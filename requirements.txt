@@ -1,0 +1,4 @@
+tornado
+requests
+scikit-image
+mysql-connector-python
