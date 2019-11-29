@@ -1,4 +1,6 @@
 import os
+import cv2
+import subprocess
 import skimage.measure as measure
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -11,10 +13,11 @@ import skimage.measure as measure
 
 # Browser Simulation
 
-
 class BrowserRender:
     """
         The main solution
+        To render web page from QT Webkit with python-webkit2png.
+        But we plan using Gecko/Servo to replace someday.
     """
     def __init__(self):
         pass
@@ -54,10 +57,10 @@ class BrowserAgent:
 
     def capture(self, url, path, size="1920,1080"):
         capture_com = self.capture_com.format(**{"url": url, "path": path, "size": size})
-        return os.system("{} {}".format(self.exec_path, capture_com))
+        return subprocess.run([self.exec_path, capture_com], shell=True, check=True)
+
 
 # Capture
-
 
 class WebCapture:
     """
@@ -88,6 +91,15 @@ class WebCapture:
         return True
 
     @staticmethod
+    def image_object(path):
+        """
+            Create NumPy Array by OpenCV
+            :param path: The Image Path
+            :return: Image object
+        """
+        return cv2.imread(path, 0)
+
+    @staticmethod
     def image_compare(img1, img2):
         """
             To compare image using structural similarity index
@@ -96,11 +108,3 @@ class WebCapture:
             :return: float of the similar lever
         """
         return measure.compare_ssim(img1, img2, multichannel=True)
-
-
-class WebSourceCompare:
-    def get(self):
-        pass
-
-    def compare(self):
-        pass

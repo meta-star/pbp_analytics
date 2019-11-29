@@ -1,3 +1,6 @@
+PyQt5
+opencv-python
+opencv-contrib-python
 tornado
 requests
 scikit-image
