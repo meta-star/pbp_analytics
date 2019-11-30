@@ -30,6 +30,7 @@
 #       Drop support for Python 2.x
 #       Support Qt 5
 #       Support Python3
+#       User-Agent Selection
 #
 #   More Information:
 #   https://github.com/supersonictw/PBP-analytics
@@ -40,20 +41,19 @@ import time
 
 from PyQt5 import sip
 from PyQt5.QtCore import QObject, QUrl, Qt, QCoreApplication, QByteArray, QBuffer, pyqtSlot
-from PyQt5.QtGui import QPalette, QImage, QColor, QPainter, QScreen, QGuiApplication
-from PyQt5.QtNetwork import QNetworkCookieJar, QNetworkCookie, QNetworkProxy, QNetworkAccessManager, \
-    QNetworkReply
+from PyQt5.QtGui import QPalette, QImage, QColor, QPainter, QGuiApplication
+from PyQt5.QtNetwork import QNetworkCookieJar, QNetworkCookie, QNetworkProxy, QNetworkAccessManager, QNetworkReply
 from PyQt5.QtWebEngineWidgets import QWebEngineSettings, QWebEnginePage, QWebEngineView
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAbstractScrollArea, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAbstractScrollArea
 
 
-# Class for Website-Rendering. Uses QWebPage, which
+# Class for Website-Rendering. Uses QtWebEngine, which
 # requires a running QtGui to work.
 
 
 class WebkitRenderer(QObject):
     """
-    A class that helps to create 'screenshots' of webpages using
+    A class that helps to create 'screenshots' of web pages using
     Requires PyQt5 library.
     Use "render()" to get a 'QImage' object, render_to_bytes() to get the
     resulting image as 'str' object or render_to_file() to write the image
@@ -115,7 +115,7 @@ class WebkitRenderer(QObject):
         # QApplication.processEvents may be called, causing
         # this method to get called while it has not returned yet.
         helper = _WebkitRendererHelper(self)
-        helper._window.resize(self.width, self.height)
+        helper.window.resize(self.width, self.height)
         image = helper.render(res)
 
         # Bind helper instance to this image to prevent the
@@ -269,7 +269,7 @@ class _WebkitRendererHelper(QObject):
 
             painter = QPainter(image)
             painter.setBackgroundMode(Qt.TransparentMode)
-            self._page.mainFrame().render(painter)
+            self._window.render(painter)
             painter.end()
         else:
             if self.grabWholeWindow:
@@ -280,7 +280,7 @@ class _WebkitRendererHelper(QObject):
                 qt_screen = QGuiApplication.primaryScreen()
                 image = qt_screen.grabWindow(sip.voidptr(0))
             else:
-                image = QWidget(self._window).grab()
+                image = self._window.grab()
 
         return self._post_process_image(image)
 
@@ -371,7 +371,7 @@ class _WebkitRendererHelper(QObject):
         """
         self.logger.debug("Received {}".format(reply.url().toString()))
 
-    # Eventhandler for "loadStarted()" signal
+    # Event for "loadStarted()" signal
     @pyqtSlot(name='loadStarted')
     def _on_load_started(self):
         """
@@ -381,7 +381,7 @@ class _WebkitRendererHelper(QObject):
             self.logger.debug("loading started")
         self.__loading = True
 
-    # Eventhandler for "loadFinished(bool)" signal
+    # Event for "loadFinished(bool)" signal
     @pyqtSlot(bool, name='loadFinished')
     def _on_load_finished(self, result):
         """
@@ -393,7 +393,7 @@ class _WebkitRendererHelper(QObject):
         self.__loading = False
         self.__loading_result = result
 
-    # Eventhandler for "sslErrors(QNetworkReply *,const QList<QSslError>&)" signal
+    # Event for "sslErrors(QNetworkReply *,const QList<QSslError>&)" signal
     @pyqtSlot('QNetworkReply*', 'QList<QSslError>', name='sslErrors')
     def _on_ssl_errors(self, reply, errors):
         """
@@ -403,6 +403,10 @@ class _WebkitRendererHelper(QObject):
             if self.logger:
                 self.logger.warn("SSL: " + e.errorString())
         reply.ignoreSslErrors()
+
+    @property
+    def window(self):
+        return self._window
 
 
 class CustomWebPage(QWebEnginePage):
