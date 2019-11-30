@@ -207,7 +207,7 @@ class _WebkitRendererHelper(QObject):
             self._page.settings().setAttribute(key, value)
 
         # Connect required event listeners
-        assert "Not finish"
+        assert False, "Not finish"
         self.connect(self._page, pyqtSignal("loadFinished(bool)"), self._on_load_finished)
         self.connect(self._page, pyqtSignal("loadStarted()"), self._on_load_started)
         self.connect(
