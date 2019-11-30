@@ -26,7 +26,7 @@ class GoogleSafeBrowsing:
 
         query_data = {
             "client": {
-                "clientId": "PhishingBlock Project",
+                "clientId": "Phishing Blocker Project - Analytics",
                 "clientVersion": "0.1"
             },
             "threatInfo": {
