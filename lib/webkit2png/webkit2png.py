@@ -38,14 +38,17 @@
 import os
 import time
 
+from PyQt5 import sip
 from PyQt5.QtCore import QObject, QUrl, Qt, QCoreApplication, QByteArray, QBuffer, pyqtSlot
-from PyQt5.QtGui import QPalette, QImage, QColor, QPainter, QScreen
-from PyQt5.QtNetwork import QNetworkCookieJar, QNetworkCookie, QNetworkProxy, QSslError, QNetworkAccessManager
+from PyQt5.QtGui import QPalette, QImage, QColor, QPainter, QScreen, QGuiApplication
+from PyQt5.QtNetwork import QNetworkCookieJar, QNetworkCookie, QNetworkProxy, QNetworkAccessManager, \
+    QNetworkReply
 from PyQt5.QtWebEngineWidgets import QWebEngineSettings, QWebEnginePage, QWebEngineView
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAbstractScrollArea
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAbstractScrollArea, QWidget
+
+
 # Class for Website-Rendering. Uses QWebPage, which
 # requires a running QtGui to work.
-from qtpy import QtNetwork
 
 
 class WebkitRenderer(QObject):
@@ -203,13 +206,18 @@ class _WebkitRendererHelper(QObject):
         self._view.setPage(self._page)
         self._window = QMainWindow()
         self._window.setCentralWidget(self._view)
+        self._qt_network_access_manager = QNetworkAccessManager()
 
         # Import QWebSettings
         for key, value in self.qWebSettings.items():
             self._page.settings().setAttribute(key, value)
 
         # Connect required event listeners
-        assert False, "Not finish"
+        # assert False, "Not finish"
+        self._page.loadFinished.connect(self._on_load_finished)
+        self._page.loadStarted.connect(self._on_load_started)
+        self._qt_network_access_manager.sslErrors.connect(self._on_ssl_errors)
+        self._qt_network_access_manager.finished.connect(self._on_each_reply)
 
         # The way we will use this, it seems to be unnecessary to have Scrollbars enabled
         self._scroll_area = QAbstractScrollArea()
@@ -269,9 +277,10 @@ class _WebkitRendererHelper(QObject):
                 # window still has the focus when the screen is
                 # grabbed. This might result in a race condition.
                 self._view.activateWindow()
-                image = QScreen().grabWindow(self._window.winId())
+                qt_screen = QGuiApplication.primaryScreen()
+                image = qt_screen.grabWindow(sip.voidptr(0))
             else:
-                image = QScreen().grabWidget(self._window)
+                image = QWidget(self._window).grab()
 
         return self._post_process_image(image)
 
@@ -304,7 +313,6 @@ class _WebkitRendererHelper(QObject):
 
         # Set the required cookies, if any
         self.cookieJar = CookieJar(self.cookies, qt_url)
-        self._qt_network_access_manager = QNetworkAccessManager()
         self._qt_network_access_manager.setCookieJar(self.cookieJar)
 
         # Load the page
@@ -327,7 +335,7 @@ class _WebkitRendererHelper(QObject):
                 self.logger.warning("Failed to load {}".format(res))
 
         # Set initial viewport (the size of the "window")
-        size = self._page.mainFrame().contentsSize()
+        size = self._page.contentsSize()
         if self.logger:
             self.logger.debug("contentsSize: %s", size)
         if width > 0:
@@ -335,7 +343,7 @@ class _WebkitRendererHelper(QObject):
         if height > 0:
             size.setHeight(height)
 
-        self._window.resize(size)
+        self._window.resize(size.toSize())
 
     def _post_process_image(self, q_image):
         """
@@ -356,7 +364,7 @@ class _WebkitRendererHelper(QObject):
                 q_image = q_image.copy(0, 0, self.scaleToWidth, self.scaleToHeight)
         return q_image
 
-    @pyqtSlot(QtNetwork.QNetworkReply, name='finished')
+    @pyqtSlot(QNetworkReply, name='finished')
     def _on_each_reply(self, reply):
         """
         Logs each requested uri
@@ -376,7 +384,8 @@ class _WebkitRendererHelper(QObject):
     # Eventhandler for "loadFinished(bool)" signal
     @pyqtSlot(bool, name='loadFinished')
     def _on_load_finished(self, result):
-        """Slot that sets the '__loading' property to false and stores
+        """
+        Slot that sets the '__loading' property to false and stores
         the result code in '__loading_result'.
         """
         if self.logger:
@@ -385,7 +394,7 @@ class _WebkitRendererHelper(QObject):
         self.__loading_result = result
 
     # Eventhandler for "sslErrors(QNetworkReply *,const QList<QSslError>&)" signal
-    @pyqtSlot(QSslError, name='sslErrors')
+    @pyqtSlot('QNetworkReply*', 'QList<QSslError>', name='sslErrors')
     def _on_ssl_errors(self, reply, errors):
         """
         Slot that writes SSL warnings into the log but ignores them.
