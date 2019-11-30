@@ -35,7 +35,7 @@
 #   More Information:
 #   https://github.com/supersonictw/PBP-analytics
 
-
+import _io
 import os
 import time
 
@@ -130,6 +130,7 @@ class WebkitRenderer(QObject):
         Renders the image into a File resource.
         Returns the size of the data that has been written.
         """
+        assert type(file_object) is _io.BufferedRandom, "Not a file object"
         qt_format = self.format  # this may not be constant due to processEvents()
         image = self.render(res)
         q_buffer = QBuffer()
