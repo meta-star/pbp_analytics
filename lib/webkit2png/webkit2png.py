@@ -38,15 +38,16 @@
 import os
 import time
 
-from PyQt5.QtCore import QObject, QUrl, Qt, QCoreApplication, QByteArray, pyqtSignal, QBuffer
+from PyQt5.QtCore import QObject, QUrl, Qt, QCoreApplication, QByteArray, QBuffer, pyqtSlot
 from PyQt5.QtGui import QPalette, QImage, QColor, QPainter, QScreen
-from PyQt5.QtNetwork import QNetworkCookieJar, QNetworkCookie, QNetworkProxy
+from PyQt5.QtNetwork import QNetworkCookieJar, QNetworkCookie, QNetworkProxy, QSslError, QNetworkAccessManager
 from PyQt5.QtWebEngineWidgets import QWebEngineSettings, QWebEnginePage, QWebEngineView
-from PyQt5.QtWidgets import QApplication, QMainWindow
-
-
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAbstractScrollArea
 # Class for Website-Rendering. Uses QWebPage, which
 # requires a running QtGui to work.
+from qtpy import QtNetwork
+
+
 class WebkitRenderer(QObject):
     """
     A class that helps to create 'screenshots' of webpages using
@@ -196,7 +197,8 @@ class _WebkitRendererHelper(QObject):
         self._page = CustomWebPage(logger=self.logger, ignore_alert=self.ignoreAlert,
                                    ignore_confirm=self.ignoreConfirm, ignore_prompt=self.ignorePrompt,
                                    interrupt_js=self.interruptJavaScript)
-        QNetworkProxy.setApplicationProxy(proxy)
+        self._qt_proxy = QNetworkProxy()
+        self._qt_proxy.setApplicationProxy(proxy)
         self._view = QWebEngineView()
         self._view.setPage(self._page)
         self._window = QMainWindow()
@@ -208,18 +210,11 @@ class _WebkitRendererHelper(QObject):
 
         # Connect required event listeners
         assert False, "Not finish"
-        self.connect(self._page, pyqtSignal("loadFinished(bool)"), self._on_load_finished)
-        self.connect(self._page, pyqtSignal("loadStarted()"), self._on_load_started)
-        self.connect(
-            self._page.networkAccessManager(),
-            pyqtSignal("sslErrors(QNetworkReply *,const QList<QSslError>&)"),
-            self._on_ssl_errors
-        )
-        self.connect(self._page.networkAccessManager(), pyqtSignal("finished(QNetworkReply *)"), self._on_each_reply)
 
         # The way we will use this, it seems to be unnecessary to have Scrollbars enabled
-        self._page.mainFrame().setScrollBarPolicy(Qt.Horizontal, Qt.ScrollBarAlwaysOff)
-        self._page.mainFrame().setScrollBarPolicy(Qt.Vertical, Qt.ScrollBarAlwaysOff)
+        self._scroll_area = QAbstractScrollArea()
+        self._scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self._scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         # Show this widget
         self._window.show()
@@ -296,7 +291,7 @@ class _WebkitRendererHelper(QObject):
         # element is the HTML code to render and the second element is a string
         # setting the base URL for the interpreted HTML code.
         # When resource is of type str or unicode, it is handled as URL which
-        # shal be loaded
+        # shall be loaded
         if type(res) == tuple:
             url = res[1]
         else:
@@ -309,13 +304,14 @@ class _WebkitRendererHelper(QObject):
 
         # Set the required cookies, if any
         self.cookieJar = CookieJar(self.cookies, qt_url)
-        self._page.networkAccessManager().setCookieJar(self.cookieJar)
+        self._qt_network_access_manager = QNetworkAccessManager()
+        self._qt_network_access_manager.setCookieJar(self.cookieJar)
 
         # Load the page
         if type(res) == tuple:
-            self._page.mainFrame().setHtml(res[0], qt_url)  # HTML, baseUrl
+            self._page.setHtml(res[0], qt_url)  # HTML, baseUrl
         else:
-            self._page.mainFrame().load(qt_url)
+            self._page.load(qt_url)
 
         while self.__loading:
             if timeout > 0 and time.time() >= cancel_at:
@@ -360,6 +356,7 @@ class _WebkitRendererHelper(QObject):
                 q_image = q_image.copy(0, 0, self.scaleToWidth, self.scaleToHeight)
         return q_image
 
+    @pyqtSlot(QtNetwork.QNetworkReply, name='finished')
     def _on_each_reply(self, reply):
         """
         Logs each requested uri
@@ -367,6 +364,7 @@ class _WebkitRendererHelper(QObject):
         self.logger.debug("Received {}".format(reply.url().toString()))
 
     # Eventhandler for "loadStarted()" signal
+    @pyqtSlot(name='loadStarted')
     def _on_load_started(self):
         """
         Slot that sets the '__loading' property to true
@@ -376,6 +374,7 @@ class _WebkitRendererHelper(QObject):
         self.__loading = True
 
     # Eventhandler for "loadFinished(bool)" signal
+    @pyqtSlot(bool, name='loadFinished')
     def _on_load_finished(self, result):
         """Slot that sets the '__loading' property to false and stores
         the result code in '__loading_result'.
@@ -386,6 +385,7 @@ class _WebkitRendererHelper(QObject):
         self.__loading_result = result
 
     # Eventhandler for "sslErrors(QNetworkReply *,const QList<QSslError>&)" signal
+    @pyqtSlot(QSslError, name='sslErrors')
     def _on_ssl_errors(self, reply, errors):
         """
         Slot that writes SSL warnings into the log but ignores them.
