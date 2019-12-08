@@ -28,7 +28,7 @@ class DomainResolve:
         compare_info = self.__dns_resolver_result(compare_handle)
 
         score = 0
-        level = 0
+        level = 1
 
         if debug:
             print(
@@ -36,6 +36,9 @@ class DomainResolve:
                 "\n",
                 compare_info
             )
+
+        if target_info == compare_info:
+            score = 1
 
         result = score / level
 
