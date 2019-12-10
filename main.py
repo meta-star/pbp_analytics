@@ -11,8 +11,6 @@ PB Project - analytics
 
 import time
 import multiprocessing as mp
-
-import lib.data_mds as mds
 import lib.callback as callback
 
 
@@ -26,7 +24,6 @@ class PBP:
         return time.strftime(time_format, Time)
 
     def start(self):
-        mp.Process(target=mds.listen, args=(0,)).start()
         mp.Process(target=callback.listen, args=(0,)).start()
 
 
