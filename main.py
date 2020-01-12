@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 PB Project - analytics
 
@@ -13,15 +14,25 @@ import time
 import multiprocessing as mp
 import lib.callback as callback
 
+from configparser import ConfigParser
+
 
 class PBP:
     def __init__(self):
         self.WebCapture = None
+        self.cfg = ConfigParser()
+        self.cfg.read("config.ini")
 
     @staticmethod
     def getTime(time_format="%b %d %Y %H:%M:%S %Z"):
-        Time = time.localtime(time.time())
-        return time.strftime(time_format, Time)
+        time_ = time.localtime(time.time())
+        return time.strftime(time_format, time_)
+
+    def view_compare(self):
+        pass
+
+    def rank(self):
+        pass
 
     def start(self):
         mp.Process(target=callback.listen, args=(0,)).start()

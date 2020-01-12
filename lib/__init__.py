@@ -1,6 +1,7 @@
-from .block import Block
+from .database import Data
 from .safebrowsing import GoogleSafeBrowsing
 from .view_analytics import BrowserAgent, BrowserRender, WebCapture
+
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
 
@@ -9,4 +10,4 @@ from .view_analytics import BrowserAgent, BrowserRender, WebCapture
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-__all__ = ["Block", "GoogleSafeBrowsing", "BrowserAgent", "BrowserRender", "WebCapture"]
+__all__ = ["Data", "GoogleSafeBrowsing", "BrowserAgent", "BrowserRender", "WebCapture"]

@@ -1,5 +1,6 @@
 import whois
 from dns import resolver
+
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
 
