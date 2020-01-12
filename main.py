@@ -12,7 +12,7 @@ PB Project - analytics
 
 import time
 import multiprocessing as mp
-import lib.callback as callback
+import libs.callback as callback
 
 from configparser import ConfigParser
 
