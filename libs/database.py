@@ -12,7 +12,7 @@ import mysql.connector as sql_client
 class DatabaseConnectInfo:
     def to_dict(self):
         return {
-            1:1
+            1: 1
         }
 
 

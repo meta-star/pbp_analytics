@@ -32,8 +32,8 @@ def update(path, data):
         if type(path) is list:
             over = query(path)
             over.get("data").update(data)
-            return {"status" : 200}
-        return {"status" : 400}
+            return {"status": 200}
+        return {"status": 400}
     except:
         return {"status": 500}
 
@@ -60,11 +60,11 @@ def query(query_data, null=None):
                 if key in result:
                     if count < query_len:
                         if type(result.get(key)) is not dict:
-                            result = 1 #"unknown_type" + type(source_data.get(key))
+                            result = 1  # "unknown_type" + type(source_data.get(key))
                             break
                     result = result.get(key)
                 else:
-                    result = 2 #"unknown_key"
+                    result = 2  # "unknown_key"
                     break
 
             return {"status": 200, "data": result}
@@ -108,9 +108,9 @@ class IndexHandler(RequestHandler):
         if req_res.get("code") == auth_code:
             result = _work[req_res.get("do")](req_res.get("path"), req_res.get("data"))
         else:
-            result = {"status" : 401}
+            result = {"status": 401}
         if not result:
-            result = {"status" : 500}
+            result = {"status": 500}
         self.write(json.dumps(result))
 
 
@@ -118,7 +118,7 @@ class IndexHandler(RequestHandler):
 def listen(code):
     global auth_code
     auth_code = code
-    app = Application([('/',IndexHandler)])
+    app = Application([('/', IndexHandler)])
     server = HTTPServer(app)
     server.listen(2020)
     IOLoop.current().start()

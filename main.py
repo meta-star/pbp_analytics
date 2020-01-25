@@ -10,11 +10,12 @@ PB Project - analytics
 ===
 """
 
-import time
 import multiprocessing as mp
-import libs.callback as callback
+import time
 
 from configparser import ConfigParser
+
+import libs.callback as callback
 
 
 class PBP:

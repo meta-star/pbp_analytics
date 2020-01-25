@@ -11,7 +11,6 @@ import requests
 
 class GoogleSafeBrowsing:
     def __init__(self, google_api_key):
-
         host = "safebrowsing.googleapis.com"
 
         api_ver = "v4"
@@ -39,4 +38,3 @@ class GoogleSafeBrowsing:
         }
 
         return requests.post(self.lookup_url, json=query_data).json()
-

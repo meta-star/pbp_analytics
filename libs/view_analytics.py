@@ -1,7 +1,7 @@
-import os
 import cv2
-import subprocess
+import os
 import skimage.measure as measure
+import subprocess
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -20,6 +20,7 @@ class BrowserRender:
         To render web page from QT Webkit with python-webkit2png.
         But we plan using Gecko/Servo to replace someday.
     """
+
     def __init__(self):
         pass
 
@@ -29,6 +30,7 @@ class BrowserAgent:
         As a backup solution
         The class will allow you to use your browser as the agent to take a screen shot form it.
     """
+
     def __init__(self, using):
         if using == "firefox":
             self.exec_path = "/usr/bin/firefox"
@@ -67,6 +69,7 @@ class WebCapture:
     """
         To take screen shot for PBP.
     """
+
     def __init__(self, browser_agent, cache_path="./temp/", compare_path="./web_archive/"):
         self.cache_path = cache_path
         self.compare_path = compare_path
