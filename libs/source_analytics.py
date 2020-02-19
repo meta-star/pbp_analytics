@@ -11,8 +11,16 @@ from dns import resolver
 
 
 class DomainResolve:
+    """
+    To check domain details for PBP
+    """
     @staticmethod
     def __dns_resolver_result(handle):
+        """
+
+        :param handle:
+        :return:
+        """
         result = {}
 
         for message in handle.response.answer:
@@ -22,6 +30,13 @@ class DomainResolve:
         return result
 
     def host_compare(self, target, compare, debug=False):
+        """
+
+        :param target:
+        :param compare:
+        :param debug:
+        :return:
+        """
         target_handle = resolver.query(target)
         compare_handle = resolver.query(compare)
 
@@ -47,6 +62,13 @@ class DomainResolve:
 
     @staticmethod
     def info_compare(target, compare, debug=False):
+        """
+
+        :param target:
+        :param compare:
+        :param debug:
+        :return:
+        """
         tests_list = [
             "registrar",
             "whois_server",
@@ -84,5 +106,9 @@ class DomainResolve:
 
     @staticmethod
     def _guess():
+        """
+
+        :return:
+        """
         result = None
         return result

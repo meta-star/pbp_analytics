@@ -16,9 +16,9 @@ import subprocess
 
 class BrowserRender:
     """
-        The main solution
-        To render web page from QT Webkit with python-webkit2png.
-        But we plan using Gecko/Servo to replace someday.
+    The main solution
+    To render web page from QT Webkit with python-webkit2png.
+    But we plan using Gecko/Servo to replace someday.
     """
 
     def __init__(self):
@@ -27,8 +27,8 @@ class BrowserRender:
 
 class BrowserAgent:
     """
-        As a backup solution
-        The class will allow you to use your browser as the agent to take a screen shot form it.
+    As a backup solution
+    The class will allow you to use your browser as the agent to take a screenshot form it.
     """
 
     def __init__(self, using):
@@ -48,9 +48,9 @@ class BrowserAgent:
 
     def set_path(self, path):
         """
-            To setup your browser path in your computer.
-            :param path: Your browser path.
-            :return: bool
+        To setup your browser path in your computer.
+        :param path: Your browser path.
+        :return: bool
         """
         if os.path.exists(path):
             self.exec_path = path
@@ -67,27 +67,39 @@ class BrowserAgent:
 
 class WebCapture:
     """
-        To take screen shot for PBP.
+    To take screenshot for PBP.
     """
 
-    def __init__(self, browser_agent, cache_path="./temp/", compare_path="./web_archive/"):
-        self.cache_path = cache_path
-        self.compare_path = compare_path
+    def __init__(self, config):
+        self.cache_path = config
+        self.compare_path = config
 
-        self.browser = browser_agent
+        self.browser = config
 
         if not os.path.exists(self.cache_path):
             os.mkdir(self.cache_path)
         if not os.path.exists(self.compare_path):
             os.mkdir(self.compare_path)
 
+    @staticmethod
+    def __set_browser_simulation(type_id):
+        """
+        Set Browser Simulation by ID
+        :param type_id: Type ID
+        :return: class object
+        """
+        return {
+            1: BrowserRender,
+            2: BrowserAgent
+        }[type_id]
+
     def get_page_image(self, target_url, output_image='out.png', agent="PC"):
         """
-            To get the image of the URL you provided.
-            :param target_url: The target URL
-            :param output_image: Output path (optional)
-            :param agent: PC or Mobile as user-agent, it will not work if you are using BrowserAgent (optional)
-            :return: bool
+        To get the image of the URL you provided.
+        :param target_url: The target URL
+        :param output_image: Output path (optional)
+        :param agent: PC or Mobile as user-agent, it will not work if you are using BrowserAgent (optional)
+        :return: bool
         """
         if os.path.isfile(self.cache_path + output_image):
             os.remove(self.cache_path + output_image)
@@ -97,18 +109,18 @@ class WebCapture:
     @staticmethod
     def image_object(path):
         """
-            Create NumPy Array by OpenCV
-            :param path: The Image Path
-            :return: Image object
+        Create NumPy Array by OpenCV
+        :param path: The Image Path
+        :return: Image object
         """
         return cv2.imread(path, 0)
 
     @staticmethod
     def image_compare(img1, img2):
         """
-            To compare image using structural similarity index
-            :param img1: Image object
-            :param img2: Image object
-            :return: float of the similar lever
+        To compare image using structural similarity index
+        :param img1: Image object
+        :param img2: Image object
+        :return: float of the similar lever
         """
         return measure.compare_ssim(img1, img2, multichannel=True)

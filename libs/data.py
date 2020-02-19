@@ -9,16 +9,16 @@ import mysql.connector as sql_client
 """
 
 
-class DatabaseConnectInfo:
-    def to_dict(self):
-        return {
-            1: 1
-        }
-
-
 class Data:
+    """
+    To control data for PBP
+    """
     def __init__(self, db_connect_info):
-        self.db_client = sql_client.connect(**db_connect_info.to_dict())
+        """
+        Configure and initialize database details
+        :param db_connect_info:
+        """
+        self.db_client = sql_client.connect(**db_connect_info)
 
     def image_register(self):
         pass

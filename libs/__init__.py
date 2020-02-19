@@ -1,4 +1,4 @@
-from .database import Data
+from .data import Data
 from .safebrowsing import GoogleSafeBrowsing
 from .view_analytics import BrowserAgent, BrowserRender, WebCapture
 

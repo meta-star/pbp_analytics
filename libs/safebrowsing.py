@@ -10,7 +10,14 @@ import requests
 
 
 class GoogleSafeBrowsing:
+    """
+    Google SafeBrowsing Client
+    """
     def __init__(self, google_api_key):
+        """
+        Initialization
+        :param google_api_key: Google API Token
+        """
         host = "safebrowsing.googleapis.com"
 
         api_ver = "v4"
@@ -22,6 +29,11 @@ class GoogleSafeBrowsing:
         self.update_url = "https://{}/{}/{}?key={}".format(host, api_ver, update_path, google_api_key)
 
     def lookup(self, urls):
+        """
+
+        :param urls:
+        :return:
+        """
         query_urls = [{"url": url} for url in urls]
 
         query_data = {

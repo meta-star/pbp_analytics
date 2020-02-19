@@ -15,17 +15,21 @@ import time
 
 from configparser import ConfigParser
 
-import libs.callback as callback
+from libs import callback, Data, WebCapture
 
 
 class PBP:
     def __init__(self):
-        self.WebCapture = None
+        self.handles = {}
+
         self.cfg = ConfigParser()
         self.cfg.read("config.ini")
 
+        self.handles["capture"] = WebCapture(self.cfg["WebCapture"])
+        self.handles["database"] = Data(self.cfg["MySQL"])
+
     @staticmethod
-    def getTime(time_format="%b %d %Y %H:%M:%S %Z"):
+    def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
         time_ = time.localtime(time.time())
         return time.strftime(time_format, time_)
 
@@ -41,5 +45,5 @@ class PBP:
 
 if __name__ == "__main__":
     handle = PBP()
-    print("PBP Server\n{}\n".format(handle.getTime()))
+    print("PBP Server\n{}\n".format(handle.get_time()))
     handle.start()
