@@ -15,7 +15,7 @@ import time
 
 from configparser import ConfigParser
 
-from libs import callback, Data, WebCapture
+from libs import callback, Data, WebCapture, ThreadControl
 
 
 class PBP:
@@ -40,7 +40,7 @@ class PBP:
         pass
 
     def start(self):
-        mp.Process(target=callback.listen, args=(0,)).start()
+        ThreadControl.add(callback.listen, (0,))
 
 
 if __name__ == "__main__":
