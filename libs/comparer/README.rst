@@ -3,9 +3,9 @@ PBP Comparer
 
 What are these?
 --------------
-These are the libraries for PBP to analytics information
+These are the libraries for PBP to analytics information of URL.
 
-How these works?
+How these work?
 ----------------
 The libraries will trigger after database checking.
 
