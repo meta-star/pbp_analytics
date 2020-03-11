@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PB Project - analytics
+Phishing Blocker Project - Analytics
 
 (c)2019 SuperSonic(https://randychen.tk).
 ===
@@ -10,37 +10,29 @@ PB Project - analytics
 ===
 """
 
-import multiprocessing as mp
 import time
 
 from configparser import ConfigParser
-
-from libs import callback, Data, WebCapture, ThreadControl
+from libs import ThreadControl, HttpServer, Data
 
 
 class PBP:
-    def __init__(self):
-        self.handles = {}
+    # Loading Configs
+    cfg = ConfigParser()
+    cfg.read("config.ini")
 
-        self.cfg = ConfigParser()
-        self.cfg.read("config.ini")
-
-        self.handles["capture"] = WebCapture(self.cfg["WebCapture"])
-        self.handles["database"] = Data(self.cfg["MySQL"])
+    # Initialization
+    thread_control = ThreadControl()
+    data_control = Data(**cfg["MySQL"])
 
     @staticmethod
     def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
         time_ = time.localtime(time.time())
         return time.strftime(time_format, time_)
 
-    def view_compare(self):
-        pass
-
-    def rank(self):
-        pass
-
     def start(self):
-        ThreadControl.add(callback.listen, (0,))
+        server = HttpServer(self)
+        self.thread_control.add(server.listen, ())
 
 
 if __name__ == "__main__":

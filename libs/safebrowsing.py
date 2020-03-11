@@ -30,9 +30,9 @@ class GoogleSafeBrowsing:
 
     def lookup(self, urls):
         """
-
-        :param urls:
-        :return:
+        To check URLs from Google SafeBrowsing
+        :param urls: list of URLs
+        :return: dict
         """
         query_urls = [{"url": url} for url in urls]
 

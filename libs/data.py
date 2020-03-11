@@ -20,11 +20,11 @@ class Data:
         """
         self.db_client = sql_client.connect(**db_connect_info)
 
-    def image_register(self):
+    def insert(self):
         pass
 
-    def url_query(self, url):
-        return url
+    def update(self):
+        pass
 
-    def url_mark(self, url, type):
+    def query(self):
         pass

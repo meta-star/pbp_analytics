@@ -19,7 +19,7 @@ class IndexHandler(RequestHandler, ABC):
         self.write('''
             <b>PBP API Server</b><br>
             The security project for Internet.<hr>
-            (c)2019 <a href="https://randychen.tk">SuperSonic</a>.
+            (c)2020 <a href="https://github.com/supersonictw">SuperSonic</a>.
         ''')
 
     def post(self):
@@ -30,7 +30,10 @@ class IndexHandler(RequestHandler, ABC):
         self.write(json.dumps(result))
 
 
-class PBP:
+class HttpServer:
+    def __init__(self, pbp_handle):
+        pbp_handle.get_time()
+
     @staticmethod
     def listen():
         app = Application([
