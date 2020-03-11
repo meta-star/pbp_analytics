@@ -6,3 +6,4 @@ scikit-image
 mysql-connector-python
 python-whois
 dnspython
+cryptography
