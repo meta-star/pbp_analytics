@@ -10,32 +10,10 @@ Phishing Blocker Project - Analytics
 ===
 """
 
-import time
-
-from configparser import ConfigParser
-from libs import ThreadControl, HttpServer, Data
-
-
-class PBP:
-    # Loading Configs
-    cfg = ConfigParser()
-    cfg.read("config.ini")
-
-    # Initialization
-    thread_control = ThreadControl()
-    data_control = Data(**cfg["MySQL"])
-
-    @staticmethod
-    def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
-        time_ = time.localtime(time.time())
-        return time.strftime(time_format, time_)
-
-    def start(self):
-        server = HttpServer(self)
-        self.thread_control.add(server.listen, ())
+from libs.analytics import Analytics
 
 
 if __name__ == "__main__":
-    handle = PBP()
+    handle = Analytics()
     print("PBP Server\n{}\n".format(handle.get_time()))
     handle.start()

@@ -14,6 +14,10 @@ from tornado.web import Application, RequestHandler
 """
 
 
+def analytics_func(data):
+    return {"status": -1, "reply": data}
+
+
 class IndexHandler(RequestHandler, ABC):
     def get(self):
         self.write('''
@@ -26,12 +30,17 @@ class IndexHandler(RequestHandler, ABC):
         req_body = self.request.body
         req_str = req_body.decode('utf8')
         req_res = json.loads(req_str)
-        result = {"status": 401, "reply": req_res}
+        if req_res:
+            result = analytics_func(req_res)
+        else:
+            result = {"status": 400}
         self.write(json.dumps(result))
 
 
 class HttpServer:
     def __init__(self, pbp_handle):
+        global analytics_func
+        analytics_func = pbp_handle.analytics
         pbp_handle.get_time()
 
     @staticmethod

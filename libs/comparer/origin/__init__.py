@@ -1,3 +1,5 @@
+from .domain_resolve import DomainResolve
+
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
 
@@ -6,4 +8,4 @@
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-__all__ = ["origin", "target"]
+__all__ = ["DomainResolve"]

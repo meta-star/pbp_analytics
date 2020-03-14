@@ -20,11 +20,22 @@ class Data:
         """
         self.db_client = sql_client.connect(**db_connect_info)
 
-    def insert(self):
-        pass
+    def check_blacklist(self, url):
+        cursor = self.db_client.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT `url`, `date`, `data` FROM blacklist WHERE url = %s",
+            (url,)
+        )
+        result = cursor.fetchall()
+        self.db_client.commit()
+        cursor.close()
+        return result
 
-    def update(self):
-        pass
-
-    def query(self):
-        pass
+    def find_page_view_signature(self, sign):
+        with self.db_client.cursor(dictionary=True) as cursor:
+            cursor.execute(
+                "SELECT `url, date, data` FROM view_signatures WHERE signature = %s",
+                (sign,)
+            )
+            self.db_client.commit()
+            return cursor.fetchall()
