@@ -1,4 +1,5 @@
 import json
+import types
 from abc import ABC
 
 from tornado.httpserver import HTTPServer
@@ -34,6 +35,8 @@ class IndexHandler(RequestHandler, ABC):
             result = analytics_func(req_res)
         else:
             result = {"status": 400}
+        if isinstance(result, types.GeneratorType):
+            result = {"status": 200}
         self.write(json.dumps(result))
 
 
