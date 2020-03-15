@@ -44,7 +44,7 @@ class Analytics:
         self.thread_control.stop("listen")
 
     def analytics(self, data):
-        if data.get("version") < 0:
+        if data.get("version") < 1:
             return {
                 "status": 505
             }
