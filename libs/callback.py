@@ -30,7 +30,7 @@ class IndexHandler(RequestHandler, ABC):
         req_body = self.request.body
         req_str = req_body.decode('utf8')
         req_res = json.loads(req_str)
-        if req_res:
+        if req_res and req_res.get("version") > 0:
             result = analytics_func(req_res)
         else:
             result = {"status": 400}
