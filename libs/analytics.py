@@ -44,6 +44,10 @@ class Analytics:
         self.thread_control.stop("listen")
 
     def analytics(self, data):
+        if data.get("version") < 0:
+            return {
+                "status": 505
+            }
         if validators.url(data.get("url")):
             if self.data_control.check_blacklist(data.get("url")):
                 score = 0
