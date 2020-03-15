@@ -1,5 +1,5 @@
-import time
 import sys
+import time
 from configparser import ConfigParser
 
 import validators
