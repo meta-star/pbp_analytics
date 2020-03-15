@@ -49,12 +49,12 @@ class Analytics:
             return {
                 "status": 505
             }
-        if data.get("shutdown"):
+        elif data.get("shutdown"):
             self.thread_control.add(self.stop, ())
             return {
                 "status": 200
             }
-        if validators.url(data.get("url")):
+        if data.get("url") and validators.url(data.get("url")):
             if self.data_control.check_blacklist(data.get("url")):
                 score = 0
             else:
