@@ -39,9 +39,10 @@ class Analytics:
 
     def start(self):
         server = HttpServer(self)
-        self.thread_control.add(server.listen, ())
+        server.listen()
 
-    def stop(self):
+    @staticmethod
+    def stop():
         time.sleep(0.5)
         sys.exit(0)
 

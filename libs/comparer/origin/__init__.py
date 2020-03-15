@@ -8,4 +8,10 @@ from .domain_resolve import DomainResolve
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-__all__ = ["DomainResolve"]
+
+class OriginAnalytics:
+    def __init__(self, pbp_handle):
+        self.pbp_handle = pbp_handle
+
+    def action(self):
+        pass
