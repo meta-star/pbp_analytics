@@ -41,12 +41,18 @@ class Analytics:
         self.thread_control.add(server.listen, ())
 
     def stop(self):
+        time.sleep(0.5)
         self.thread_control.stop("listen")
 
     def analytics(self, data):
         if data.get("version") < 1:
             return {
                 "status": 505
+            }
+        if data.get("shutdown"):
+            self.thread_control.add(self.stop, ())
+            return {
+                "status": 200
             }
         if validators.url(data.get("url")):
             if self.data_control.check_blacklist(data.get("url")):
