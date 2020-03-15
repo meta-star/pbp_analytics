@@ -13,6 +13,7 @@ class GoogleSafeBrowsing:
     """
     Google SafeBrowsing Client
     """
+
     def __init__(self, google_api_key):
         """
         Initialization

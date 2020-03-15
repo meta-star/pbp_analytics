@@ -1,7 +1,7 @@
+from .callback import HttpServer
 from .data import Data
 from .safebrowsing import GoogleSafeBrowsing
 from .thread_control import ThreadControl
-from .callback import HttpServer
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)

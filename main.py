@@ -12,7 +12,6 @@ Phishing Blocker Project - Analytics
 
 from libs.analytics import Analytics
 
-
 if __name__ == "__main__":
     handle = Analytics()
     print("PBP Server\n{}\n".format(handle.get_time()))

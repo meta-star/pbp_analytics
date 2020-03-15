@@ -14,6 +14,7 @@ class DomainResolve:
     """
     To check domain details for PBP
     """
+
     @staticmethod
     def __dns_resolver_result(handle):
         """
