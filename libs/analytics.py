@@ -3,8 +3,10 @@ from configparser import ConfigParser
 
 import validators
 
-from . import ThreadControl, HttpServer, Data
+from .callback import HttpServer
 from .comparer.origin import DomainResolve
+from .data import Data
+from .thread_control import ThreadControl
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -22,11 +24,12 @@ class Analytics:
 
     # Initialization
     thread_control = ThreadControl()
-    data_control = Data(cfg["MySQL"])
-
     domain_resolve = DomainResolve()
 
     analytic_tasks = []
+
+    def __init__(self):
+        self.data_control = Data(self)
 
     @staticmethod
     def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
