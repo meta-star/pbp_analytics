@@ -22,11 +22,12 @@ class Analytics:
 
     # Initialization
     thread_control = ThreadControl()
-    data_control = Data(cfg["MySQL"])
-
     domain_resolve = DomainResolve()
 
     analytic_tasks = []
+
+    def __init__(self):
+        self.data_control = Data(self)
 
     @staticmethod
     def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
