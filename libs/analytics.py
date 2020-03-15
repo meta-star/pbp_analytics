@@ -1,4 +1,5 @@
 import time
+import sys
 from configparser import ConfigParser
 
 import validators
@@ -42,17 +43,19 @@ class Analytics:
 
     def stop(self):
         time.sleep(0.5)
-        self.thread_control.stop("listen")
+        sys.exit(0)
 
     def analytics(self, data):
         if data.get("version") < 1:
             return {
                 "status": 505
             }
-        elif data.get("shutdown"):
-            yield True
+        if data.get("shutdown"):
             self.stop()
-        if data.get("url") and validators.url(data.get("url")):
+            return {
+                "status": 200
+            }
+        elif data.get("url") and validators.url(data.get("url")):
             if self.data_control.check_blacklist(data.get("url")):
                 score = 0
             else:
