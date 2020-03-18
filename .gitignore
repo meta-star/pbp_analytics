@@ -1,6 +1,10 @@
 # Custom file
 config.ini
 
+# Editor config
+.theia
+.vscode
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

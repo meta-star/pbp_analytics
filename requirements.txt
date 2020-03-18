@@ -1,3 +1,4 @@
+url_normalize
 validators
 opencv-python
 opencv-contrib-python

@@ -3,6 +3,7 @@ import time
 from configparser import ConfigParser
 
 import validators
+from url_normalize import url_normalize
 
 from .callback import HttpServer
 from .comparer.origin import DomainResolve
@@ -57,11 +58,12 @@ class Analytics:
                 "status": 200
             }
         elif data.get("url") and validators.url(data.get("url")):
-            if self.data_control.check_blacklist(data.get("url")):
+            url = url_normalize(data.get("url"))
+            if self.data_control.check_blacklist(url):
                 score = 0
             else:
                 for task in self.analytic_tasks:
-                    self.thread_control.add(task, (data.get("url"),))
+                    self.thread_control.add(task, (url,))
                 score = 1
             return {
                 "status": 200,
