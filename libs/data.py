@@ -17,7 +17,7 @@ class Data:
     def __init__(self, pbp_handle):
         """
         Configure and initialize database details
-        :param db_connect_info:
+        :param pbp_handle:
         """
         self.db_client = sql_client.connect(**pbp_handle.cfg["MySQL"])
 

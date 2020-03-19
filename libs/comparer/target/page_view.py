@@ -72,10 +72,12 @@ class WebCapture:
     """
 
     def __init__(self, config):
-        self.cache_path = config
-        self.compare_path = config
+        self.cache_path = config["cache_path"]
+        self.compare_path = config["compare_path"]
 
-        self.browser = config
+        self.browser = self.__set_browser_simulation(
+            config["capture_type"]
+        )()
 
         if not os.path.exists(self.cache_path):
             os.mkdir(self.cache_path)
@@ -94,12 +96,11 @@ class WebCapture:
             2: BrowserAgent
         }[type_id]
 
-    def get_page_image(self, target_url, output_image='out.png', agent="PC"):
+    def get_page_image(self, target_url, output_image='out.png'):
         """
         To get the image of the URL you provided.
         :param target_url: The target URL
         :param output_image: Output path (optional)
-        :param agent: PC or Mobile as user-agent, it will not work if you are using BrowserAgent (optional)
         :return: bool
         """
         if os.path.isfile(self.cache_path + output_image):
@@ -125,3 +126,6 @@ class WebCapture:
         :return: float of the similar lever
         """
         return measure.compare_ssim(img1, img2, multichannel=True)
+
+    def analytics(self, url):
+        pass

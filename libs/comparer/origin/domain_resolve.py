@@ -105,11 +105,5 @@ class DomainResolve:
 
         return round(result, 2)
 
-    @staticmethod
-    def _guess():
-        """
-
-        :return:
-        """
-        result = None
-        return result
+    def analytics(self, url):
+        pass

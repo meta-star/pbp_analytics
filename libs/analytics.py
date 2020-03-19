@@ -6,9 +6,10 @@ import validators
 from url_normalize import url_normalize
 
 from .callback import HttpServer
-from .comparer.origin import DomainResolve
+from .comparer.origin import OriginAnalytics
+from .comparer.target import TargetAnalytics
 from .data import Data
-from .thread_control import ThreadControl
+from .safebrowsing import GoogleSafeBrowsing
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -24,14 +25,14 @@ class Analytics:
     cfg = ConfigParser()
     cfg.read("config.ini")
 
-    # Initialization
-    thread_control = ThreadControl()
-    domain_resolve = DomainResolve()
-
-    analytic_tasks = []
-
     def __init__(self):
+        # Initialization
         self.data_control = Data(self)
+        self.safe_browsing = GoogleSafeBrowsing(
+            self.cfg["Google Safe Browsing"]["google_api_key"]
+        )
+        self.target_analytics = TargetAnalytics(self)
+        self.origin_analytics = OriginAnalytics(self)
 
     @staticmethod
     def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
@@ -59,12 +60,14 @@ class Analytics:
             }
         elif data.get("url") and validators.url(data.get("url")):
             url = url_normalize(data.get("url"))
-            if self.data_control.check_blacklist(url):
+            if self.data_control.check_blacklist(url) or \
+                    self.safe_browsing.lookup([url]):
                 score = 0
             else:
-                for task in self.analytic_tasks:
-                    self.thread_control.add(task, (url,))
-                score = 1
+                if self.target_analytics.action(url) > 0.5:
+                    score = self.origin_analytics.action(url)
+                else:
+                    score = 1
             return {
                 "status": 200,
                 "trust-score": score

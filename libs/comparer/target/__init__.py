@@ -1,4 +1,5 @@
 from .page_view import WebCapture
+from ...thread_control import ThreadControl
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -12,6 +13,21 @@ from .page_view import WebCapture
 class TargetAnalytics:
     def __init__(self, pbp_handle):
         self.pbp_handle = pbp_handle
+        self.tasks = [
+            WebCapture(pbp_handle.cfg["WebCapture"])
+        ]
 
-    def action(self):
-        pass
+    @staticmethod
+    def _get_result():
+        return 1
+
+    def action(self, url):
+        thread_control = ThreadControl()
+        for task in self.tasks:
+            thread_control.add(
+                task.analytics,
+                (url,)
+            )
+        while len(thread_control.multiprocess_list):
+            pass
+        return self._get_result()
