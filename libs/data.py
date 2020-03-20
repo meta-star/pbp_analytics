@@ -35,7 +35,7 @@ class Data:
         return result
 
     def mark_as_blacklist(self, url):
-        cursor = self.db_client.cursor(dictionary=True)
+        cursor = self.db_client.cursor()
         date = self.pbp_handle.get_time()
         cursor.execute(
             "INSERT INTO `blacklist`(`url`, `date`) VALUES (%s, %s)",

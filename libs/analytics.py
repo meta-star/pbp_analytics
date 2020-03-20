@@ -60,14 +60,21 @@ class Analytics:
             }
         elif data.get("url") and validators.url(data.get("url")):
             url = url_normalize(data.get("url"))
-            if self.data_control.check_blacklist(url) or \
-                    self.safe_browsing.lookup([url]):
+
+            score = 1
+
+            if self.data_control.check_blacklist(url):
                 score = 0
-            else:
-                if self.target_analytics.action(url) > 0.5:
-                    score = self.origin_analytics.action(url)
-                else:
-                    score = 1
+
+            elif self.safe_browsing.lookup([url]):
+                score = 0
+
+            elif self.target_analytics.action(url) > 0.5:
+                score = self.origin_analytics.action(url)
+
+            if score < 0.5:
+                self.data_control.mark_as_blacklist(url)
+
             return {
                 "status": 200,
                 "trust-score": score
@@ -75,3 +82,6 @@ class Analytics:
         return {
             "status": 401
         }
+
+    def gen_sample(self):
+        pass

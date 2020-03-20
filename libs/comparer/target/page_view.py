@@ -73,7 +73,6 @@ class WebCapture:
 
     def __init__(self, config):
         self.cache_path = config["cache_path"]
-        self.compare_path = config["compare_path"]
 
         self.browser = self.__set_browser_simulation(
             config["capture_type"]
@@ -81,8 +80,6 @@ class WebCapture:
 
         if not os.path.exists(self.cache_path):
             os.mkdir(self.cache_path)
-        if not os.path.exists(self.compare_path):
-            os.mkdir(self.compare_path)
 
     @staticmethod
     def __set_browser_simulation(type_id):
