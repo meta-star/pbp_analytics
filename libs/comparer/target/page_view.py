@@ -89,8 +89,8 @@ class WebCapture:
         :return: class object
         """
         return {
-            1: BrowserRender,
-            2: BrowserAgent
+            '1': BrowserRender,
+            '2': BrowserAgent
         }[type_id]
 
     def get_page_image(self, target_url, output_image='out.png'):
