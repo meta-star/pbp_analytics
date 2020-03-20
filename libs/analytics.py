@@ -70,10 +70,10 @@ class Analytics:
                 score = 0
                 self.data_control.mark_as_blacklist(url)
 
-            elif self.target_analytics.action(url) > 0.5:
-                if self.origin_analytics.action(url) < 0.5:
-                    self.data_control.mark_as_blacklist(url)
-                    score = 0
+            # elif self.target_analytics.action(url) > 0.5:
+            #    if self.origin_analytics.action(url) < 0.5:
+            #        self.data_control.mark_as_blacklist(url)
+            #        score = 0
 
             return {
                 "status": 200,
