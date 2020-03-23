@@ -64,6 +64,9 @@ class Analytics:
             score = 1
 
             if self.data_control.check_blacklist(url):
+                pass
+
+            elif self.data_control.check_blacklist(url):
                 score = 0
 
             elif self.safe_browsing.lookup([url]):

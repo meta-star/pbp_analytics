@@ -23,10 +23,21 @@ class Data:
 
         self.pbp_handle = pbp_handle
 
+    def check_trustlist(self, url):
+        cursor = self.db_client.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT `url` FROM `trustlist` WHERE `url` = %s",
+            (url,)
+        )
+        result = cursor.fetchall()
+        self.db_client.commit()
+        cursor.close()
+        return result
+
     def check_blacklist(self, url):
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
-            "SELECT `url`, `date` FROM blacklist WHERE url = %s",
+            "SELECT `url`, `date` FROM `blacklist` WHERE `url` = %s",
             (url,)
         )
         result = cursor.fetchall()
@@ -45,10 +56,10 @@ class Data:
         cursor.close()
         return True
 
-    def find_page_view_signature(self, sign):
+    def find_page_by_view_signature(self, sign):
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
-            "SELECT `url, date, data` FROM view_signatures WHERE signature = %s",
+            "SELECT `url` FROM `trustlist` WHERE `view_signature` = %s",
             (sign,)
         )
         result = cursor.fetchall()
