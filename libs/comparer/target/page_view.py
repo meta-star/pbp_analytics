@@ -1,5 +1,7 @@
-from .page_view_tools import WebCapture
 from hashlib import sha256
+
+from .page_view_tools import WebCapture
+from ...thread_control import ThreadControl
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -16,15 +18,29 @@ class ViewSample:
         self.data_control = pbp_handle.data_control
 
     def _capture(self, url):
-        layout_path = self.handle.get_page_image(url)
+        url_hash = sha256(url.encode("utf-8"))
+        layout_path = self.handle.get_page_image(
+            url,
+            "{}.png".format(
+                url_hash.hexdigest()
+            )
+        )
         image_num_array = self.handle.image_object(layout_path)
         hash_object = sha256(image_num_array)
         return hash_object.hexdigest()
 
     def generate(self):
+        thread_control = ThreadControl()
         for url in self.data_control.get_urls_from_trustlist():
-            hash_sign = self._capture(url)
-            self.data_control.upload_view_sample(url, hash_sign)
+            thread_control.add(
+                lambda target_url: (
+                    self.data_control.upload_view_sample(
+                        target_url,
+                        self._capture(target_url)
+                    )
+                ),
+                (url,)
+            )
 
 
 class View:
