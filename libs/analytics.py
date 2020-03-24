@@ -6,8 +6,7 @@ import validators
 from url_normalize import url_normalize
 
 from .callback import HttpServer
-from .comparer.origin import OriginAnalytics
-from .comparer.target import TargetAnalytics
+from .comparer import Origin, Target
 from .data import Data
 from .safebrowsing import GoogleSafeBrowsing
 
@@ -31,8 +30,8 @@ class Analytics:
         self.safe_browsing = GoogleSafeBrowsing(
             self.cfg["Google Safe Browsing"]["google_api_key"]
         )
-        self.target_analytics = TargetAnalytics(self)
-        self.origin_analytics = OriginAnalytics(self)
+        self.target_handle = Target(self)
+        self.origin_handle = Origin(self)
 
     @staticmethod
     def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
@@ -73,10 +72,10 @@ class Analytics:
                 score = 0
                 self.data_control.mark_as_blacklist(url)
 
-            # elif self.target_analytics.action(url) > 0.5:
-            #    if self.origin_analytics.action(url) < 0.5:
-            #        self.data_control.mark_as_blacklist(url)
-            #        score = 0
+            elif self.target_handle.analytics_action(url) > 0.5:
+                if self.origin_handle.action(url) < 0.5:
+                    self.data_control.mark_as_blacklist(url)
+                    score = 0
 
             return {
                 "status": 200,

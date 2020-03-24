@@ -10,7 +10,7 @@ from ...thread_control import ThreadControl
 """
 
 
-class OriginAnalytics:
+class Origin:
     def __init__(self, pbp_handle):
         self.pbp_handle = pbp_handle
         self.tasks = [

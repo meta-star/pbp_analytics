@@ -1,4 +1,4 @@
-from .page_view import WebCapture
+from .page_view import View, ViewSample
 from ...thread_control import ThreadControl
 
 """
@@ -10,20 +10,23 @@ from ...thread_control import ThreadControl
 """
 
 
-class TargetAnalytics:
+class Target:
     def __init__(self, pbp_handle):
-        self.pbp_handle = pbp_handle
-        self.tasks = [
-            WebCapture(pbp_handle.cfg["WebCapture"])
+        self.analytics_tasks = [
+            View()
+        ]
+
+        self.generate_tasks = [
+            ViewSample(pbp_handle)
         ]
 
     @staticmethod
     def _get_result():
         return 1
 
-    def action(self, url):
+    def analytics_action(self, url):
         thread_control = ThreadControl()
-        for task in self.tasks:
+        for task in self.analytics_tasks:
             thread_control.add(
                 task.analytics,
                 (url,)
