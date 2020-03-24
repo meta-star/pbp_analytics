@@ -1,8 +1,8 @@
 import os
-import subprocess
 
 import cv2
 import skimage.measure as measure
+from selenium import webdriver
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -32,23 +32,19 @@ class BrowserAgent:
     The class will allow you to use your browser as the agent to take a screenshot form it.
     """
 
+    driver = None
+
     def __init__(self, config):
         using = config.get("capture_browser")
         if using == "firefox":
-            self.exec_path = "/usr/bin/firefox"
-            self.capture_args = "--screenshot {path} {url} --window-size={size}"
+            options = webdriver.FirefoxOptions()
+            options.add_argument('--headless')
+            self.driver = webdriver.Firefox(firefox_options=options)
         elif using == "chrome":
-            self.exec_path = "/usr/bin/google-chrome"
-            self.capture_args = "--headless --screenshot={path} {url} --window-size={size} --hide-scrollbars"
-        elif using == "chromium":
-            self.exec_path = "/usr/bin/chromium-browser"
-            self.capture_args = "--headless --screenshot={path} {url} --window-size={size}"
-        else:
-            browser_exec_path = config.get("exec_path")
-            browser_capture_args = config.get("capture_args")
-            assert using is None and browser_exec_path and browser_capture_args, "BrowserAgent Configure Error"
-            self.exec_path = config.get("exec_path")
-            self.capture_args = config.get("capture_args")
+            options = webdriver.ChromeOptions()
+            options.add_argument('--headless')
+            options.add_argument('--disable-gpu')
+            self.driver = webdriver.Chrome(chrome_options=options)
 
     def set_path(self, path):
         """
@@ -63,8 +59,11 @@ class BrowserAgent:
             return False
 
     def capture(self, url, path, size="1920,1080"):
-        capture_args = self.capture_args.format(**{"url": url, "path": path, "size": size})
-        return subprocess.run([self.exec_path, capture_args], shell=True, check=True)
+        (width, height) = size.split(",")
+        self.driver.set_window_size(width, height)
+        self.driver.get(url)
+        self.driver.save_screenshot(path)
+        self.driver.close()
 
 
 # Capture
