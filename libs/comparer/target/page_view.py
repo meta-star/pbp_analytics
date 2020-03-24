@@ -24,7 +24,7 @@ class ViewSample:
     def generate(self):
         for url in self.data_control.get_urls_from_trustlist():
             hash_sign = self._capture(url)
-            self.data_control.upload_view__sample(url, hash_sign)
+            self.data_control.upload_view_sample(url, hash_sign)
 
 
 class View:

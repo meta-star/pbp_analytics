@@ -18,7 +18,7 @@ from selenium import webdriver
 class BrowserRender:
     """
     The main solution
-    To render web page from QT Webkit with python-webkit2png.
+    To render web page from QTWebEngine with blink2png.
     But we plan using Gecko/Servo to replace someday.
     """
 
@@ -29,6 +29,7 @@ class BrowserRender:
 class BrowserAgent:
     """
     As a backup solution
+    To capture web page via Selenium with webdriver.
     The class will allow you to use your browser as the agent to take a screenshot form it.
     """
 
@@ -46,23 +47,13 @@ class BrowserAgent:
             options.add_argument('--disable-gpu')
             self.driver = webdriver.Chrome(chrome_options=options)
 
-    def set_path(self, path):
-        """
-        To setup your browser path in your computer.
-        :param path: Your browser path.
-        :return: bool
-        """
-        if os.path.exists(path):
-            self.exec_path = path
-            return True
-        else:
-            return False
-
     def capture(self, url, path, size="1920,1080"):
         (width, height) = size.split(",")
         self.driver.set_window_size(width, height)
         self.driver.get(url)
         self.driver.save_screenshot(path)
+
+    def close(self):
         self.driver.close()
 
 
@@ -102,7 +93,7 @@ class WebCapture:
         :param output_image: Output path (optional)
         :return: bool
         """
-        layout_path = self.cache_path + output_image
+        layout_path = os.path.join(self.cache_path, output_image)
         if os.path.isfile(layout_path):
             os.remove(layout_path)
         self.browser.capture(target_url, layout_path)
