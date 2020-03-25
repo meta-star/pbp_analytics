@@ -77,6 +77,17 @@ class Data:
         return [record[0] for record in result]
 
     @mysql_checker
+    def get_view_narray_from_trustlist(self):
+        cursor = self.db_client.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT `url`, `target_view_narray` FROM `trustlist`"
+        )
+        result = cursor.fetchall()
+        self.db_client.commit()
+        cursor.close()
+        return result
+
+    @mysql_checker
     def find_page_by_view_signature(self, sign):
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(

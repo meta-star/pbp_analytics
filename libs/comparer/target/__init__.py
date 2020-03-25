@@ -13,7 +13,7 @@ from ...thread_control import ThreadControl
 class Target:
     def __init__(self, pbp_handle):
         self.analytics_tasks = [
-            View()
+            View(pbp_handle)
         ]
 
         self.generate_tasks = [

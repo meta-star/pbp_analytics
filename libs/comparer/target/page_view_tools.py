@@ -1,6 +1,7 @@
 import os
 
 import cv2
+import numpy
 import skimage.measure as measure
 from selenium import webdriver
 
@@ -107,6 +108,15 @@ class WebCapture:
         :return: Image object
         """
         return cv2.imread(path, 0)
+
+    @staticmethod
+    def image_object_from_string(string):
+        """
+        Create NumPy Array by string
+        :param path: The Image Path
+        :return: Image object
+        """
+        return numpy.loads(string)
 
     @staticmethod
     def image_compare(img1, img2):

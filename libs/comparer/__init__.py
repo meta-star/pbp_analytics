@@ -1,5 +1,6 @@
 from .origin import Origin
 from .target import Target
+
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
 
