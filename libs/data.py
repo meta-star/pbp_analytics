@@ -10,9 +10,9 @@ import mysql.connector as sql_client
 
 
 def mysql_checker(function):
-    def wrapper(*args):
+    def wrapper(*args, **kwargs):
         try:
-            result = function(*args)
+            result = function(*args, **kwargs)
             args[0].db_error_checkpoint = 0
             return result
         except sql_client.errors.OperationalError:
@@ -89,17 +89,17 @@ class Data:
         return result
 
     @mysql_checker
-    def upload_view_sample(self, url, view_signature):
+    def upload_view_sample(self, url, view_signature, view_data):
         cursor = self.db_client.cursor()
         if self.check_trustlist(url):
             cursor.execute(
-                "UPDATE `trustlist` SET `target_view_signature`=%s WHERE `url`=%s",
-                (view_signature, url)
+                "UPDATE `trustlist` SET `target_view_signature`=%s, `target_view_narray`=%s WHERE `url`=%s",
+                (view_signature, view_data, url)
             )
         else:
             cursor.execute(
-                "INSERT INTO `trustlist`(`url`, `target_view_signature`) VALUES (%s, %s)",
-                (url, view_signature)
+                "INSERT INTO `trustlist`(`url`, `target_view_signature`, `target_view_narray`=%s) VALUES (%s, %s, %s)",
+                (url, view_signature, view_data)
             )
         self.db_client.commit()
         cursor.close()

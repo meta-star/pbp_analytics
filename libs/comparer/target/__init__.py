@@ -24,7 +24,7 @@ class Target:
     def _get_result():
         return 1
 
-    def generate_action(self, url):
+    def generate_action(self):
         thread_control = ThreadControl()
         for task in self.generate_tasks:
             thread_control.add(

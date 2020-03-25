@@ -1,5 +1,6 @@
 from hashlib import sha256
-
+import base64
+from threading import Thread
 from .page_view_tools import WebCapture
 
 """
@@ -16,24 +17,32 @@ class ViewSample:
         self.handle = WebCapture(pbp_handle.cfg["WebCapture"])
         self.data_control = pbp_handle.data_control
 
-    def _capture(self, url):
-        url_hash = sha256(url.encode("utf-8"))
+    def _capture(self, target_url):
+        url_hash = sha256(target_url.encode("utf-8"))
         layout_path = self.handle.get_page_image(
-            url,
-            "{}.png".format(
+            target_url=target_url,
+            output_image="{}.png".format(
                 url_hash.hexdigest()
             )
         )
         image_num_array = self.handle.image_object(layout_path)
+        b64_num_array = base64.b64encode(image_num_array)
         hash_object = sha256(image_num_array)
-        return hash_object.hexdigest()
+        return hash_object.hexdigest(), b64_num_array
 
     def generate(self):
-        for url in self.data_control.get_urls_from_trustlist():
-            self.data_control.upload_view_sample(
-                url=url,
-                view_signature=self._capture(url)
+        for target_url in self.data_control.get_urls_from_trustlist():
+            (view_signature, view_data) = self._capture(target_url)
+            thread = Thread(
+                target=self.data_control.upload_view_sample,
+                args=(
+                    target_url,
+                    view_signature,
+                    view_data,
+                )
             )
+            thread.start()
+            thread.join()
 
 
 class View:
