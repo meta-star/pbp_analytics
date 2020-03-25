@@ -12,15 +12,15 @@ from .page_view_tools import WebCapture
 """
 
 
-class ViewSample:
+class View:
     def __init__(self, pbp_handle):
         self.handle = WebCapture(pbp_handle.cfg["WebCapture"])
         self.data_control = pbp_handle.data_control
 
-    def _capture(self, origin_url):
-        url_hash = sha256(origin_url.encode("utf-8"))
+    def _capture(self, url):
+        url_hash = sha256(url.encode("utf-8"))
         layout_path = self.handle.get_page_image(
-            target_url=origin_url,
+            target_url=url,
             output_image="{}.png".format(
                 url_hash.hexdigest()
             )
@@ -29,6 +29,29 @@ class ViewSample:
         dump_num_array = image_num_array.dumps()
         hash_object = sha256(image_num_array)
         return hash_object.hexdigest(), dump_num_array
+
+    def _signature(self, hex_digest):
+        return self.data_control.find_page_by_view_signature(hex_digest)
+
+    def _render(self, target_num_array):
+        trust_samples = self.data_control.get_view_narray_from_trustlist()
+        for sample in trust_samples:
+            origin_sample = self.handle.image_object_from_string(
+                sample["target_view_narray"].encode("utf-8")
+            )
+            yield sample["url"], self.handle.image_compare(
+                target_num_array,
+                origin_sample
+            )
+
+    def analytics(self, target_url):
+        (view_signature, view_data) = self._capture(target_url)
+        signature_query = self._signature(view_signature)
+        if signature_query:
+            return [signature_query]
+
+        query = {url: score for url, score in self._render(view_data)}
+        return [url for url in query if query[url] == max(query.values())]
 
     def generate(self):
         for origin_url in self.data_control.get_urls_from_trustlist():
@@ -43,26 +66,3 @@ class ViewSample:
             )
             thread.start()
             thread.join()
-
-
-class View:
-    def __init__(self, pbp_handle):
-        self.handle = WebCapture(pbp_handle.cfg["WebCapture"])
-        self.data_control = pbp_handle.data_control
-
-    def _signature(self, hex_digest):
-        return self.data_control.find_page_by_view_signature(hex_digest)
-
-    def _render(self, target_num_array):
-        trust_samples = self.data_control.get_view_narray_from_trustlist()
-        for sample in trust_samples:
-            origin_sample = self.handle.image_object_from_string(
-                sample["target_view_narray"]
-            )
-            return self.handle.image_compare(
-                target_num_array,
-                origin_sample
-            )
-
-    def analytics(self, url):
-        pass

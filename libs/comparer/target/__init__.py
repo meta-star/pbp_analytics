@@ -1,4 +1,4 @@
-from .page_view import View, ViewSample
+from .page_view import View
 from ...thread_control import ThreadControl
 
 """
@@ -12,12 +12,8 @@ from ...thread_control import ThreadControl
 
 class Target:
     def __init__(self, pbp_handle):
-        self.analytics_tasks = [
+        self.tasks = [
             View(pbp_handle)
-        ]
-
-        self.generate_tasks = [
-            ViewSample(pbp_handle)
         ]
 
     @staticmethod
@@ -26,7 +22,7 @@ class Target:
 
     def generate_action(self):
         thread_control = ThreadControl()
-        for task in self.generate_tasks:
+        for task in self.tasks:
             thread_control.add(
                 task.generate,
                 ()
@@ -37,7 +33,7 @@ class Target:
 
     def analytics_action(self, url):
         thread_control = ThreadControl()
-        for task in self.analytics_tasks:
+        for task in self.tasks:
             thread_control.add(
                 task.analytics,
                 (url,)

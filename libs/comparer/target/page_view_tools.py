@@ -1,7 +1,7 @@
 import os
 
 import cv2
-import numpy
+import pickle
 import skimage.measure as measure
 from selenium import webdriver
 
@@ -116,7 +116,7 @@ class WebCapture:
         :param path: The Image Path
         :return: Image object
         """
-        return numpy.loads(string)
+        return pickle.loads(string)
 
     @staticmethod
     def image_compare(img1, img2):
