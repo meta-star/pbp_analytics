@@ -1,3 +1,5 @@
+import base64
+
 from hashlib import sha256
 from threading import Thread
 
@@ -26,9 +28,8 @@ class View:
             )
         )
         image_num_array = self.handle.image_object(layout_path)
-        dump_num_array = image_num_array.dumps()
         hash_object = sha256(image_num_array)
-        return hash_object.hexdigest(), dump_num_array
+        return hash_object.hexdigest(), image_num_array
 
     def _signature(self, hex_digest):
         query = self.data_control.find_page_by_view_signature(hex_digest)
@@ -38,7 +39,7 @@ class View:
     def _render(self, target_num_array):
         trust_samples = self.data_control.get_view_narray_from_trustlist()
         for sample in trust_samples:
-            origin_sample = self.handle.image_object_from_string(
+            origin_sample = self.handle.image_object_from_b64(
                 sample["target_view_narray"].encode("utf-8")
             )
             yield sample["url"], self.handle.image_compare(
@@ -57,14 +58,21 @@ class View:
         return [url for url in query if query[url] > 0.5 and query[url] == max(query.values())]
 
     def generate(self):
-        for origin_url in self.data_control.get_urls_from_trustlist():
+        def _upload(data_control, capture, origin_url):
             (view_signature, view_data) = self._capture(origin_url)
+            b64_view_data = base64.b64encode(view_data.dumps())
+            self.data_control.upload_view_sample(
+                origin_url,
+                view_signature,
+                b64_view_data,
+            )
+        for origin_url in self.data_control.get_urls_from_trustlist():
             thread = Thread(
-                target=self.data_control.upload_view_sample,
+                target=_upload,
                 args=(
+                    self.data_control,
+                    self._capture,
                     origin_url,
-                    view_signature,
-                    view_data,
                 )
             )
             thread.start()

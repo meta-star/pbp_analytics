@@ -1,8 +1,8 @@
 import os
-
-import cv2
+import base64
 import pickle
-import skimage.measure as measure
+import cv2
+from skimage.metrics import structural_similarity
 from selenium import webdriver
 
 """
@@ -105,17 +105,18 @@ class WebCapture:
         """
         Create NumPy Array by OpenCV
         :param path: The Image Path
-        :return: Image object
+        :return: NumPy Array
         """
         return cv2.imread(path, 0)
 
     @staticmethod
-    def image_object_from_string(string):
+    def image_object_from_b64(b64_string):
         """
-        Create NumPy Array by string
-        :param path: The Image Path
-        :return: Image object
+        Import NumPy Array by base64
+        :param b64_string: base64 NumPy Array dumped
+        :return: NumPy Array
         """
+        string = base64.b64decode(b64_string)
         return pickle.loads(string)
 
     @staticmethod
@@ -126,4 +127,4 @@ class WebCapture:
         :param img2: Image object
         :return: float of the similar lever
         """
-        return measure.compare_ssim(img1, img2, multichannel=True)
+        return structural_similarity(img1, img2, multichannel=True)
