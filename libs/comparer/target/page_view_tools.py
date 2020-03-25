@@ -2,7 +2,7 @@ import os
 
 import cv2
 import skimage.measure as measure
-from arsenic import browsers, services, get_session
+from selenium import webdriver
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -32,28 +32,29 @@ class BrowserAgent:
     To capture web page via Selenium with webdriver.
     The class will allow you to use your browser as the agent to take a screenshot form it.
     """
+
+    driver = None
+
     def __init__(self, config):
-        self.browser = config.get("capture_browser")
+        using = config.get("capture_browser")
+        if using == "firefox":
+            options = webdriver.FirefoxOptions()
+            options.add_argument('--headless')
+            self.driver = webdriver.Firefox(firefox_options=options)
+        elif using == "chrome":
+            options = webdriver.ChromeOptions()
+            options.add_argument('--headless')
+            options.add_argument('--disable-gpu')
+            self.driver = webdriver.Chrome(chrome_options=options)
 
-    def _get_browser(self):
-        if self.browser == "firefox":
-            service = services.Geckodriver()
-            browser = browsers.Firefox(firefoxOptions={
-                'args': ['-headless']
-            })
-        elif self.browser == "chrome":
-            service = services.Chromedriver()
-            browser = browsers.Chrome(chromeOptions={
-                'args': ['--headless', '--disable-gpu']
-            })
-        return (service, browser)
+    def capture(self, url, path, size="1920,1080"):
+        (width, height) = size.split(",")
+        self.driver.set_window_size(width, height)
+        self.driver.get(url)
+        self.driver.save_screenshot(path)
 
-    async def capture(self, url, path, size="1920,1080"):
-        async with get_session(*self._get_browser()) as driver:
-            (width, height) = size.split(",")
-            driver.set_window_size(width, height)
-            driver.get(url)
-            await driver.save_screenshot(path)
+    def close(self):
+        self.driver.close()
 
 
 # Capture

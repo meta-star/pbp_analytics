@@ -1,4 +1,4 @@
-arsenic
+selenium
 url_normalize
 validators
 opencv-python
