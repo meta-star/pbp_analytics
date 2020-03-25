@@ -31,7 +31,9 @@ class View:
         return hash_object.hexdigest(), dump_num_array
 
     def _signature(self, hex_digest):
-        return self.data_control.find_page_by_view_signature(hex_digest)
+        query = self.data_control.find_page_by_view_signature(hex_digest)
+        if query:
+            return query[0]
 
     def _render(self, target_num_array):
         trust_samples = self.data_control.get_view_narray_from_trustlist()
@@ -46,12 +48,13 @@ class View:
 
     def analytics(self, target_url):
         (view_signature, view_data) = self._capture(target_url)
+
         signature_query = self._signature(view_signature)
         if signature_query:
-            return [signature_query]
+            return list(signature_query)
 
         query = {url: score for url, score in self._render(view_data)}
-        return [url for url in query if query[url] == max(query.values())]
+        return [url for url in query if query[url] > 0.5 and query[url] == max(query.values())]
 
     def generate(self):
         for origin_url in self.data_control.get_urls_from_trustlist():

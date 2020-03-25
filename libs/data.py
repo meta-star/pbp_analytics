@@ -89,7 +89,7 @@ class Data:
 
     @mysql_checker
     def find_page_by_view_signature(self, sign):
-        cursor = self.db_client.cursor(dictionary=True)
+        cursor = self.db_client.cursor()
         cursor.execute(
             "SELECT `url` FROM `trustlist` WHERE `target_view_signature` = %s",
             (sign,)
