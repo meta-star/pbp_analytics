@@ -1,7 +1,6 @@
 from hashlib import sha256
 
 from .page_view_tools import WebCapture
-from ...thread_control import ThreadControl
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -30,16 +29,10 @@ class ViewSample:
         return hash_object.hexdigest()
 
     def generate(self):
-        thread_control = ThreadControl()
         for url in self.data_control.get_urls_from_trustlist():
-            thread_control.add(
-                lambda target_url: (
-                    self.data_control.upload_view_sample(
-                        target_url,
-                        self._capture(target_url)
-                    )
-                ),
-                (url,)
+            self.data_control.upload_view_sample(
+                url=url,
+                view_signature=self._capture(url)
             )
 
 

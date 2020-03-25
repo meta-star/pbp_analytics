@@ -24,6 +24,17 @@ class Target:
     def _get_result():
         return 1
 
+    def generate_action(self, url):
+        thread_control = ThreadControl()
+        for task in self.generate_tasks:
+            thread_control.add(
+                task.generate,
+                ()
+            )
+        while len(thread_control.multiprocess_list):
+            pass
+        return self._get_result()
+
     def analytics_action(self, url):
         thread_control = ThreadControl()
         for task in self.analytics_tasks:
