@@ -46,7 +46,7 @@ class View:
         if query:
             return query[0]
 
-    def _render(self, target_num_array):
+    async def _render(self, target_num_array):
         """
 
         :param target_num_array:
@@ -62,7 +62,7 @@ class View:
                 origin_sample
             )
 
-    def analytics(self, target_url):
+    async def analytics(self, target_url):
         """
 
         :param target_url:
@@ -74,7 +74,9 @@ class View:
         if signature_query:
             return list(signature_query)
 
-        query = {url: score for url, score in self._render(view_data)}
+        query = {}
+        async for url, score in self._render(view_data):
+            query[url] = score
 
         query_list = []
         for url in query:
