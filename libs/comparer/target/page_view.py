@@ -4,6 +4,7 @@ from hashlib import sha256
 from threading import Thread, Lock
 
 from .page_view_tools import WebCapture
+from queue import Queue
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -46,23 +47,41 @@ class View:
         if query:
             return query[0]
 
-    async def _render(self, target_num_array):
+    def _render(self, target_num_array):
         """
 
         :param target_num_array:
         :return:
         """
-        trust_samples = self.data_control.get_view_narray_from_trustlist()
-        for sample in trust_samples:
+        q = Queue()
+        thread = None
+
+        def _compare(sample):
             origin_sample = self.handle.image_object_from_b64(
                 sample["target_view_narray"].encode("utf-8")
             )
-            yield sample["url"], self.handle.image_compare(
+            q.put([sample["url"], self.handle.image_compare(
                 target_num_array,
                 origin_sample
-            )
+            )])
 
-    async def analytics(self, target_url):
+        trust_samples = self.data_control.get_view_narray_from_trustlist()
+        for record in trust_samples:
+            thread = Thread(
+                target=_compare,
+                args=(
+                    record,
+                )
+            )
+            thread.start()
+
+        if thread:
+            thread.join()
+
+        for _ in trust_samples:
+            yield q.get()
+
+    def analytics(self, target_url):
         """
 
         :param target_url:
@@ -72,19 +91,15 @@ class View:
 
         signature_query = self._signature(view_signature)
         if signature_query:
-            return list(signature_query)
+            yield signature_query
 
         query = {}
-        async for url, score in self._render(view_data):
+        for url, score in self._render(view_data):
             query[url] = score
 
-        query_list = []
         for url in query:
-            print(url, query[url])
             if query[url] > 0.8 and query[url] == max(query.values()):
-                query_list.append(url)
-
-        return query_list
+                yield url
 
     def generate(self):
         """
