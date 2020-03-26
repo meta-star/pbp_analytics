@@ -91,14 +91,14 @@ class View:
 
         signature_query = self._signature(view_signature)
         if signature_query:
-            yield signature_query
+            return list(signature_query)
 
         query = {}
         for url, score in self._render(view_data):
             query[url] = score
 
         for url in query:
-            if query[url] > 0.8 and query[url] == max(query.values()):
+            if query[url] > 0.95 and query[url] == max(query.values()):
                 yield url
 
     def generate(self):
