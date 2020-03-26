@@ -11,14 +11,19 @@ from .page_view import View
 
 class Target:
     def __init__(self, pbp_handle):
-        self.tasks = [
-            View(pbp_handle)
-        ]
+        self.view_handle = View(pbp_handle)
 
     def generate(self):
-        for task in self.tasks:
-            task.generate()
+        """
+
+        :return:
+        """
+        self.view_handle.generate()
 
     def analytics(self, url):
-        for task in self.tasks:
-            yield task.analytics(url)
+        """
+
+        :param url:
+        :return:
+        """
+        return self.view_handle.analytics(url)

@@ -1,9 +1,10 @@
-import os
 import base64
+import os
 import pickle
+
 import cv2
-from skimage.metrics import structural_similarity
 from selenium import webdriver
+from skimage.metrics import structural_similarity
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -41,10 +42,12 @@ class BrowserAgent:
         if using == "firefox":
             options = webdriver.FirefoxOptions()
             options.add_argument('--headless')
+            options.add_argument('--private-window')
             self.driver = webdriver.Firefox(firefox_options=options)
         elif using == "chrome":
             options = webdriver.ChromeOptions()
             options.add_argument('--headless')
+            options.add_argument('--incognito')
             options.add_argument('--disable-gpu')
             self.driver = webdriver.Chrome(chrome_options=options)
 
@@ -103,7 +106,7 @@ class WebCapture:
     @staticmethod
     def image_object(path):
         """
-        Create NumPy Array by OpenCV
+        Create NumPy Array
         :param path: The Image Path
         :return: NumPy Array
         """

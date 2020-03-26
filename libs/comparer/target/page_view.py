@@ -20,6 +20,11 @@ class View:
         self.data_control = pbp_handle.data_control
 
     def _capture(self, url):
+        """
+
+        :param url:
+        :return:
+        """
         url_hash = sha256(url.encode("utf-8"))
         layout_path = self.handle.get_page_image(
             target_url=url,
@@ -32,11 +37,21 @@ class View:
         return hash_object.hexdigest(), image_num_array
 
     def _signature(self, hex_digest):
+        """
+
+        :param hex_digest:
+        :return:
+        """
         query = self.data_control.find_page_by_view_signature(hex_digest)
         if query:
             return query[0]
 
     def _render(self, target_num_array):
+        """
+
+        :param target_num_array:
+        :return:
+        """
         trust_samples = self.data_control.get_view_narray_from_trustlist()
         for sample in trust_samples:
             origin_sample = self.handle.image_object_from_b64(
@@ -48,6 +63,11 @@ class View:
             )
 
     def analytics(self, target_url):
+        """
+
+        :param target_url:
+        :return:
+        """
         (view_signature, view_data) = self._capture(target_url)
 
         signature_query = self._signature(view_signature)
@@ -65,6 +85,10 @@ class View:
         return query_list
 
     def generate(self):
+        """
+
+        :return:
+        """
         thread = None
         lock = Lock()
 

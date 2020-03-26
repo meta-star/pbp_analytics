@@ -88,11 +88,11 @@ class Data:
         return result
 
     @mysql_checker
-    def find_page_by_view_signature(self, sign):
+    def find_page_by_view_signature(self, signature):
         cursor = self.db_client.cursor()
         cursor.execute(
             "SELECT `url` FROM `trustlist` WHERE `target_view_signature` = %s",
-            (sign,)
+            (signature,)
         )
         result = cursor.fetchall()
         self.db_client.commit()
