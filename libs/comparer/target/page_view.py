@@ -55,7 +55,7 @@ class View:
             return list(signature_query)
 
         query = {url: score for url, score in self._render(view_data)}
-        return [url for url in query if query[url] > 0.5 and query[url] == max(query.values())]
+        return [url for url in query if query[url] > 0.8 and query[url] == max(query.values())]
 
     def generate(self):
         def _upload(data_control, capture, origin_url):
@@ -76,4 +76,4 @@ class View:
                 )
             )
             thread.start()
-            thread.join()
+        thread.join()
