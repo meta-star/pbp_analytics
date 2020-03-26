@@ -55,7 +55,14 @@ class View:
             return list(signature_query)
 
         query = {url: score for url, score in self._render(view_data)}
-        return [url for url in query if query[url] > 0.8 and query[url] == max(query.values())]
+
+        query_list = []
+        for url in query:
+            print(url, query[url])
+            if query[url] > 0.8 and query[url] == max(query.values()):
+                query_list.append(url)
+
+        return query_list
 
     def generate(self):
         thread = None
