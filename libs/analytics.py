@@ -62,7 +62,7 @@ class Analytics:
 
             score = 1
 
-            if self.data_control.check_blacklist(url):
+            if self.data_control.check_trustlist(url):
                 pass
 
             elif self.data_control.check_blacklist(url):
@@ -72,7 +72,7 @@ class Analytics:
                 score = 0
                 self.data_control.mark_as_blacklist(url)
 
-            elif self.target_handle.analytics(url) > 0.5:
+            elif self.target_handle.analytics(url):
                 if self.origin_handle.action(url) < 0.5:
                     self.data_control.mark_as_blacklist(url)
                     score = 0
