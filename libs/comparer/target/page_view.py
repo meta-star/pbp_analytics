@@ -1,7 +1,7 @@
 import base64
 
 from hashlib import sha256
-from threading import Thread
+from threading import Thread, Lock
 
 from .page_view_tools import WebCapture
 
@@ -58,22 +58,28 @@ class View:
         return [url for url in query if query[url] > 0.8 and query[url] == max(query.values())]
 
     def generate(self):
-        def _upload(data_control, capture, origin_url):
-            (view_signature, view_data) = self._capture(origin_url)
+        thread = None
+        lock = Lock()
+
+        def _upload(url):
+            lock.acquire()
+            (view_signature, view_data) = self._capture(url)
             b64_view_data = base64.b64encode(view_data.dumps())
             self.data_control.upload_view_sample(
-                origin_url,
+                url,
                 view_signature,
                 b64_view_data,
             )
+            lock.release()
+
         for origin_url in self.data_control.get_urls_from_trustlist():
             thread = Thread(
                 target=_upload,
                 args=(
-                    self.data_control,
-                    self._capture,
                     origin_url,
                 )
             )
             thread.start()
-        thread.join()
+
+        if thread:
+            thread.join()

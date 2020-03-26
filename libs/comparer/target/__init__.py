@@ -1,5 +1,4 @@
 from .page_view import View
-from ...thread_control import ThreadControl
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -16,28 +15,10 @@ class Target:
             View(pbp_handle)
         ]
 
-    @staticmethod
-    def _get_result():
-        return 1
-
-    def generate_action(self):
-        thread_control = ThreadControl()
+    def generate(self):
         for task in self.tasks:
-            thread_control.add(
-                task.generate,
-                ()
-            )
-        while len(thread_control.multiprocess_list):
-            pass
-        return self._get_result()
+            task.generate()
 
-    def analytics_action(self, url):
-        thread_control = ThreadControl()
+    def analytics(self, url):
         for task in self.tasks:
-            thread_control.add(
-                task.analytics,
-                (url,)
-            )
-        while len(thread_control.multiprocess_list):
-            pass
-        return self._get_result()
+            yield task.analytics(url)

@@ -1,5 +1,4 @@
 from .domain_resolve import DomainResolve
-from ...thread_control import ThreadControl
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -22,12 +21,4 @@ class Origin:
         return 1
 
     def action(self, url):
-        thread_control = ThreadControl()
-        for task in self.tasks:
-            thread_control.add(
-                task.analytics,
-                (url,)
-            )
-        while len(thread_control.multiprocess_list):
-            pass
         return self._get_result()
