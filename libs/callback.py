@@ -13,9 +13,7 @@ from tornado.web import Application, RequestHandler
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-
-def analytics_func(data):
-    return {"status": -1, "reply": data}
+response_handle = ()
 
 
 class IndexHandler(RequestHandler, ABC):
@@ -31,7 +29,10 @@ class IndexHandler(RequestHandler, ABC):
         req_str = req_body.decode('utf8')
         req_res = json.loads(req_str)
         if req_res.get("version") is not None:
-            result = analytics_func(req_res)
+            result = {"status": 500}
+            if response_handle:
+                for handle in response_handle:
+                    result = handle(req_res)
         else:
             result = {"status": 400}
         self.write(json.dumps(result))
@@ -39,8 +40,8 @@ class IndexHandler(RequestHandler, ABC):
 
 class HttpServer:
     def __init__(self, pbp_handle):
-        global analytics_func
-        analytics_func = pbp_handle.analytics
+        global response_handle
+        response_handle = (pbp_handle.server_response,)
         pbp_handle.get_time()
 
     @staticmethod

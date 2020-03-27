@@ -43,6 +43,11 @@ class Data:
 
     @mysql_checker
     def check_trustlist(self, url):
+        """
+
+        :param url:
+        :return:
+        """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
             "SELECT `url` FROM `trustlist` WHERE `url` = %s",
@@ -55,6 +60,11 @@ class Data:
 
     @mysql_checker
     def check_blacklist(self, url):
+        """
+
+        :param url:
+        :return:
+        """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
             "SELECT `url`, `date` FROM `blacklist` WHERE `url` = %s",
@@ -67,6 +77,10 @@ class Data:
 
     @mysql_checker
     def get_urls_from_trustlist(self):
+        """
+
+        :return:
+        """
         cursor = self.db_client.cursor()
         cursor.execute(
             "SELECT `url` FROM `trustlist`"
@@ -78,6 +92,10 @@ class Data:
 
     @mysql_checker
     def get_view_narray_from_trustlist(self):
+        """
+
+        :return:
+        """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
             "SELECT `url`, `target_view_narray` FROM `trustlist`"
@@ -88,7 +106,29 @@ class Data:
         return result
 
     @mysql_checker
+    def get_view_narray_from_trustlist_with_target_type(self, target_type):
+        """
+
+        :param target_type:
+        :return:
+        """
+        cursor = self.db_client.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT `url`, `target_view_narray` FROM `trustlist` WHERE `type` = ?",
+            (target_type,)
+        )
+        result = cursor.fetchall()
+        self.db_client.commit()
+        cursor.close()
+        return result
+
+    @mysql_checker
     def find_page_by_view_signature(self, signature):
+        """
+
+        :param signature:
+        :return:
+        """
         cursor = self.db_client.cursor()
         cursor.execute(
             "SELECT `url` FROM `trustlist` WHERE `target_view_signature` = %s",
@@ -101,10 +141,17 @@ class Data:
 
     @mysql_checker
     def upload_view_sample(self, url, view_signature, view_data):
+        """
+
+        :param url:
+        :param view_signature:
+        :param view_data:
+        :return:
+        """
         cursor = self.db_client.cursor()
         if self.check_trustlist(url):
             cursor.execute(
-                "UPDATE `trustlist` SET `target_view_signature`=%s, `target_view_narray`=%s WHERE `url`=%s",
+                "UPDATE `trustlist` SET `target_view_signature` = %s, `target_view_narray`=%s WHERE `url` = %s",
                 (view_signature, view_data, url)
             )
         else:
@@ -118,6 +165,11 @@ class Data:
 
     @mysql_checker
     def mark_as_blacklist(self, url):
+        """
+
+        :param url:
+        :return:
+        """
         cursor = self.db_client.cursor()
         date = self.pbp_handle.get_time("%Y-%m-%d %H:%M:%S")
         cursor.execute(

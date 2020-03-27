@@ -47,9 +47,10 @@ class View:
         if query:
             return query[0]
 
-    def _render(self, target_num_array):
+    def _render(self, target_type, target_num_array):
         """
 
+        :param target_type:
         :param target_num_array:
         :return:
         """
@@ -65,7 +66,7 @@ class View:
                 origin_sample
             )])
 
-        trust_samples = self.data_control.get_view_narray_from_trustlist()
+        trust_samples = self.data_control.get_view_narray_from_trustlist_with_target_type(target_type)
         for record in trust_samples:
             thread = Thread(
                 target=_compare,
@@ -81,9 +82,10 @@ class View:
         for _ in trust_samples:
             yield q.get()
 
-    def analytics(self, target_url):
+    def analytics(self, target_type, target_url):
         """
 
+        :param target_type:
         :param target_url:
         :return:
         """
@@ -94,7 +96,7 @@ class View:
             return list(signature_query)
 
         query = {}
-        for url, score in self._render(view_data):
+        for url, score in self._render(target_type, view_data):
             query[url] = score
 
         for url in query:

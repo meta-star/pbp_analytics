@@ -1,6 +1,7 @@
 import sys
 import time
 from configparser import ConfigParser
+from urllib import request
 
 import validators
 from url_normalize import url_normalize
@@ -48,39 +49,57 @@ class Analytics:
         sys.exit(0)
 
     def analytics(self, data):
+        url = url_normalize(data.get("url"))
+
+        if "type" in data:
+            target_type = data.get("type")
+        else:
+            target_type = 0
+
+        http_status = request.urlopen(url).getcode()
+        if http_status != 200:
+            return {
+                "status": 404,
+                "http_code": http_status
+            }
+
+        score = 1
+
+        if self.data_control.check_trustlist(url):
+            pass
+
+        elif self.data_control.check_blacklist(url):
+            score = 0
+
+        elif self.safe_browsing.lookup([url]):
+            score = 0
+            self.data_control.mark_as_blacklist(url)
+
+        else:
+            self.target_handle.analytics(target_type, url)
+            if self.origin_handle.action(url) < 0.5:
+                self.data_control.mark_as_blacklist(url)
+                score = 0
+
+        return {
+            "status": 200,
+            "trust-score": score
+        }
+
+    def server_response(self, data):
         if data.get("version") < 1:
             return {
                 "status": 505
             }
+
         if data.get("shutdown"):
             self.stop()
             return {
                 "status": 200
             }
-        elif data.get("url") and validators.url(data.get("url")):
-            url = url_normalize(data.get("url"))
+        elif validators.url(data.get("url")):
+            return self.analytics(data)
 
-            score = 1
-
-            if self.data_control.check_trustlist(url):
-                pass
-
-            elif self.data_control.check_blacklist(url):
-                score = 0
-
-            elif self.safe_browsing.lookup([url]):
-                score = 0
-                self.data_control.mark_as_blacklist(url)
-
-            elif self.target_handle.analytics(url):
-                if self.origin_handle.action(url) < 0.5:
-                    self.data_control.mark_as_blacklist(url)
-                    score = 0
-
-            return {
-                "status": 200,
-                "trust-score": score
-            }
         return {
             "status": 401
         }
