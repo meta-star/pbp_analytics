@@ -103,7 +103,7 @@ class Analytics:
 
         return {
             "status": 200,
-            "trust-score": score
+            "trust_score": score
         }
 
     def server_response(self, data):
