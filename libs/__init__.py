@@ -1,5 +1,6 @@
 from .analytics import Analytics
 from .data import Data
+
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
 

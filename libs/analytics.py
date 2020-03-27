@@ -1,6 +1,8 @@
 import sys
 import time
 from configparser import ConfigParser
+from queue import Queue
+from threading import Thread
 from urllib import request
 
 import validators
@@ -71,8 +73,29 @@ class Analytics:
             self.data_control.mark_as_blacklist(url)
 
         else:
-            self.target_handle.analytics(data, url)
-            if self.origin_handle.action(url) < 0.5:
+            origin_scores = Queue()
+            thread = None
+
+            def _origin_check(origin):
+                origin_scores.put(
+                    self.origin_handle.action(origin, url)
+                )
+
+            for origin_url in self.target_handle.analytics(data, url):
+                thread = Thread(
+                    target=_origin_check,
+                    args=(origin_url,)
+                )
+                thread.start()
+
+            if thread:
+                thread.join()
+
+            results = []
+            for _ in range(4):
+                results.append(origin_scores.get())
+
+            if origin_scores and max(results) < 0.5:
                 self.data_control.mark_as_blacklist(url)
                 score = 0
 

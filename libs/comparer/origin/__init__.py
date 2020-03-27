@@ -20,5 +20,5 @@ class Origin:
     def _get_result():
         return 1
 
-    def action(self, url):
+    def action(self, origin_url, target_url):
         return self._get_result()

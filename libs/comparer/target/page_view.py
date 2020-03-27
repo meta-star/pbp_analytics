@@ -1,10 +1,9 @@
 import base64
-
 from hashlib import sha256
+from queue import Queue
 from threading import Thread, Lock
 
 from .page_view_tools import WebCapture
-from queue import Queue
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -61,18 +60,19 @@ class View:
             origin_sample = self.handle.image_object_from_b64(
                 sample["target_view_narray"].encode("utf-8")
             )
-            q.put([sample["url"], self.handle.image_compare(
-                target_num_array,
-                origin_sample
-            )])
+            q.put([
+                sample["url"],
+                self.handle.image_compare(
+                    target_num_array,
+                    origin_sample
+                )
+            ])
 
         trust_samples = self.data_control.get_view_narray_from_trustlist_with_target_type(target_type)
         for record in trust_samples:
             thread = Thread(
                 target=_compare,
-                args=(
-                    record,
-                )
+                args=(record,)
             )
             thread.start()
 
