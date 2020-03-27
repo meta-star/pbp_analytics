@@ -20,10 +20,16 @@ class Target:
         """
         self.view_handle.generate()
 
-    def analytics(self, target_type, url):
+    def analytics(self, data, url_normalized):
         """
 
-        :param url:
+        :param data:
+        :param url_normalized:
         :return:
         """
-        return self.view_handle.analytics(target_type, url)
+        if "type" in data:
+            target_type = data.get("type")
+        else:
+            target_type = 0
+
+        return self.view_handle.analytics(target_type, url_normalized)

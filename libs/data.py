@@ -114,7 +114,7 @@ class Data:
         """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
-            "SELECT `url`, `target_view_narray` FROM `trustlist` WHERE `type` = ?",
+            "SELECT `url`, `target_view_narray` FROM `trustlist` WHERE `type` = %s",
             (target_type,)
         )
         result = cursor.fetchall()

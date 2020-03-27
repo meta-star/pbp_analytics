@@ -51,11 +51,6 @@ class Analytics:
     def analytics(self, data):
         url = url_normalize(data.get("url"))
 
-        if "type" in data:
-            target_type = data.get("type")
-        else:
-            target_type = 0
-
         http_status = request.urlopen(url).getcode()
         if http_status != 200:
             return {
@@ -76,7 +71,7 @@ class Analytics:
             self.data_control.mark_as_blacklist(url)
 
         else:
-            self.target_handle.analytics(target_type, url)
+            self.target_handle.analytics(data, url)
             if self.origin_handle.action(url) < 0.5:
                 self.data_control.mark_as_blacklist(url)
                 score = 0
