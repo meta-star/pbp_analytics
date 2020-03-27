@@ -16,6 +16,9 @@ class Origin:
             DomainResolve()
         ]
 
+    def generate(self):
+        pass
+
     @staticmethod
     def _get_result():
         return 1

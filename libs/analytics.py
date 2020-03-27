@@ -75,6 +75,7 @@ class Analytics:
         else:
             origin_scores = Queue()
             thread = None
+            data_num = 0
 
             def _origin_check(origin):
                 origin_scores.put(
@@ -87,12 +88,13 @@ class Analytics:
                     args=(origin_url,)
                 )
                 thread.start()
+                data_num += 1
 
             if thread:
                 thread.join()
 
             results = []
-            for _ in range(4):
+            for _ in range(data_num):
                 results.append(origin_scores.get())
 
             if origin_scores and max(results) < 0.5:
@@ -123,4 +125,5 @@ class Analytics:
         }
 
     def gen_sample(self):
-        pass
+        self.target_handle.generate()
+        self.origin_handle.generate()
