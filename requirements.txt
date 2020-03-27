@@ -11,3 +11,5 @@ mysql-connector-python
 python-whois
 dnspython
 cryptography
+pyopenssl
+idna
