@@ -4,6 +4,7 @@ from configparser import ConfigParser
 from queue import Queue
 from threading import Thread
 from urllib import request
+from urllib import error as urllib_error
 
 import validators
 from url_normalize import url_normalize
@@ -71,10 +72,16 @@ class Analytics:
     def analytics(self, data):
         url = url_normalize(data.get("url"))
 
-        http_status = request.urlopen(url).getcode()
-        if http_status != 200:
+        try:
+            http_status = request.urlopen(url).getcode()
+            if http_status != 200:
+                return {
+                    "status": 404,
+                    "http_code": http_status
+                }
+        except urllib_error.HTTPError:
             return {
-                "status": 404,
+                "status": 403,
                 "http_code": http_status
             }
 
