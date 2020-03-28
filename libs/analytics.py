@@ -97,7 +97,7 @@ class Analytics:
             for _ in range(data_num):
                 results.append(origin_scores.get())
 
-            if origin_scores and max(results) < 0.5:
+            if results and max(results) < 0.5:
                 self.data_control.mark_as_blacklist(url)
                 score = 0
 
