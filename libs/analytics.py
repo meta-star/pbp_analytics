@@ -50,62 +50,6 @@ class Analytics:
         time.sleep(0.5)
         sys.exit(0)
 
-    def analytics(self, data):
-        url = url_normalize(data.get("url"))
-
-        http_status = request.urlopen(url).getcode()
-        if http_status != 200:
-            return {
-                "status": 404,
-                "http_code": http_status
-            }
-
-        score = 1
-
-        if self.data_control.check_trustlist(url):
-            pass
-
-        elif self.data_control.check_blacklist(url):
-            score = 0
-
-        elif self.safe_browsing.lookup([url]):
-            score = 0
-            self.data_control.mark_as_blacklist(url)
-
-        else:
-            origin_scores = Queue()
-            thread = None
-            data_num = 0
-
-            def _origin_check(origin):
-                origin_scores.put(
-                    self.origin_handle.action(origin, url)
-                )
-
-            for origin_url in self.target_handle.analytics(data, url):
-                thread = Thread(
-                    target=_origin_check,
-                    args=(origin_url,)
-                )
-                thread.start()
-                data_num += 1
-
-            if thread:
-                thread.join()
-
-            results = []
-            for _ in range(data_num):
-                results.append(origin_scores.get())
-
-            if results and max(results) < 0.5:
-                self.data_control.mark_as_blacklist(url)
-                score = 0
-
-        return {
-            "status": 200,
-            "trust_score": score
-        }
-
     def server_response(self, data):
         if data.get("version") < 1:
             return {
@@ -123,6 +67,65 @@ class Analytics:
         return {
             "status": 401
         }
+
+    def analytics(self, data):
+        url = url_normalize(data.get("url"))
+
+        http_status = request.urlopen(url).getcode()
+        if http_status != 200:
+            return {
+                "status": 404,
+                "http_code": http_status
+            }
+
+        if self.data_control.check_trustlist(url):
+            score = 1
+
+        elif self.data_control.check_blacklist(url):
+            score = 0
+
+        elif self.safe_browsing.lookup([url]):
+            score = 0
+            self.data_control.mark_as_blacklist(url)
+
+        else:
+            score = self.analytics_inside(data, url)
+
+        return {
+            "status": 200,
+            "trust_score": score
+        }
+
+    def analytics_inside(self, data, url):
+        origin_scores = Queue()
+        thread = None
+        data_num = 0
+
+        def _origin_check(origin):
+            origin_scores.put(
+                self.origin_handle.action(origin, url)
+            )
+
+        for origin_url in self.target_handle.analytics(data, url):
+            thread = Thread(
+                target=_origin_check,
+                args=(origin_url,)
+            )
+            thread.start()
+            data_num += 1
+
+        if thread:
+            thread.join()
+
+        results = []
+        for _ in range(data_num):
+            results.append(origin_scores.get())
+
+        if results and max(results) < 0.5:
+            self.data_control.mark_as_blacklist(url)
+            return 0
+
+        return 1
 
     def gen_sample(self):
         self.target_handle.generate()
