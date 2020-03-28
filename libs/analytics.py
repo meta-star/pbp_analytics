@@ -157,7 +157,7 @@ class Analytics:
                 self.origin_handle.action(origin, url)
             )
 
-        for origin_url in self.target_handle.analytics(data, url):
+        async for origin_url in self.target_handle.analytics(data, url):
             thread = Thread(
                 target=_origin_check,
                 args=(origin_url,)

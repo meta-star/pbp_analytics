@@ -92,11 +92,13 @@ class View:
         (view_signature, view_data) = self._capture(target_url)
 
         signature_query = self._signature(view_signature)
+        yield signature_query
+
         if signature_query:
-            return list(signature_query)
+            return
 
         query = {}
-        for url, score in self._render(target_type, view_data):
+        async for url, score in self._render(target_type, view_data):
             query[url] = score
 
         for url in query:

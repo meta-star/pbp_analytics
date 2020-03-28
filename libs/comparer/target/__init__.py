@@ -13,14 +13,14 @@ class Target:
     def __init__(self, pbp_handle):
         self.view_handle = View(pbp_handle)
 
-    async def generate(self):
+    def generate(self):
         """
 
         :return:
         """
         self.view_handle.generate()
 
-    async def analytics(self, data, url_normalized):
+    def analytics(self, data, url_normalized):
         """
 
         :param data:
