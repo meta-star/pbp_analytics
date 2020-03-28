@@ -1,4 +1,5 @@
 import base64
+import asyncio
 from hashlib import sha256
 from queue import Queue
 from threading import Thread, Lock
@@ -113,9 +114,9 @@ class View:
         thread = None
         lock = Lock()
 
-        def _upload(url):
+        async def _upload(url):
             lock.acquire()
-            (view_signature, view_data) = self._capture(url)
+            (view_signature, view_data) = await self._capture(url)
             b64_view_data = base64.b64encode(view_data.dumps())
             self.data_control.upload_view_sample(
                 url,
@@ -126,7 +127,7 @@ class View:
 
         for origin_url in self.data_control.get_urls_from_trustlist():
             thread = Thread(
-                target=_upload,
+                target=lambda url: asyncio.run(_upload(url)),
                 args=(
                     origin_url,
                 )
