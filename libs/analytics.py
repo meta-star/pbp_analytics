@@ -1,11 +1,10 @@
 import sys
 import time
+import urllib3
 import traceback
 from configparser import ConfigParser
 from queue import Queue
 from threading import Thread
-from urllib import request
-from urllib import error as urllib_error
 
 import validators
 from url_normalize import url_normalize
@@ -35,6 +34,7 @@ class Analytics:
         self.safe_browsing = GoogleSafeBrowsing(
             self.cfg["Google Safe Browsing"]["google_api_key"]
         )
+        self.web_agent = urllib3.PoolManager()
         self.target_handle = Target(self)
         self.origin_handle = Origin(self)
 
@@ -86,17 +86,11 @@ class Analytics:
     def analytics(self, data):
         url = url_normalize(data.get("url"))
 
-        try:
-            http_status = request.urlopen(url).getcode()
-            if http_status != 200:
-                return {
-                    "status": 404,
-                    "http_code": http_status
-                }
-        except urllib_error.HTTPError:
+        response = self.web_agent.request('GET', url)
+        if response.status != 200:
             return {
-                "status": 403,
-                "http_code": self.error_report()
+                "status": 404,
+                "http_code": response.status
             }
 
         if self.data_control.check_trustlist(url):
