@@ -86,7 +86,13 @@ class Analytics:
     def analytics(self, data):
         url = url_normalize(data.get("url"))
 
-        response = self.web_agent.request('GET', url)
+        try:
+            response = self.web_agent.request('GET', url)
+        except urllib3.exceptions:
+            return {
+                "status": 403
+            }
+
         if response.status != 200:
             return {
                 "status": 404,

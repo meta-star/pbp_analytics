@@ -1,5 +1,6 @@
 - `200` Success
 - `401` No `version` Tag Found From Request
+- `403` urllib3 Got Error
 - `404` URL Request Not Found
 - `500` Empty Response
 
