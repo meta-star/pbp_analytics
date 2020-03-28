@@ -89,7 +89,7 @@ class View:
         :param target_url:
         :return:
         """
-        (view_signature, view_data) = self._capture(target_url)
+        (view_signature, view_data) = await self._capture(target_url)
 
         signature_query = self._signature(view_signature)
         yield signature_query

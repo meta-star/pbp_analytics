@@ -178,10 +178,10 @@ class Analytics:
 
         return 1
 
-    def gen_sample(self):
+    async def gen_sample(self):
         """
 
         :return:
         """
-        self.target_handle.generate()
+        await self.target_handle.generate()
         self.origin_handle.generate()
