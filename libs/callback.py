@@ -17,6 +17,9 @@ response_handle = ()
 
 
 class IndexHandler(RequestHandler, ABC):
+    """
+    
+    """
     def get(self):
         self.write('''
             <b>PBP API Server</b><br>
@@ -46,6 +49,10 @@ class HttpServer:
 
     @staticmethod
     def listen():
+        """
+
+        :return:
+        """
         app = Application([
             ('/', IndexHandler)
         ])

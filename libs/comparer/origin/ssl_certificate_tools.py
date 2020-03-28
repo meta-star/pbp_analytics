@@ -4,13 +4,13 @@
 # requires a recent enough python with idna support in socket
 # pyopenssl, cryptography and idna
 
+from collections import namedtuple
+from socket import socket
+
+import idna
 from OpenSSL import SSL
 from cryptography import x509
 from cryptography.x509.oid import NameOID
-import idna
-
-from socket import socket
-from collections import namedtuple
 
 HostInfo = namedtuple(field_names='cert hostname peername', typename='HostInfo')
 
@@ -23,11 +23,13 @@ HOSTS = [
     ('самодеј.мкд', 443),
 ]
 
+
 def verify_cert(cert, hostname):
     # verify notAfter/notBefore, CA trusted, servername/sni/hostname
     cert.has_expired()
     # service_identity.pyopenssl.verify_hostname(client_ssl, hostname)
     # issuer
+
 
 def get_certificate(hostname, port):
     hostname_idna = idna.encode(hostname)
@@ -35,7 +37,7 @@ def get_certificate(hostname, port):
 
     sock.connect((hostname, port))
     peername = sock.getpeername()
-    ctx = SSL.Context(SSL.SSLv23_METHOD) # most compatible
+    ctx = SSL.Context(SSL.SSLv23_METHOD)  # most compatible
     ctx.check_hostname = False
     ctx.verify_mode = SSL.VERIFY_NONE
 
@@ -50,6 +52,7 @@ def get_certificate(hostname, port):
 
     return HostInfo(cert=crypto_cert, peername=peername, hostname=hostname)
 
+
 def get_alt_names(cert):
     try:
         ext = cert.extensions.get_extension_for_class(x509.SubjectAlternativeName)
@@ -57,12 +60,14 @@ def get_alt_names(cert):
     except x509.ExtensionNotFound:
         return None
 
+
 def get_common_name(cert):
     try:
         names = cert.subject.get_attributes_for_oid(NameOID.COMMON_NAME)
         return names[0].value
     except x509.ExtensionNotFound:
         return None
+
 
 def get_issuer(cert):
     try:
@@ -80,15 +85,16 @@ def print_basic_info(hostinfo):
     \tnotBefore: {notbefore}
     \tnotAfter:  {notafter}
     '''.format(
-            hostname=hostinfo.hostname,
-            peername=hostinfo.peername,
-            commonname=get_common_name(hostinfo.cert),
-            SAN=get_alt_names(hostinfo.cert),
-            issuer=get_issuer(hostinfo.cert),
-            notbefore=hostinfo.cert.not_valid_before,
-            notafter=hostinfo.cert.not_valid_after
+        hostname=hostinfo.hostname,
+        peername=hostinfo.peername,
+        commonname=get_common_name(hostinfo.cert),
+        SAN=get_alt_names(hostinfo.cert),
+        issuer=get_issuer(hostinfo.cert),
+        notbefore=hostinfo.cert.not_valid_before,
+        notafter=hostinfo.cert.not_valid_after
     )
     print(s)
+
 
 def check_it_out(hostname, port):
     hostinfo = get_certificate(hostname, port)
@@ -96,6 +102,7 @@ def check_it_out(hostname, port):
 
 
 import concurrent.futures
+
 if __name__ == '__main__':
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as e:
         for hostinfo in e.map(lambda x: get_certificate(x[0], x[1]), HOSTS):

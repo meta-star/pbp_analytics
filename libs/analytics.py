@@ -1,11 +1,11 @@
 import sys
 import time
-import urllib3
 import traceback
 from configparser import ConfigParser
 from queue import Queue
 from threading import Thread
 
+import urllib3
 import validators
 from url_normalize import url_normalize
 
@@ -40,15 +40,28 @@ class Analytics:
 
     @staticmethod
     def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
+        """
+
+        :param time_format:
+        :return:
+        """
         time_ = time.localtime(time.time())
         return time.strftime(time_format, time_)
 
     def start(self):
+        """
+
+        :return:
+        """
         server = HttpServer(self)
         server.listen()
 
     @staticmethod
     def stop():
+        """
+
+        :return:
+        """
         time.sleep(0.5)
         sys.exit(0)
 
@@ -66,6 +79,11 @@ class Analytics:
         return error_info
 
     def server_response(self, data):
+        """
+
+        :param data:
+        :return:
+        """
         if data.get("version") < 1:
             return {
                 "status": 505
@@ -84,13 +102,19 @@ class Analytics:
         }
 
     def analytics(self, data):
+        """
+
+        :param data:
+        :return:
+        """
         url = url_normalize(data.get("url"))
 
         try:
             response = self.web_agent.request('GET', url)
-        except urllib3.exceptions:
+        except urllib3.exceptions.MaxRetryError as e:
             return {
-                "status": 403
+                "status": 403,
+                "reason": e.reason
             }
 
         if response.status != 200:
@@ -118,6 +142,12 @@ class Analytics:
         }
 
     def analytics_inside(self, data, url):
+        """
+
+        :param data:
+        :param url:
+        :return:
+        """
         origin_scores = Queue()
         thread = None
         data_num = 0
@@ -149,5 +179,9 @@ class Analytics:
         return 1
 
     def gen_sample(self):
+        """
+
+        :return:
+        """
         self.target_handle.generate()
         self.origin_handle.generate()
