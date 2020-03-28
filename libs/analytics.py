@@ -1,5 +1,6 @@
 import sys
 import time
+import traceback
 from configparser import ConfigParser
 from queue import Queue
 from threading import Thread
@@ -51,6 +52,19 @@ class Analytics:
         time.sleep(0.5)
         sys.exit(0)
 
+    @staticmethod
+    def error_report():
+        """
+        Report errors as tuple
+        :return: tuple
+        """
+        err1, err2, err3 = sys.exc_info()
+        traceback.print_tb(err3)
+        tb_info = traceback.extract_tb(err3)
+        filename, line, func, text = tb_info[-1]
+        error_info = "occurred in\n{}\n\non line {}\nin statement {}".format(filename, line, text)
+        return error_info
+
     def server_response(self, data):
         if data.get("version") < 1:
             return {
@@ -82,7 +96,7 @@ class Analytics:
         except urllib_error.HTTPError:
             return {
                 "status": 403,
-                "http_code": http_status
+                "http_code": self.error_report()
             }
 
         if self.data_control.check_trustlist(url):
