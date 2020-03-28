@@ -19,7 +19,7 @@ class View:
         self.handle = WebCapture(pbp_handle.cfg["WebCapture"])
         self.data_control = pbp_handle.data_control
 
-    def _capture(self, url):
+    async def _capture(self, url):
         """
 
         :param url:
@@ -36,7 +36,7 @@ class View:
         hash_object = sha256(image_num_array)
         return hash_object.hexdigest(), image_num_array
 
-    def _signature(self, hex_digest):
+    async def _signature(self, hex_digest):
         """
 
         :param hex_digest:
@@ -46,7 +46,7 @@ class View:
         if query:
             return query[0]
 
-    def _render(self, target_type, target_num_array):
+    async def _render(self, target_type, target_num_array):
         """
 
         :param target_type:
@@ -82,7 +82,7 @@ class View:
         for _ in trust_samples:
             yield q.get()
 
-    def analytics(self, target_type, target_url):
+    async def analytics(self, target_type, target_url):
         """
 
         :param target_type:
@@ -103,7 +103,7 @@ class View:
             if query[url] > 0.95 and query[url] == max(query.values()):
                 yield url
 
-    def generate(self):
+    async def generate(self):
         """
 
         :return:

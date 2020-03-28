@@ -78,7 +78,7 @@ class Analytics:
         error_info = "occurred in\n{}\n\non line {}\nin statement {}".format(filename, line, text)
         return error_info
 
-    def server_response(self, data):
+    async def server_response(self, data):
         """
 
         :param data:
@@ -101,7 +101,7 @@ class Analytics:
             "status": 401
         }
 
-    def analytics(self, data):
+    async def analytics(self, data):
         """
 
         :param data:
@@ -141,7 +141,7 @@ class Analytics:
             "trust_score": score
         }
 
-    def analytics_inside(self, data, url):
+    async def analytics_inside(self, data, url):
         """
 
         :param data:
