@@ -20,6 +20,9 @@ class View:
         self.handle = WebCapture(pbp_handle.cfg["WebCapture"])
         self.data_control = pbp_handle.data_control
 
+    def close(self):
+        self.handle.browser.close()
+
     async def _capture(self, url):
         """
 
