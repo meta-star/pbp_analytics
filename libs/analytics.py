@@ -114,7 +114,7 @@ class Analytics:
         except urllib3.exceptions.MaxRetryError as e:
             return {
                 "status": 403,
-                "reason": e.reason
+                "reason": str(e.reason)
             }
 
         if response.status != 200:
