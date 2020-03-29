@@ -134,11 +134,11 @@ class Analytics:
             self.data_control.mark_as_blacklist(url)
 
         else:
-            score = self.analytics_inside(data, url)
+            score = await self.analytics_inside(data, url)
 
         return {
             "status": 200,
-            "trust_score": await score
+            "trust_score": score
         }
 
     async def analytics_inside(self, data, url):
