@@ -2,8 +2,7 @@ import sys
 import time
 import traceback
 from configparser import ConfigParser
-from queue import Queue
-from threading import Thread
+from multiprocessing import Process, Queue
 
 import urllib3
 import validators
@@ -31,6 +30,7 @@ class Analytics:
     hour_cache = {}
 
     def __init__(self):
+        self.__config_checker()
         # Initialization
         self.data_control = Data(self)
         self.safe_browsing = GoogleSafeBrowsing(
@@ -39,16 +39,6 @@ class Analytics:
         self.web_agent = urllib3.PoolManager()
         self.target_handle = Target(self)
         self.origin_handle = Origin(self)
-
-    @staticmethod
-    def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
-        """
-
-        :param time_format:
-        :return:
-        """
-        time_ = time.localtime(time.time())
-        return time.strftime(time_format, time_)
 
     def start(self):
         """
@@ -66,6 +56,20 @@ class Analytics:
         time.sleep(0.5)
         self.target_handle.close()
         sys.exit(0)
+
+    @staticmethod
+    def __config_checker():
+        assert 1==1
+
+    @staticmethod
+    def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
+        """
+
+        :param time_format:
+        :return:
+        """
+        time_ = time.localtime(time.time())
+        return time.strftime(time_format, time_)
 
     @staticmethod
     def error_report():
@@ -139,7 +143,7 @@ class Analytics:
             score = self.hour_cache[url]
 
         else:
-            score = await self.analytics_inside(data, url)
+            score = await self._analytics_inside(data, url)
             self.hour_cache[url] = score
     
         return {
@@ -147,7 +151,7 @@ class Analytics:
             "trust_score": score
         }
 
-    async def analytics_inside(self, data, url):
+    async def _analytics_inside(self, data, url):
         """
 
         :param data:
@@ -164,7 +168,7 @@ class Analytics:
             )
 
         async for origin_url in self.target_handle.analytics(data, url):
-            thread = Thread(
+            thread = Process(
                 target=_origin_check,
                 args=(origin_url,)
             )

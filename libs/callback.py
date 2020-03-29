@@ -48,13 +48,14 @@ class HttpHandler(RequestHandler, ABC):
                 result = {"status": 401}
         self.write(json.dumps(result))
 
-class WSHandler(WebSocketHandler):  
-    def check_origin(self, origin):  
-        return True  
-  
-    def open(self):  
-        pass  
-  
+
+class WSHandler(WebSocketHandler, ABC):
+    def check_origin(self, origin):
+        return True
+
+    def open(self):
+        pass
+
     async def on_message(self, message):
         try:
             req_res = json.loads(message)
@@ -70,11 +71,12 @@ class WSHandler(WebSocketHandler):
                 result = {"status": 400}
             else:
                 result = {"status": 401}
-        self.write_message(json.dumps(result)) 
-  
-    def on_close(self):  
-        pass  
-  
+        await self.write_message(json.dumps(result))
+
+    def on_close(self):
+        pass
+
+
 class WebServer:
     def __init__(self, pbp_handle):
         global response_handle
