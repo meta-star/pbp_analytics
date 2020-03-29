@@ -78,7 +78,7 @@ class Analytics:
         error_info = "occurred in\n{}\n\non line {}\nin statement {}".format(filename, line, text)
         return error_info
 
-    def server_response(self, data):
+    async def server_response(self, data):
         """
 
         :param data:
@@ -95,13 +95,13 @@ class Analytics:
                 "status": 200
             }
         elif validators.url(data.get("url")):
-            return self.analytics(data)
+            return await self.analytics(data)
 
         return {
             "status": 401
         }
 
-    def analytics(self, data):
+    async def analytics(self, data):
         """
 
         :param data:
@@ -138,10 +138,10 @@ class Analytics:
 
         return {
             "status": 200,
-            "trust_score": score
+            "trust_score": await score
         }
 
-    def analytics_inside(self, data, url):
+    async def analytics_inside(self, data, url):
         """
 
         :param data:
@@ -157,7 +157,7 @@ class Analytics:
                 self.origin_handle.action(origin, url)
             )
 
-        for origin_url in self.target_handle.analytics(data, url):
+        async for origin_url in self.target_handle.analytics(data, url):
             thread = Thread(
                 target=_origin_check,
                 args=(origin_url,)
@@ -178,10 +178,10 @@ class Analytics:
 
         return 1
 
-    def gen_sample(self):
+    async def gen_sample(self):
         """
 
         :return:
         """
-        self.target_handle.generate()
+        await self.target_handle.generate()
         self.origin_handle.generate()

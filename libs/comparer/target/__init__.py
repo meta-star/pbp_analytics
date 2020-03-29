@@ -16,12 +16,12 @@ class Target:
     def close(self):
         self.view_handle.close()
 
-    def generate(self):
+    async def generate(self):
         """
 
         :return:
         """
-        self.view_handle.generate()
+        await self.view_handle.generate()
 
     def analytics(self, data, url_normalized):
         """

@@ -1,4 +1,5 @@
 import base64
+import asyncio
 from hashlib import sha256
 from queue import Queue
 from threading import Thread, Lock
@@ -22,7 +23,7 @@ class View:
     def close(self):
         self.handle.browser.close()
 
-    def _capture(self, url):
+    async def _capture(self, url):
         """
 
         :param url:
@@ -39,7 +40,7 @@ class View:
         hash_object = sha256(image_num_array)
         return hash_object.hexdigest(), image_num_array
 
-    def _signature(self, hex_digest):
+    async def _signature(self, hex_digest):
         """
 
         :param hex_digest:
@@ -49,7 +50,7 @@ class View:
         if query:
             return query[0]
 
-    def _render(self, target_type, target_num_array):
+    async def _render(self, target_type, target_num_array):
         """
 
         :param target_type:
@@ -85,28 +86,30 @@ class View:
         for _ in trust_samples:
             yield q.get()
 
-    def analytics(self, target_type, target_url):
+    async def analytics(self, target_type, target_url):
         """
 
         :param target_type:
         :param target_url:
         :return:
         """
-        (view_signature, view_data) = self._capture(target_url)
+        (view_signature, view_data) = await self._capture(target_url)
 
         signature_query = self._signature(view_signature)
+        yield signature_query
+
         if signature_query:
-            return list(signature_query)
+            return
 
         query = {}
-        for url, score in self._render(target_type, view_data):
+        async for url, score in self._render(target_type, view_data):
             query[url] = score
 
         for url in query:
             if query[url] > 0.95 and query[url] == max(query.values()):
                 yield url
 
-    def generate(self):
+    async def generate(self):
         """
 
         :return:
@@ -114,9 +117,9 @@ class View:
         thread = None
         lock = Lock()
 
-        def _upload(url):
+        async def _upload(url):
             lock.acquire()
-            (view_signature, view_data) = self._capture(url)
+            (view_signature, view_data) = await self._capture(url)
             b64_view_data = base64.b64encode(view_data.dumps())
             self.data_control.upload_view_sample(
                 url,
@@ -127,7 +130,7 @@ class View:
 
         for origin_url in self.data_control.get_urls_from_trustlist():
             thread = Thread(
-                target=_upload,
+                target=lambda url: asyncio.run(_upload(url)),
                 args=(
                     origin_url,
                 )
