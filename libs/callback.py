@@ -55,7 +55,7 @@ class WSHandler(WebSocketHandler):
     def open(self):  
         pass  
   
-    def on_message(self, message):
+    async def on_message(self, message):
         try:
             req_res = json.loads(message)
         except json.decoder.JSONDecodeError:
