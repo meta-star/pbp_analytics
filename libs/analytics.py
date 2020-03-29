@@ -28,6 +28,8 @@ class Analytics:
     cfg = ConfigParser()
     cfg.read("config.ini")
 
+    hour_cache = {}
+
     def __init__(self):
         # Initialization
         self.data_control = Data(self)
@@ -133,9 +135,13 @@ class Analytics:
             score = 0
             self.data_control.mark_as_blacklist(url)
 
+        elif url in self.hour_cache:
+            score = self.hour_cache[url]
+
         else:
             score = await self.analytics_inside(data, url)
-
+            self.hour_cache[url] = score
+    
         return {
             "status": 200,
             "trust_score": score
