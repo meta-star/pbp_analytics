@@ -4,6 +4,7 @@ from abc import ABC
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.web import Application, RequestHandler
+from tornado.websocket import WebSocketHandler
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -47,7 +48,33 @@ class HttpHandler(RequestHandler, ABC):
                 result = {"status": 401}
         self.write(json.dumps(result))
 
-
+class WSHandler(WebSocketHandler):  
+    def check_origin(self, origin):  
+        return True  
+  
+    def open(self):  
+        pass  
+  
+    def on_message(self, message):
+        try:
+            req_res = json.loads(message)
+        except json.decoder.JSONDecodeError:
+            req_res = {}
+        if req_res.get("version") is not None:
+            result = {"status": 500}
+            if response_handle:
+                for handle in response_handle:
+                    result = await handle(req_res)
+        else:
+            if req_res:
+                result = {"status": 400}
+            else:
+                result = {"status": 401}
+        self.write_message(json.dumps(result)) 
+  
+    def on_close(self):  
+        pass  
+  
 class WebServer:
     def __init__(self, pbp_handle):
         global response_handle
@@ -61,7 +88,8 @@ class WebServer:
         :return:
         """
         app = Application([
-            ('/', HttpHandler)
+            ('/', HttpHandler),
+            ('/ws', WSHandler)
         ])
         server = HTTPServer(app)
         server.listen(2020)
