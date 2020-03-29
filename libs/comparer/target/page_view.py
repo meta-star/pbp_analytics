@@ -1,8 +1,8 @@
 import base64
 import asyncio
 from hashlib import sha256
-from queue import Queue
 from threading import Thread, Lock
+from multiprocessing import Process, Queue
 
 from .page_view_tools import WebCapture
 
@@ -74,7 +74,7 @@ class View:
 
         trust_samples = self.data_control.get_view_narray_from_trustlist_with_target_type(target_type)
         for record in trust_samples:
-            thread = Thread(
+            thread = Process(
                 target=_compare,
                 args=(record,)
             )
