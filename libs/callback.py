@@ -28,7 +28,7 @@ class HttpHandler(RequestHandler, ABC):
     
     """
 
-    def get(self):
+    async def get(self):
         self.write(hello_msg)
 
     async def post(self):
