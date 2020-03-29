@@ -16,7 +16,7 @@ from tornado.web import Application, RequestHandler
 response_handle = ()
 
 
-class IndexHandler(RequestHandler, ABC):
+class HttpHandler(RequestHandler, ABC):
     """
     
     """
@@ -48,7 +48,7 @@ class IndexHandler(RequestHandler, ABC):
         self.write(json.dumps(result))
 
 
-class HttpServer:
+class WebServer:
     def __init__(self, pbp_handle):
         global response_handle
         response_handle = (pbp_handle.server_response,)
@@ -61,7 +61,7 @@ class HttpServer:
         :return:
         """
         app = Application([
-            ('/', IndexHandler)
+            ('/', HttpHandler)
         ])
         server = HTTPServer(app)
         server.listen(2020)

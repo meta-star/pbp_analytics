@@ -9,7 +9,7 @@ import urllib3
 import validators
 from url_normalize import url_normalize
 
-from .callback import HttpServer
+from .callback import WebServer
 from .comparer import Origin, Target
 from .data import Data
 from .safebrowsing import GoogleSafeBrowsing
@@ -55,7 +55,7 @@ class Analytics:
 
         :return:
         """
-        server = HttpServer(self)
+        server = WebServer(self)
         server.listen()
 
     def stop(self):
