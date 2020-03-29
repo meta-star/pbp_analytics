@@ -16,6 +16,12 @@ from tornado.websocket import WebSocketHandler
 
 response_handle = ()
 
+hello_msg = '''
+<b>PBP API Server</b>
+<br>The security project for Internet.
+<hr>(c)2020 <a href="https://github.com/supersonictw">SuperSonic</a>.
+'''
+
 
 class HttpHandler(RequestHandler, ABC):
     """
@@ -23,11 +29,7 @@ class HttpHandler(RequestHandler, ABC):
     """
 
     def get(self):
-        self.write('''
-            <b>PBP API Server</b><br>
-            The security project for Internet.<hr>
-            (c)2020 <a href="https://github.com/supersonictw">SuperSonic</a>.
-        ''')
+        self.write(hello_msg)
 
     async def post(self):
         req_body = self.request.body
@@ -50,11 +52,18 @@ class HttpHandler(RequestHandler, ABC):
 
 
 class WSHandler(WebSocketHandler, ABC):
+    """
+
+    """
+
     def check_origin(self, origin):
         return True
 
     def open(self):
-        pass
+        self.write_message(json.dumps({
+            "status": 200,
+            "msg": hello_msg
+        }))
 
     async def on_message(self, message):
         try:
@@ -74,10 +83,17 @@ class WSHandler(WebSocketHandler, ABC):
         await self.write_message(json.dumps(result))
 
     def on_close(self):
-        pass
+        self.write_message(json.dumps({
+            "status": 200,
+            "msg": "See you [PB Project]"
+        }))
 
 
 class WebServer:
+    """
+
+    """
+
     def __init__(self, pbp_handle):
         global response_handle
         response_handle = (pbp_handle.server_response,)
