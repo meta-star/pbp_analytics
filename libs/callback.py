@@ -30,6 +30,7 @@ class HttpHandler(RequestHandler, ABC):
 
     async def get(self):
         self.write(hello_msg)
+        await self.finish()
 
     async def post(self):
         req_body = self.request.body
@@ -49,6 +50,7 @@ class HttpHandler(RequestHandler, ABC):
             else:
                 result = {"status": 401}
         self.write(json.dumps(result))
+        await self.finish()
 
 
 class WSHandler(WebSocketHandler, ABC):
@@ -83,10 +85,7 @@ class WSHandler(WebSocketHandler, ABC):
         await self.write_message(json.dumps(result))
 
     def on_close(self):
-        self.write_message(json.dumps({
-            "status": 200,
-            "msg": "See you [PB Project]"
-        }))
+        pass
 
 
 class WebServer:
