@@ -95,7 +95,7 @@ class View:
         """
         (view_signature, view_data) = await self._capture(target_url)
 
-        signature_query = self._signature(view_signature)
+        signature_query = await self._signature(view_signature)
         yield signature_query
 
         if signature_query:

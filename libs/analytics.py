@@ -71,10 +71,10 @@ class Analytics:
         Report errors as tuple
         :return: tuple
         """
-        err1, err2, err3 = sys.exc_info()
+        _, _, err3 = sys.exc_info()
         traceback.print_tb(err3)
         tb_info = traceback.extract_tb(err3)
-        filename, line, func, text = tb_info[-1]
+        filename, line, _, text = tb_info[-1]
         error_info = "occurred in\n{}\n\non line {}\nin statement {}".format(filename, line, text)
         return error_info
 
