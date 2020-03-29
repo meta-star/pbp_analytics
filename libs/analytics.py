@@ -95,7 +95,7 @@ class Analytics:
                 "status": 200
             }
         elif validators.url(data.get("url")):
-            return self.analytics(data)
+            return await self.analytics(data)
 
         return {
             "status": 401
@@ -114,7 +114,7 @@ class Analytics:
         except urllib3.exceptions.MaxRetryError as e:
             return {
                 "status": 403,
-                "reason": e.reason
+                "reason": str(e.reason)
             }
 
         if response.status != 200:

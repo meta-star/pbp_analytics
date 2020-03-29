@@ -27,7 +27,7 @@ class IndexHandler(RequestHandler, ABC):
             (c)2020 <a href="https://github.com/supersonictw">SuperSonic</a>.
         ''')
 
-    def post(self):
+    async def post(self):
         req_body = self.request.body
         req_str = req_body.decode('utf8')
         req_res = json.loads(req_str)
@@ -35,9 +35,10 @@ class IndexHandler(RequestHandler, ABC):
             result = {"status": 500}
             if response_handle:
                 for handle in response_handle:
-                    result = handle(req_res)
+                    result = await handle(req_res)
         else:
             result = {"status": 400}
+        print(result)
         self.write(json.dumps(result))
 
 
