@@ -1,3 +1,4 @@
+import http.client
 import sys
 import time
 import traceback
@@ -32,6 +33,7 @@ class Analytics:
     def __init__(self):
         self.__config_checker()
         # Initialization
+        http.client._MAXHEADERS = 1000
         self.data_control = Data(self)
         self.safe_browsing = GoogleSafeBrowsing(
             self.cfg["Google Safe Browsing"]["google_api_key"]
