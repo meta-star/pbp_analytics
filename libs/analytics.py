@@ -110,7 +110,7 @@ class Analytics:
         url = url_normalize(data.get("url"))
 
         try:
-            response = await self.web_agent.request('GET', url)
+            response = self.web_agent.request('GET', url)
         except urllib3.exceptions.MaxRetryError as e:
             return {
                 "status": 403,

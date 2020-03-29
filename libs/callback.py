@@ -20,6 +20,7 @@ class IndexHandler(RequestHandler, ABC):
     """
     
     """
+
     def get(self):
         self.write('''
             <b>PBP API Server</b><br>
@@ -30,15 +31,20 @@ class IndexHandler(RequestHandler, ABC):
     async def post(self):
         req_body = self.request.body
         req_str = req_body.decode('utf8')
-        req_res = json.loads(req_str)
+        try:
+            req_res = json.loads(req_str)
+        except json.decoder.JSONDecodeError:
+            req_res = {}
         if req_res.get("version") is not None:
             result = {"status": 500}
             if response_handle:
                 for handle in response_handle:
                     result = await handle(req_res)
         else:
-            result = {"status": 400}
-        print(result)
+            if req_res:
+                result = {"status": 400}
+            else:
+                result = {"status": 401}
         self.write(json.dumps(result))
 
 
