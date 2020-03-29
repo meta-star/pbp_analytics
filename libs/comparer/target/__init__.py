@@ -13,6 +13,9 @@ class Target:
     def __init__(self, pbp_handle):
         self.view_handle = View(pbp_handle)
 
+    def close(self):
+        self.view_handle.close()
+
     def generate(self):
         """
 

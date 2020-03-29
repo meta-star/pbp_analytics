@@ -56,13 +56,13 @@ class Analytics:
         server = HttpServer(self)
         server.listen()
 
-    @staticmethod
-    def stop():
+    def stop(self):
         """
 
         :return:
         """
         time.sleep(0.5)
+        self.target_handle.close()
         sys.exit(0)
 
     @staticmethod
