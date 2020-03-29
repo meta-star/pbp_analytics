@@ -1,8 +1,8 @@
-import base64
 import asyncio
+import base64
 from hashlib import sha256
-from threading import Thread, Lock
 from multiprocessing import Process, Queue
+from threading import Thread, Lock
 
 from .page_view_tools import WebCapture
 

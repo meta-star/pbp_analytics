@@ -59,7 +59,7 @@ class Analytics:
 
     @staticmethod
     def __config_checker():
-        assert 1==1
+        assert 1 == 1
 
     @staticmethod
     def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
@@ -145,7 +145,7 @@ class Analytics:
         else:
             score = await self._analytics_inside(data, url)
             self.hour_cache[url] = score
-    
+
         return {
             "status": 200,
             "trust_score": score
