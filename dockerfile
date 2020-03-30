@@ -13,4 +13,6 @@ RUN python3.7 -m pip install --trusted-host pypi.python.org -r requirements.txt
 
 EXPOSE 2020
 
+ENV PYTHONUNBUFFERED true
+
 CMD ["python3.7", "main.py"]
