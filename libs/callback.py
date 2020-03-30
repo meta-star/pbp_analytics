@@ -63,7 +63,7 @@ class WSHandler(WebSocketHandler, ABC):
 
     def open(self):
         self.write_message(json.dumps({
-            "status": 200,
+            "status": 201,
             "msg": hello_msg
         }))
 

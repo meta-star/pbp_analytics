@@ -100,7 +100,7 @@ class Analytics:
         if data.get("shutdown"):
             self.stop()
             return {
-                "status": 200
+                "status": 202
             }
         elif validators.url(data.get("url")):
             return await self.analytics(data)
