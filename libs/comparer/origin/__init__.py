@@ -1,5 +1,3 @@
-from .domain_resolve import DomainResolve
-
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
 
@@ -12,16 +10,9 @@ from .domain_resolve import DomainResolve
 class Origin:
     def __init__(self, pbp_handle):
         self.pbp_handle = pbp_handle
-        self.tasks = [
-            DomainResolve()
-        ]
 
     def generate(self):
         pass
 
-    @staticmethod
-    def _get_result():
-        return 1
-
     def action(self, origin_url, target_url):
-        return self._get_result()
+        return 1
