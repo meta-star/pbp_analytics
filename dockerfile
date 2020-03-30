@@ -4,6 +4,7 @@ MAINTAINER Star Inc.<star_inc@aol.com>
 WORKDIR /app
 COPY . /app
 
+RUN sudo chown -R seluser:seluser ../app
 RUN sudo apt-get update
 RUN sudo apt-get upgrade -y
 RUN sudo apt-get install -y python3.7 python3-pip
