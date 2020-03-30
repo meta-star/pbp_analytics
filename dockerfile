@@ -12,4 +12,4 @@ RUN python3.7 -m pip install --trusted-host pypi.python.org -r requirements.txt
 
 EXPOSE 2020
 
-CMD ["python3", "main.py"]
+CMD ["python3.7", "main.py"]
