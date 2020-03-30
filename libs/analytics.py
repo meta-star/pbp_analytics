@@ -150,6 +150,7 @@ class Analytics:
 
         return {
             "status": 200,
+            "url": url,
             "trust_score": score
         }
 
