@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Phishing Blocker Project - Analytics
+Phishing Blocker Project - Analytics [Test]
 
 (c)2019 SuperSonic(https://randychen.tk).
 ===
@@ -10,9 +10,9 @@ Phishing Blocker Project - Analytics
 ===
 """
 
-from libs import Analytics, Tools
+from libs.analytics import Analytics
 
 if __name__ == "__main__":
     handle = Analytics()
-    print("PBP Server\n{}\n".format(Tools.get_time()))
+    print("PBP Server [Test]\n{}\n".format(handle.get_time()))
     handle.start()

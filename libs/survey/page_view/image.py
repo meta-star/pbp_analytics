@@ -1,10 +1,13 @@
 import base64
 import os
 import pickle
+from hashlib import sha256
+from multiprocessing import Process, Queue
 
 import cv2
-from selenium import webdriver
 from skimage.metrics import structural_similarity
+
+from .browser import BrowserRender, BrowserAgent
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -15,53 +18,78 @@ from skimage.metrics import structural_similarity
 """
 
 
-# Browser Simulation
-
-class BrowserRender:
-    """
-    The main solution
-    To render web page from QTWebEngine with blink2png.
-    But we plan using Gecko/Servo to replace someday.
+class Image:
     """
 
-    def __init__(self):
-        pass
-
-
-class BrowserAgent:
-    """
-    As a backup solution
-    To capture web page via Selenium with webdriver.
-    The class will allow you to use your browser as the agent to take a screenshot form it.
     """
 
-    driver = None
+    def __init__(self, pbp_capture):
+        self.capture_handle = WebCapture(pbp_capture.cfg["WebCapture"])
+        self.data_control = pbp_capture.data_control
 
-    def __init__(self, config):
-        using = config.get("capture_browser")
-        if using == "firefox":
-            options = webdriver.FirefoxOptions()
-            options.add_argument('--headless')
-            options.add_argument('--private-window')
-            self.driver = webdriver.Firefox(firefox_options=options)
-        elif using == "chrome":
-            options = webdriver.ChromeOptions()
-            options.add_argument('--headless')
-            options.add_argument('--incognito')
-            options.add_argument('--disable-gpu')
-            self.driver = webdriver.Chrome(chrome_options=options)
+    async def capture(self, url):
+        """
 
-    def capture(self, url, path, size="1920,1080"):
-        (width, height) = size.split(",")
-        self.driver.set_window_size(width, height)
-        self.driver.get(url)
-        self.driver.save_screenshot(path)
+        :param url:
+        :return:
+        """
+        url_hash = sha256(url.encode("utf-8"))
+        layout_path = self.capture_handle.get_page_image(
+            target_url=url,
+            output_image="{}.png".format(
+                url_hash.hexdigest()
+            )
+        )
+        image_num_array = self.capture_handle.image_object(layout_path)
+        hash_object = sha256(image_num_array)
+        return hash_object.hexdigest(), image_num_array
 
-    def close(self):
-        self.driver.close()
+    async def signature(self, hex_digest):
+        """
 
+        :param hex_digest:
+        :return:
+        """
+        query = self.data_control.find_page_by_view_signature(hex_digest)
+        if query:
+            return query[0]
 
-# Capture
+    async def rank(self, target_type, target_num_array):
+        """
+
+        :param target_type:
+        :param target_num_array:
+        :return:
+        """
+        q = Queue()
+        thread = None
+
+        def _compare(sample):
+            origin_sample = self.capture_handle.image_object_from_b64(
+                sample["target_view_narray"].encode("utf-8")
+            )
+            q.put([
+                sample["url"],
+                self.capture_handle.image_compare(
+                    target_num_array,
+                    origin_sample
+                )
+            ])
+
+        trust_samples = self.data_control.get_view_narray_from_trustlist_with_target_type(target_type)
+        for record in trust_samples:
+            thread = Process(
+                target=_compare,
+                args=(record,)
+            )
+            thread.start()
+
+        if thread:
+            thread.join()
+
+        for _ in trust_samples:
+            yield q.get()
+
 
 class WebCapture:
     """

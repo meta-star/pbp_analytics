@@ -1,5 +1,7 @@
 import mysql.connector as sql_client
 
+from .tools import Tools
+
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
 
@@ -38,8 +40,6 @@ class Data:
         :param pbp_handle:
         """
         self.db_client = sql_client.connect(**pbp_handle.cfg["MySQL"])
-
-        self.pbp_handle = pbp_handle
 
     @mysql_checker
     def check_trustlist(self, url):
@@ -171,7 +171,7 @@ class Data:
         :return:
         """
         cursor = self.db_client.cursor()
-        date = self.pbp_handle.get_time("%Y-%m-%d %H:%M:%S")
+        date = Tools.get_time("%Y-%m-%d %H:%M:%S")
         cursor.execute(
             "INSERT INTO `blacklist`(`url`, `date`) VALUES (%s, %s)",
             (url, date)

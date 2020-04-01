@@ -1,5 +1,5 @@
-from .origin import Origin
-from .target import Target
+from .page_view import View
+from .safebrowsing import GoogleSafeBrowsing
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -9,4 +9,4 @@ from .target import Target
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-__all__ = ["Origin", "Target"]
+__all__ = ["View", "GoogleSafeBrowsing"]

@@ -1,5 +1,6 @@
 from .analytics import Analytics
 from .data import Data
+from .tools import Tools
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -9,4 +10,4 @@ from .data import Data
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-__all__ = ["Analytics", Data]
+__all__ = ["Analytics", "Data", "Tools"]
