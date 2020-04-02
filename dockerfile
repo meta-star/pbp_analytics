@@ -2,13 +2,11 @@
 # (c)2019 SuperSonic(https://randychen.tk).
 
 ### Select the browser you prefer
-
 # Google Chrome
 # FROM selenium/standalone-chrome:latest
 # Mozilla Firefox
 FROM selenium/standalone-firefox:latest
 # More: https://github.com/SeleniumHQ/docker-selenium
-
 ###
 
 # PB Project Maintainer
