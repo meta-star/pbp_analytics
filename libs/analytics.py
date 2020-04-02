@@ -11,6 +11,7 @@ from url_normalize import url_normalize
 
 from .callback import WebServer
 from .data import Data
+from .initialize import Initialize
 from .survey import GoogleSafeBrowsing, View
 
 """
@@ -30,7 +31,7 @@ class Analytics:
     hour_cache = {}
 
     def __init__(self):
-        self.__config_checker()
+        Initialize(self)
         # Initialization
         http.client._MAXHEADERS = 1000
         self.view_survey = View(self)
@@ -63,10 +64,6 @@ class Analytics:
         time.sleep(0.5)
         self.view_survey.close()
         sys.exit(0)
-
-    @staticmethod
-    def __config_checker():
-        assert 1 == 1
 
     def server_response(self, message):
         try:
