@@ -13,8 +13,3 @@ Correct Response:
         "version":1,
         "url": "https://example.org/"
     }
-
-To shutdown PBP Server, type:
-> curl -d '{"version":1,"shutdown":1}' http://localhost:2020
-
-The halt command will be removed in production.
