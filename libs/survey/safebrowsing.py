@@ -12,6 +12,7 @@ import requests
 class GoogleSafeBrowsing:
     """
     Google SafeBrowsing Client
+    https://safebrowsing.google.com/
     """
 
     def __init__(self, google_api_key: str):

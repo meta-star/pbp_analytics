@@ -180,6 +180,18 @@ class Data:
         return True
 
     @mysql_checker
+    def clean_result_cache(self):
+        """
+
+        :return:
+        """
+        cursor = self.db_client.cursor()
+        cursor.execute("DELETE FROM `result_cache`")
+        self.db_client.commit()
+        cursor.close()
+        return True
+
+    @mysql_checker
     def upload_view_sample(self, url: str, view_signature: str, view_data: str):
         """
 

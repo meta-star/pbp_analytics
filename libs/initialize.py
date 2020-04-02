@@ -1,6 +1,3 @@
-import asyncio
-import multiprocessing
-
 from .tools import Tools
 
 """
@@ -41,18 +38,3 @@ class Initialize:
 
     def __mysql_checker_repair(self):
         pass
-
-    @staticmethod
-    def env_setup(pbp_handle):
-        threads = EnvironmentClean(pbp_handle)
-        threads.start()
-        threads.join()
-
-
-class EnvironmentClean(multiprocessing.Process):
-    def __init__(self, pbp_handle):
-        multiprocessing.Process.__init__(self)
-        self.handle = pbp_handle
-
-    def run(self):
-        asyncio.run(self.handle.gen_sample())

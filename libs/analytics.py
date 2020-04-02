@@ -10,6 +10,7 @@ import validators
 from url_normalize import url_normalize
 
 from .callback import WebServer
+from .cron import Cron
 from .data import Data
 from .initialize import Initialize
 from .survey import GoogleSafeBrowsing, View
@@ -35,11 +36,12 @@ class Analytics:
         http.client._MAXHEADERS = 1000
         self.data_control = Data(self)
         self.view_survey = View(self)
+        self.cron_job = Cron(self)
         self.safe_browsing = GoogleSafeBrowsing(
             self.cfg["Google Safe Browsing"]["google_api_key"]
         )
         self.web_agent = urllib3.PoolManager()
-        Initialize.env_setup(self)
+        self.cron_job.start()
 
     def start(self, port: int = 2020):
         """
@@ -60,12 +62,12 @@ class Analytics:
         """
         pass
 
-    @staticmethod
-    def stop():
+    def stop(self):
         """
 
         :return:
         """
+        self.cron_job.stop()
         sys.exit(0)
 
     async def server_response(self, message: str):
