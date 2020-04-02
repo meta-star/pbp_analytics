@@ -32,20 +32,25 @@ class BrowserAgent:
     driver = None
 
     def __init__(self, config):
-        using = config.get("capture_browser")
-        if using == "firefox":
+        self.using = config.get("capture_browser")
+        self.driver = self._set_browser()
+
+    def _set_browser(self):
+        if self.using == "firefox":
             options = webdriver.FirefoxOptions()
             options.add_argument('--headless')
             options.add_argument('--private-window')
-            self.driver = webdriver.Firefox(firefox_options=options)
-        elif using == "chrome":
+            return webdriver.Firefox(firefox_options=options)
+        elif self.using == "chrome":
             options = webdriver.ChromeOptions()
             options.add_argument('--headless')
             options.add_argument('--incognito')
             options.add_argument('--disable-gpu')
-            self.driver = webdriver.Chrome(chrome_options=options)
+            return webdriver.Chrome(chrome_options=options)
+        raise BrowserException("BrowserAgent", "No Browser Selected")
 
     def capture(self, url, path, size="1920,1080"):
+        assert self.driver, "Web Driver Not Existed."
         (width, height) = size.split(",")
         self.driver.set_window_size(width, height)
         self.driver.get(url)
@@ -53,3 +58,12 @@ class BrowserAgent:
 
     def close(self):
         self.driver.close()
+
+
+class BrowserException(Exception):
+    def __init__(self, cause, message):
+        self.cause = cause
+        self.message = message
+
+    def __str__(self):
+        return self.cause + ': ' + self.message
