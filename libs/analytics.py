@@ -47,8 +47,11 @@ class Analytics:
         Start to listen online
         :return:
         """
-        server = WebServer(self)
-        server.listen()
+        try:
+            server = WebServer(self)
+            server.listen()
+        except KeyboardInterrupt:
+            self.stop()
 
     def test(self):
         """
