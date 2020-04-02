@@ -131,7 +131,7 @@ class Analytics:
 
         cache = self.data_control.find_result_cache_by_url_hash(url_hash)
 
-        if cache:
+        if cache is not None:
             score = cache
 
         elif self.data_control.check_trustlist(url):

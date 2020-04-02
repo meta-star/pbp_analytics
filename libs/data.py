@@ -139,7 +139,9 @@ class Data:
         result = cursor.fetchall()
         self.db_client.commit()
         cursor.close()
-        return result
+        if result:
+            return result[0][0]
+        return None
 
     @mysql_checker
     def find_result_cache_by_url_hash(self, url_hash):
