@@ -47,7 +47,7 @@ class BrowserAgent:
             options.add_argument('--incognito')
             options.add_argument('--disable-gpu')
             return webdriver.Chrome(chrome_options=options)
-        raise BrowserException("BrowserAgent", "No Browser Selected")
+        raise BrowserException("BrowserAgent", "No Supported Browser Selected")
 
     def capture(self, url, path, size="1920,1080"):
         assert self.driver, "Web Driver Not Existed."

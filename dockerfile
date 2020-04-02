@@ -6,7 +6,6 @@
 # FROM selenium/standalone-chrome:latest
 # Mozilla Firefox
 FROM selenium/standalone-firefox:latest
-# More: https://github.com/SeleniumHQ/docker-selenium
 ###
 
 # PB Project Maintainer
