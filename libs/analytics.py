@@ -1,9 +1,9 @@
 import http.client
-import sys
 import json
+import sys
 from configparser import ConfigParser
-from multiprocessing import Process, Queue
 from hashlib import sha256
+from multiprocessing import Process, Queue
 
 import urllib3
 import validators

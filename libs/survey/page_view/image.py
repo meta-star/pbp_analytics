@@ -9,7 +9,6 @@ import numpy
 from skimage.metrics import structural_similarity
 
 from .browser import BrowserRender, BrowserAgent
-from ...analytics import Analytics
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -25,7 +24,7 @@ class Image:
 
     """
 
-    def __init__(self, pbp_handle: Analytics):
+    def __init__(self, pbp_handle):
         self.capture_handle = WebCapture(pbp_handle.cfg["WebCapture"])
         self.data_control = pbp_handle.data_control
 
