@@ -46,15 +46,12 @@ class Analytics:
         Start to listen online
         :return:
         """
-        try:
-            server = WebServer(self)
-            print(
-                Tools.get_time(),
-                "[Start] Listening WebServer port {}".format(port)
-            )
-            server.listen(port)
-        except KeyboardInterrupt:
-            self.stop()
+        server = WebServer(self)
+        print(
+            Tools.get_time(),
+            "[Start] Listening WebServer port {}".format(port)
+        )
+        server.listen(port)
 
     def test(self):
         """
@@ -79,6 +76,8 @@ class Analytics:
         if req_res.get("version") is not None:
             try:
                 return await self._server_response(req_res)
+            except KeyboardInterrupt:
+                self.stop()
             except:
                 error_report = Tools.error_report()
                 print(error_report)
