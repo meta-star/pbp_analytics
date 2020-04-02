@@ -3,6 +3,7 @@ import base64
 from threading import Thread, Lock
 
 from .image import Image
+from ...tools import Tools
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -58,13 +59,17 @@ class View:
 
         async def _upload(url):
             lock.acquire()
-            (view_signature, view_data) = await self.image_handle.capture(url)
-            b64_view_data = base64.b64encode(view_data.dumps())
-            self.data_control.upload_view_sample(
-                url,
-                view_signature,
-                b64_view_data,
-            )
+            try:
+                (view_signature, view_data) = await self.image_handle.capture(url)
+                b64_view_data = base64.b64encode(view_data.dumps())
+                self.data_control.upload_view_sample(
+                    url,
+                    view_signature,
+                    b64_view_data,
+                )
+            except:
+                error_report = Tools.error_report()
+                raise ViewException("generate._upload", url, error_report[3])
             lock.release()
 
         for origin_url in self.data_control.get_urls_from_trustlist():
@@ -78,3 +83,15 @@ class View:
 
         if thread:
             thread.join()
+
+
+class ViewException(Exception):
+    def __init__(self, cause, url, message):
+        self.err_msg = {
+            "cause": cause,
+            "url": url,
+            "message": message
+        }
+
+    def __str__(self):
+        return "{cause}[{url}]: {message}".format(**self.err_msg)
