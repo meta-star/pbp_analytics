@@ -66,7 +66,6 @@ class Analytics:
         :return:
         """
         time.sleep(0.5)
-        self.view_survey.close()
         sys.exit(0)
 
     async def server_response(self, message):

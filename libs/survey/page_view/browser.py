@@ -31,8 +31,8 @@ class BrowserAgent:
 
     driver = None
 
-    def __init__(self, config):
-        self.using = config.get("capture_browser")
+    def __init__(self, capture_browser):
+        self.using = capture_browser
         self.driver = self._set_browser()
 
     def _set_browser(self):

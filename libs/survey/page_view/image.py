@@ -97,11 +97,9 @@ class WebCapture:
     """
 
     def __init__(self, config):
+        self.capture_browser = config["capture_browser"]
         self.cache_path = config["cache_path"]
-
-        self.browser = self.__set_browser_simulation(
-            config["capture_type"]
-        )(config)
+        self.browser = config["capture_type"]
 
         if not os.path.exists(self.cache_path):
             os.makedirs(self.cache_path)
@@ -126,9 +124,11 @@ class WebCapture:
         :return: bool
         """
         layout_path = os.path.join(self.cache_path, output_image)
+        simulation = self.__set_browser_simulation(self.browser)(self.capture_browser)
         if os.path.isfile(layout_path):
             os.remove(layout_path)
-        self.browser.capture(target_url, layout_path)
+        simulation.capture(target_url, layout_path)
+        simulation.close()
         return layout_path
 
     @staticmethod
