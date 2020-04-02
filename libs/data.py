@@ -203,7 +203,7 @@ class Data:
         cursor = self.db_client.cursor()
         if self.check_trustlist(url):
             cursor.execute(
-                "UPDATE `trustlist` SET `target_view_signature` = %s, `target_view_narray`=%s WHERE `url` = %s",
+                "UPDATE `trustlist` SET `target_view_signature` = %s, `target_view_narray` = %s WHERE `url` = %s",
                 (view_signature, view_data, url)
             )
         else:

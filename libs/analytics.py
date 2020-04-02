@@ -145,7 +145,8 @@ class Analytics:
         else:
             score = await self._analytics_inside(data, url)
 
-        self.data_control.upload_result_cache(url_hash, score)
+        if cache is None:
+            self.data_control.upload_result_cache(url_hash, score)
 
         return {
             "status": 200,
