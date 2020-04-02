@@ -28,17 +28,18 @@ class Tools:
         Report errors as message
         :return: string
         """
+        occur_time = Tools.get_time()
         err1, err2, err3 = sys.exc_info()
         traceback.print_tb(err3)
         tb_info = traceback.extract_tb(err3)
         filename, line, func, text = tb_info[-1]
         error_info = "occurred in\n{}\n\non line {}\nin statement {}".format(filename, line, text)
-        return "System Error:\n\n%s\n%s\n%s\n\n%s" % (err1, err2, err3, error_info)
+        return "%s\nSystem Error:\n\n%s\n%s\n%s\n\n%s\n" % (occur_time, err1, err2, err3, error_info)
 
     @staticmethod
     def logger(error_msg, write=True):
         if write:
             with open("service.log", "a+") as log:
-                log.write(error_msg)
+                log.write(error_msg + "\n")
         else:
             print(error_msg)
