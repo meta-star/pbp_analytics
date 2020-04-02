@@ -65,6 +65,11 @@ class Image:
         thread = None
 
         def _compare(sample):
+            """
+
+            :param sample:
+            :return:
+            """
             origin_sample = self.capture_handle.image_object_from_b64(
                 sample["target_view_narray"].encode("utf-8")
             )

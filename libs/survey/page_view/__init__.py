@@ -51,6 +51,11 @@ class View:
         lock = Lock()
 
         async def _upload(url):
+            """
+
+            :param url:
+            :return:
+            """
             lock.acquire()
             try:
                 (view_signature, view_data) = await self.image_handle.capture(url)

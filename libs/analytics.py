@@ -1,7 +1,6 @@
 import http.client
 import sys
 import json
-import time
 from configparser import ConfigParser
 from multiprocessing import Process, Queue
 
@@ -13,6 +12,7 @@ from .callback import WebServer
 from .data import Data
 from .initialize import Initialize
 from .survey import GoogleSafeBrowsing, View
+from .tools import Tools
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -42,14 +42,18 @@ class Analytics:
         self.web_agent = urllib3.PoolManager()
         Initialize.env_setup(self)
 
-    def start(self):
+    def start(self, port=2020):
         """
         Start to listen online
         :return:
         """
         try:
             server = WebServer(self)
-            server.listen()
+            print(
+                Tools.get_time(),
+                "[Start] Listening WebServer port {}".format(port)
+            )
+            server.listen(port)
         except KeyboardInterrupt:
             self.stop()
 
@@ -65,7 +69,6 @@ class Analytics:
 
         :return:
         """
-        time.sleep(0.5)
         sys.exit(0)
 
     async def server_response(self, message):

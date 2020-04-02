@@ -78,7 +78,7 @@ class WebServer:
         response_handle = (pbp_handle.server_response,)
 
     @staticmethod
-    def listen():
+    def listen(port):
         """
 
         :return:
@@ -88,5 +88,6 @@ class WebServer:
             ('/ws', WSHandler)
         ])
         server = HTTPServer(app)
-        server.listen(2020)
+        server.listen(port)
+        server.start(0)
         IOLoop.current().start()

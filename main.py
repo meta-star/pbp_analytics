@@ -10,9 +10,8 @@ Phishing Blocker Project - Analytics
 ===
 """
 
-from libs import Analytics, Tools
+from libs import Analytics
 
 if __name__ == "__main__":
     handle = Analytics()
-    print("PBP Server\n{}\n".format(Tools.get_time()))
     handle.start()
