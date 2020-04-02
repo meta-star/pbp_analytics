@@ -1,4 +1,5 @@
 import asyncio
+import multiprocessing
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -18,7 +19,7 @@ class Initialize:
         return self.__mysql_checker()
 
     def __mysql_checker(self):
-        return self.__env_setup()
+        pass
 
     def __mysql_checker_initialize(self):
         pass
@@ -26,5 +27,17 @@ class Initialize:
     def __mysql_checker_repair(self):
         pass
 
-    def __env_setup(self):
+    @staticmethod
+    def env_setup(pbp_handle):
+        threads = EnvironmentClean(pbp_handle)
+        threads.start()
+        threads.join()
+
+
+class EnvironmentClean(multiprocessing.Process):
+    def __init__(self, pbp_handle):
+        multiprocessing.Process.__init__(self)
+        self.handle = pbp_handle
+
+    def run(self):
         asyncio.run(self.handle.gen_sample())

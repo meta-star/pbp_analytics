@@ -34,12 +34,13 @@ class Analytics:
         Initialize(self)
         # Initialization
         http.client._MAXHEADERS = 1000
-        self.view_survey = View(self)
         self.data_control = Data(self)
+        self.view_survey = View(self)
         self.safe_browsing = GoogleSafeBrowsing(
             self.cfg["Google Safe Browsing"]["google_api_key"]
         )
         self.web_agent = urllib3.PoolManager()
+        Initialize.env_setup(self)
 
     def start(self):
         """
@@ -65,7 +66,7 @@ class Analytics:
         self.view_survey.close()
         sys.exit(0)
 
-    def server_response(self, message):
+    async def server_response(self, message):
         try:
             req_res = json.loads(message)
         except json.decoder.JSONDecodeError:

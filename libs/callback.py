@@ -35,20 +35,10 @@ class HttpHandler(RequestHandler, ABC):
     async def post(self):
         req_body = self.request.body
         req_str = req_body.decode('utf8')
-        try:
-            req_res = json.loads(req_str)
-        except json.decoder.JSONDecodeError:
-            req_res = {}
-        if req_res.get("version") is not None:
-            result = {"status": 500}
-            if response_handle:
-                for handle in response_handle:
-                    result = await handle(req_res)
-        else:
-            if req_res:
-                result = {"status": 400}
-            else:
-                result = {"status": 401}
+        result = {"status": 202}
+        if response_handle:
+            for handle in response_handle:
+                result = await handle(req_str)
         self.write(json.dumps(result))
         await self.finish()
 
@@ -71,7 +61,7 @@ class WSHandler(WebSocketHandler, ABC):
         result = {"status": 202}
         if response_handle:
             for handle in response_handle:
-                result = handle(message)
+                result = await handle(message)
         await self.write_message(json.dumps(result))
 
     def on_close(self):
@@ -86,7 +76,6 @@ class WebServer:
     def __init__(self, pbp_handle):
         global response_handle
         response_handle = (pbp_handle.server_response,)
-        pbp_handle.get_time()
 
     @staticmethod
     def listen():
