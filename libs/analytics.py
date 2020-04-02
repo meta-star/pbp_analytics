@@ -82,7 +82,7 @@ class Analytics:
                 self.stop()
             except:
                 error_report = Tools.error_report()
-                print(error_report)
+                Tools.logger(error_report)
                 return {"status": 500}
         return {"status": 400}
 

@@ -34,3 +34,11 @@ class Tools:
         filename, line, func, text = tb_info[-1]
         error_info = "occurred in\n{}\n\non line {}\nin statement {}".format(filename, line, text)
         return "System Error:\n\n%s\n%s\n%s\n\n%s" % (err1, err2, err3, error_info)
+
+    @staticmethod
+    def logger(error_msg, write=True):
+        if write:
+            with open("service.log", "a+") as log:
+                log.write(error_msg)
+        else:
+            print(error_msg)
