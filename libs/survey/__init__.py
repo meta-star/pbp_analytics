@@ -1,6 +1,6 @@
 from .page_view import View
-from .safebrowsing import GoogleSafeBrowsing
 from .phishtank import PhishTank
+from .safebrowsing import GoogleSafeBrowsing
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)

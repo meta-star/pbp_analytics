@@ -1,3 +1,6 @@
+import gzip
+import json
+
 import requests
 
 """
@@ -25,7 +28,7 @@ class PhishTank:
         self.api_key = api_key
 
         self.api_url = "https://checkurl.phishtank.com/checkurl"
-        self.db_url = "http://data.phishtank.com/data/{}/online-valid.json"
+        self.db_url = "http://data.phishtank.com/data/{}/online-valid.json.gz".format(api_key)
 
     def lookup(self, url: str):
         """
@@ -48,4 +51,6 @@ class PhishTank:
         Get database from PhishTank
         :return:
         """
-        return requests.get(self.db_url).json()
+        data = requests.get(self.db_url)
+        uncompressed_data = gzip.decompress(data.content)
+        return json.loads(uncompressed_data)

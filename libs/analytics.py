@@ -13,7 +13,7 @@ from .callback import WebServer
 from .cron import Cron
 from .data import Data
 from .initialize import Initialize
-from .survey import GoogleSafeBrowsing, View
+from .survey import View, GoogleSafeBrowsing, PhishTank
 from .tools import Tools
 
 """
@@ -39,6 +39,10 @@ class Analytics:
         self.cron_job = Cron(self)
         self.safe_browsing = GoogleSafeBrowsing(
             self.cfg["Google Safe Browsing"]["google_api_key"]
+        )
+        self.phishtank = PhishTank(
+            self.cfg["PhishTank"]["username"],
+            self.cfg["PhishTank"]["api_key"]
         )
         self.web_agent = urllib3.PoolManager()
         self.cron_job.start()
@@ -202,3 +206,7 @@ class Analytics:
         :return:
         """
         await self.view_survey.generate()
+        blacklist = self.phishtank.get_database()
+        for target in blacklist:
+            if not self.data_control.check_blacklist(target.get("url")):
+                self.data_control.mark_as_blacklist(target.get("url"))
