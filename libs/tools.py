@@ -37,8 +37,8 @@ class Tools:
         return "%s\nSystem Error:\n\n%s\n%s\n%s\n\n%s\n" % (occur_time, err1, err2, err3, error_info)
 
     @staticmethod
-    def logger(error_msg, write=True):
-        if write:
+    def logger(error_msg, silence: bool = True):
+        if silence:
             with open("service.log", "a+") as log:
                 log.write(error_msg + "\n")
         else:
