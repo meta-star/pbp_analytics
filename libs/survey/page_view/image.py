@@ -34,14 +34,16 @@ class Image:
         :return:
         """
         url_hash = sha256(url.encode("utf-8"))
+        cache_file = "{}.png".format(
+            url_hash.hexdigest()
+        )
         layout_path = self.capture_handle.get_page_image(
             target_url=url,
-            output_image="{}.png".format(
-                url_hash.hexdigest()
-            )
+            output_image=cache_file
         )
         image_num_array = self.capture_handle.image_object(layout_path)
         hash_object = sha256(image_num_array)
+        self.capture_handle.delete_page_image(cache_file)
         return hash_object.hexdigest(), image_num_array
 
     async def signature(self, hex_digest):
@@ -135,6 +137,16 @@ class WebCapture:
         simulation.capture(target_url, layout_path)
         simulation.close()
         return layout_path
+
+    def delete_page_image(self, output_image='out.png'):
+        """
+        To delete the image of the URL you provided.
+        :param output_image: Output path (optional)
+        :return: bool
+        """
+        layout_path = os.path.join(self.cache_path, output_image)
+        if os.path.isfile(layout_path):
+            os.remove(layout_path)
 
     @staticmethod
     def image_object(path):

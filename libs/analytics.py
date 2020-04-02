@@ -3,6 +3,7 @@ import sys
 import json
 from configparser import ConfigParser
 from multiprocessing import Process, Queue
+from hashlib import shake_128
 
 import urllib3
 import validators
@@ -27,8 +28,6 @@ class Analytics:
     # Loading Configs
     cfg = ConfigParser()
     cfg.read("config.ini")
-
-    hour_cache = {}
 
     def __init__(self):
         Initialize(self)
@@ -113,6 +112,7 @@ class Analytics:
         :return:
         """
         url = url_normalize(data.get("url"))
+        url_hash = shake_128(url).hexdigest()
 
         try:
             response = self.web_agent.request('GET', url)
@@ -128,7 +128,12 @@ class Analytics:
                 "http_code": response.status
             }
 
-        if self.data_control.check_trustlist(url):
+        cache = self.data_control.find_result_cache_by_url_hash(url_hash)
+
+        if cache:
+            score = cache
+
+        elif self.data_control.check_trustlist(url):
             score = 1
 
         elif self.data_control.check_blacklist(url):
@@ -138,12 +143,9 @@ class Analytics:
             score = 0
             self.data_control.mark_as_blacklist(url)
 
-        elif url in self.hour_cache:
-            score = self.hour_cache[url]
-
         else:
             score = await self._analytics_inside(data, url)
-            self.hour_cache[url] = score
+            self.data_control.upload_result_cache(url_hash, score)
 
         return {
             "status": 200,

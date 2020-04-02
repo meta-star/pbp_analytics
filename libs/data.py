@@ -88,7 +88,9 @@ class Data:
         result = cursor.fetchall()
         self.db_client.commit()
         cursor.close()
-        return [record[0] for record in result]
+        if result:
+            return [record[0] for record in result]
+        return []
 
     @mysql_checker
     def get_view_narray_from_trustlist(self):
@@ -140,6 +142,40 @@ class Data:
         return result
 
     @mysql_checker
+    def find_result_cache_by_url_hash(self, url_hash):
+        """
+
+        :param url_hash:
+        :return:
+        """
+        cursor = self.db_client.cursor()
+        cursor.execute(
+            "SELECT `score` FROM `result_cache` WHERE `url_hash` = %s",
+            (url_hash,)
+        )
+        result = cursor.fetchall()
+        self.db_client.commit()
+        cursor.close()
+        return result
+
+    @mysql_checker
+    def upload_result_cache(self, url_hash, score):
+        """
+
+        :param url_hash:
+        :param score:
+        :return:
+        """
+        cursor = self.db_client.cursor()
+        cursor.execute(
+            "INSERT INTO `trustlist`(`url_hash`, `score`) VALUES (%s, %s)",
+            (url_hash, score)
+        )
+        self.db_client.commit()
+        cursor.close()
+        return True
+
+    @mysql_checker
     def upload_view_sample(self, url, view_signature, view_data):
         """
 
@@ -156,7 +192,7 @@ class Data:
             )
         else:
             cursor.execute(
-                "INSERT INTO `trustlist`(`url`, `target_view_signature`, `target_view_narray`=%s) VALUES (%s, %s, %s)",
+                "INSERT INTO `trustlist`(`url`, `target_view_signature`, `target_view_narray`) VALUES (%s, %s, %s)",
                 (url, view_signature, view_data)
             )
         self.db_client.commit()
