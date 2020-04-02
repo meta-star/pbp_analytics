@@ -14,7 +14,7 @@ class GoogleSafeBrowsing:
     Google SafeBrowsing Client
     """
 
-    def __init__(self, google_api_key):
+    def __init__(self, google_api_key: str):
         """
         Initialization
         :param google_api_key: Google API Token
@@ -29,7 +29,7 @@ class GoogleSafeBrowsing:
         self.lookup_url = "https://{}/{}/{}?key={}".format(host, api_ver, lookup_path, google_api_key)
         self.update_url = "https://{}/{}/{}?key={}".format(host, api_ver, update_path, google_api_key)
 
-    def lookup(self, urls):
+    def lookup(self, urls: list):
         """
         To check URLs from Google SafeBrowsing
         :param urls: list of URLs

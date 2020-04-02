@@ -2,6 +2,7 @@ import asyncio
 import multiprocessing
 
 from .tools import Tools
+from .analytics import Analytics
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -26,7 +27,7 @@ class Initialize:
     ===
     """.format(Tools.get_time()))
 
-    def __init__(self, pbp_handle):
+    def __init__(self, pbp_handle: Analytics):
         self.handle = pbp_handle
         self.__config_checker()
 

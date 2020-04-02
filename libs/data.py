@@ -42,7 +42,7 @@ class Data:
         self.db_client = sql_client.connect(**pbp_handle.cfg["MySQL"])
 
     @mysql_checker
-    def check_trustlist(self, url):
+    def check_trustlist(self, url: str):
         """
 
         :param url:
@@ -53,13 +53,13 @@ class Data:
             "SELECT `url` FROM `trustlist` WHERE `url` = %s",
             (url,)
         )
-        result = cursor.fetchall()
+        result = cursor.fetchone()
         self.db_client.commit()
         cursor.close()
         return result
 
     @mysql_checker
-    def check_blacklist(self, url):
+    def check_blacklist(self, url: str):
         """
 
         :param url:
@@ -70,7 +70,7 @@ class Data:
             "SELECT `url`, `date` FROM `blacklist` WHERE `url` = %s",
             (url,)
         )
-        result = cursor.fetchall()
+        result = cursor.fetchone()
         self.db_client.commit()
         cursor.close()
         return result
@@ -108,7 +108,7 @@ class Data:
         return result
 
     @mysql_checker
-    def get_view_narray_from_trustlist_with_target_type(self, target_type):
+    def get_view_narray_from_trustlist_with_target_type(self, target_type: int):
         """
 
         :param target_type:
@@ -125,7 +125,7 @@ class Data:
         return result
 
     @mysql_checker
-    def find_page_by_view_signature(self, signature):
+    def find_page_by_view_signature(self, signature: str):
         """
 
         :param signature:
@@ -136,15 +136,15 @@ class Data:
             "SELECT `url` FROM `trustlist` WHERE `target_view_signature` = %s",
             (signature,)
         )
-        result = cursor.fetchall()
+        result = cursor.fetchone()
         self.db_client.commit()
         cursor.close()
         if result:
-            return result[0][0]
+            return result[0]
         return None
 
     @mysql_checker
-    def find_result_cache_by_url_hash(self, url_hash):
+    def find_result_cache_by_url_hash(self, url_hash: str):
         """
 
         :param url_hash:
@@ -155,13 +155,15 @@ class Data:
             "SELECT `score` FROM `result_cache` WHERE `url_hash` = %s",
             (url_hash,)
         )
-        result = cursor.fetchall()
+        result = cursor.fetchone()
         self.db_client.commit()
         cursor.close()
-        return result
+        if result:
+            return result[0]
+        return None
 
     @mysql_checker
-    def upload_result_cache(self, url_hash, score):
+    def upload_result_cache(self, url_hash: str, score: float):
         """
 
         :param url_hash:
@@ -178,7 +180,7 @@ class Data:
         return True
 
     @mysql_checker
-    def upload_view_sample(self, url, view_signature, view_data):
+    def upload_view_sample(self, url: str, view_signature: str, view_data: str):
         """
 
         :param url:
@@ -202,7 +204,7 @@ class Data:
         return True
 
     @mysql_checker
-    def mark_as_blacklist(self, url):
+    def mark_as_blacklist(self, url: str):
         """
 
         :param url:

@@ -67,7 +67,7 @@ class View:
                 )
             except:
                 error_report = Tools.error_report()
-                raise ViewException("generate._upload", url, error_report[3])
+                raise ViewException("generate._upload", url, error_report)
             lock.release()
 
         for origin_url in self.data_control.get_urls_from_trustlist():

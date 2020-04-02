@@ -5,9 +5,11 @@ from hashlib import sha256
 from multiprocessing import Process, Queue
 
 import cv2
+import numpy
 from skimage.metrics import structural_similarity
 
 from .browser import BrowserRender, BrowserAgent
+from ...analytics import Analytics
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -23,11 +25,11 @@ class Image:
 
     """
 
-    def __init__(self, pbp_capture):
-        self.capture_handle = WebCapture(pbp_capture.cfg["WebCapture"])
-        self.data_control = pbp_capture.data_control
+    def __init__(self, pbp_handle: Analytics):
+        self.capture_handle = WebCapture(pbp_handle.cfg["WebCapture"])
+        self.data_control = pbp_handle.data_control
 
-    async def capture(self, url):
+    async def capture(self, url: str):
         """
 
         :param url:
@@ -46,7 +48,7 @@ class Image:
         self.capture_handle.delete_page_image(cache_file)
         return hash_object.hexdigest(), image_num_array
 
-    async def signature(self, hex_digest):
+    async def signature(self, hex_digest: str):
         """
 
         :param hex_digest:
@@ -56,7 +58,7 @@ class Image:
         if query:
             return query[0]
 
-    async def rank(self, target_type, target_num_array):
+    async def rank(self, target_type: int, target_num_array: str):
         """
 
         :param target_type:
@@ -66,7 +68,7 @@ class Image:
         q = Queue()
         thread = None
 
-        def _compare(sample):
+        def _compare(sample: dict):
             """
 
             :param sample:
@@ -103,7 +105,7 @@ class WebCapture:
     To take screenshot for PBP.
     """
 
-    def __init__(self, config):
+    def __init__(self, config: dict):
         self.capture_browser = config["capture_browser"]
         self.cache_path = config["cache_path"]
         self.browser = config["capture_type"]
@@ -112,7 +114,7 @@ class WebCapture:
             os.makedirs(self.cache_path)
 
     @staticmethod
-    def __set_browser_simulation(type_id):
+    def __set_browser_simulation(type_id: str):
         """
         Set Browser Simulation by ID
         :param type_id: Type ID
@@ -123,7 +125,7 @@ class WebCapture:
             '2': BrowserAgent
         }[type_id]
 
-    def get_page_image(self, target_url, output_image='out.png'):
+    def get_page_image(self, target_url: str, output_image: str = 'out.png'):
         """
         To get the image of the URL you provided.
         :param target_url: The target URL
@@ -138,7 +140,7 @@ class WebCapture:
         simulation.close()
         return layout_path
 
-    def delete_page_image(self, output_image='out.png'):
+    def delete_page_image(self, output_image: str = 'out.png'):
         """
         To delete the image of the URL you provided.
         :param output_image: Output path (optional)
@@ -149,7 +151,7 @@ class WebCapture:
             os.remove(layout_path)
 
     @staticmethod
-    def image_object(path):
+    def image_object(path: str):
         """
         Create NumPy Array
         :param path: The Image Path
@@ -158,7 +160,7 @@ class WebCapture:
         return cv2.imread(path, 0)
 
     @staticmethod
-    def image_object_from_b64(b64_string):
+    def image_object_from_b64(b64_string: bytes):
         """
         Import NumPy Array by base64
         :param b64_string: base64 NumPy Array dumped
@@ -168,7 +170,7 @@ class WebCapture:
         return pickle.loads(string)
 
     @staticmethod
-    def image_compare(img1, img2):
+    def image_compare(img1: numpy.numarray, img2: numpy.numarray):
         """
         To compare image using structural similarity index
         :param img1: Image object

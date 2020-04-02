@@ -1,3 +1,5 @@
+from .analytics import Analytics
+
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
 
@@ -8,5 +10,5 @@
 
 
 class Cron:
-    def __init__(self, pbp_handle):
+    def __init__(self, pbp_handle: Analytics):
         self.handle = pbp_handle

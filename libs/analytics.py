@@ -41,7 +41,7 @@ class Analytics:
         self.web_agent = urllib3.PoolManager()
         Initialize.env_setup(self)
 
-    def start(self, port=2020):
+    def start(self, port: int = 2020):
         """
         Start to listen online
         :return:
@@ -71,7 +71,7 @@ class Analytics:
         """
         sys.exit(0)
 
-    async def server_response(self, message):
+    async def server_response(self, message: str):
         try:
             req_res = json.loads(message)
         except json.decoder.JSONDecodeError:
@@ -80,10 +80,12 @@ class Analytics:
             try:
                 return await self._server_response(req_res)
             except:
+                error_report = Tools.error_report()
+                print(error_report)
                 return {"status": 500}
         return {"status": 400}
 
-    async def _server_response(self, data):
+    async def _server_response(self, data: dict):
         """
 
         :param data:
@@ -106,7 +108,7 @@ class Analytics:
             "status": 401
         }
 
-    async def analytics(self, data):
+    async def analytics(self, data: dict):
         """
 
         :param data:
@@ -155,7 +157,7 @@ class Analytics:
             "trust_score": score
         }
 
-    async def _analytics_inside(self, data, url):
+    async def _analytics_inside(self, data: dict, url: str):
         """
 
         :param data:

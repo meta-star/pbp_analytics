@@ -31,7 +31,7 @@ class BrowserAgent:
 
     driver = None
 
-    def __init__(self, capture_browser):
+    def __init__(self, capture_browser: str):
         self.using = capture_browser
         self.driver = self._set_browser()
 
@@ -49,7 +49,7 @@ class BrowserAgent:
             return webdriver.Chrome(chrome_options=options)
         raise BrowserException("BrowserAgent", "No Supported Browser Selected")
 
-    def capture(self, url, path, size="1920,1080"):
+    def capture(self, url: str, path: str, size: str = "1920,1080"):
         assert self.driver, "Web Driver Not Existed."
         (width, height) = size.split(",")
         self.driver.set_window_size(width, height)

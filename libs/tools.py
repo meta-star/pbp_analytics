@@ -13,7 +13,7 @@ import traceback
 
 class Tools:
     @staticmethod
-    def get_time(time_format="%b %d %Y %H:%M:%S %Z"):
+    def get_time(time_format: str = "%b %d %Y %H:%M:%S %Z"):
         """
 
         :param time_format:
@@ -25,12 +25,12 @@ class Tools:
     @staticmethod
     def error_report():
         """
-        Report errors as tuple
-        :return: tuple
+        Report errors as message
+        :return: string
         """
         err1, err2, err3 = sys.exc_info()
         traceback.print_tb(err3)
         tb_info = traceback.extract_tb(err3)
         filename, line, func, text = tb_info[-1]
         error_info = "occurred in\n{}\n\non line {}\nin statement {}".format(filename, line, text)
-        return err1, err2, err3, error_info
+        return "System Error:\n\n%s\n%s\n%s\n\n%s" % (err1, err2, err3, error_info)
