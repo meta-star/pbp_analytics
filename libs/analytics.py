@@ -206,6 +206,8 @@ class Analytics:
         :return:
         """
         await self.view_survey.generate()
+
+    def update_blacklist_from_phishtank(self):
         blacklist = self.phishtank.get_database()
         for target in blacklist:
             if not self.data_control.check_blacklist(target.get("url")):

@@ -47,3 +47,4 @@ class Update(multiprocessing.Process):
     def run(self):
         asyncio.run(self.handle.gen_sample())
         self.handle.data_control.clean_result_cache()
+        self.handle.update_blacklist_from_phishtank()
