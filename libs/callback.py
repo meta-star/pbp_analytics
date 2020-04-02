@@ -68,20 +68,10 @@ class WSHandler(WebSocketHandler, ABC):
         }))
 
     async def on_message(self, message):
-        try:
-            req_res = json.loads(message)
-        except json.decoder.JSONDecodeError:
-            req_res = {}
-        if req_res.get("version") is not None:
-            result = {"status": 500}
-            if response_handle:
-                for handle in response_handle:
-                    result = await handle(req_res)
-        else:
-            if req_res:
-                result = {"status": 400}
-            else:
-                result = {"status": 401}
+        result = {"status": 202}
+        if response_handle:
+            for handle in response_handle:
+                result = handle(message)
         await self.write_message(json.dumps(result))
 
     def on_close(self):

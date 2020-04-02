@@ -19,6 +19,10 @@ class View:
         self.image_handle = Image(pbp_handle)
 
     def close(self):
+        """
+
+        :return:
+        """
         self.image_handle.capture_handle.browser.close()
 
     async def analytics(self, target_type, target_url):

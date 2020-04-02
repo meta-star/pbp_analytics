@@ -1,5 +1,6 @@
 import http.client
 import sys
+import json
 import time
 from configparser import ConfigParser
 from multiprocessing import Process, Queue
@@ -45,7 +46,6 @@ class Analytics:
         :return:
         """
         server = WebServer(self)
-        # noinspection PyBroadException
         server.listen()
 
     def test(self):
@@ -53,8 +53,7 @@ class Analytics:
 
         :return:
         """
-        server = WebServer(self)
-        server.listen()
+        pass
 
     def stop(self):
         """
@@ -69,7 +68,19 @@ class Analytics:
     def __config_checker():
         assert 1 == 1
 
-    async def server_response(self, data):
+    def server_response(self, message):
+        try:
+            req_res = json.loads(message)
+        except json.decoder.JSONDecodeError:
+            return {"status": 401}
+        if req_res.get("version") is not None:
+            try:
+                return await self._server_response(req_res)
+            except:
+                return {"status": 500}
+        return {"status": 400}
+
+    async def _server_response(self, data):
         """
 
         :param data:
