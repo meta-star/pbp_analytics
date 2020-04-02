@@ -48,7 +48,7 @@ class Data:
         :param url:
         :return:
         """
-        cursor = self.db_client.cursor(dictionary=True)
+        cursor = self.db_client.cursor(buffered=True, dictionary=True)
         cursor.execute(
             "SELECT `url` FROM `trustlist` WHERE `url` = %s",
             (url,)
@@ -65,7 +65,7 @@ class Data:
         :param url:
         :return:
         """
-        cursor = self.db_client.cursor(dictionary=True)
+        cursor = self.db_client.cursor(buffered=True, dictionary=True)
         cursor.execute(
             "SELECT `url`, `date` FROM `blacklist` WHERE `url` = %s",
             (url,)
@@ -131,7 +131,7 @@ class Data:
         :param signature:
         :return:
         """
-        cursor = self.db_client.cursor()
+        cursor = self.db_client.cursor(buffered=True)
         cursor.execute(
             "SELECT `url` FROM `trustlist` WHERE `target_view_signature` = %s",
             (signature,)
@@ -150,7 +150,7 @@ class Data:
         :param url_hash:
         :return:
         """
-        cursor = self.db_client.cursor()
+        cursor = self.db_client.cursor(buffered=True)
         cursor.execute(
             "SELECT `score` FROM `result_cache` WHERE `url_hash` = %s",
             (url_hash,)
