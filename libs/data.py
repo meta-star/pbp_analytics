@@ -168,7 +168,7 @@ class Data:
         """
         cursor = self.db_client.cursor()
         cursor.execute(
-            "INSERT INTO `trustlist`(`url_hash`, `score`) VALUES (%s, %s)",
+            "INSERT INTO `result_cache`(`url_hash`, `score`) VALUES (%s, %s)",
             (url_hash, score)
         )
         self.db_client.commit()

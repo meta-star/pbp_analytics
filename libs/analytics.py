@@ -3,7 +3,7 @@ import sys
 import json
 from configparser import ConfigParser
 from multiprocessing import Process, Queue
-from hashlib import shake_128
+from hashlib import sha256
 
 import urllib3
 import validators
@@ -63,7 +63,8 @@ class Analytics:
         """
         pass
 
-    def stop(self):
+    @staticmethod
+    def stop():
         """
 
         :return:
@@ -112,7 +113,7 @@ class Analytics:
         :return:
         """
         url = url_normalize(data.get("url"))
-        url_hash = shake_128(url).hexdigest()
+        url_hash = sha256(url.encode("utf-8")).hexdigest()
 
         try:
             response = self.web_agent.request('GET', url)
