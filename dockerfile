@@ -23,6 +23,10 @@ RUN sudo apt-get install -y python3.7 python3-pip
 RUN python3.7 -m pip install --upgrade pip
 RUN python3.7 -m pip install --trusted-host pypi.python.org -r requirements.txt --no-warn-script-location
 
+# Set Timezone to GMT +8 for PBP Network
+RUN echo Asia/Taipei > /etc/timezone
+RUN dpkg-reconfigure -f noninteractive tzdata
+
 # Expose port
 EXPOSE 2020
 
