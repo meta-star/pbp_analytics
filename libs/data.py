@@ -76,6 +76,23 @@ class Data:
         return result
 
     @mysql_checker
+    def check_warnlist(self, url: str):
+        """
+
+        :param url:
+        :return:
+        """
+        cursor = self.db_client.cursor(buffered=True, dictionary=True)
+        cursor.execute(
+            "SELECT `url`, `origin`, `date` FROM `warnlist` WHERE `url` = %s",
+            (url,)
+        )
+        result = cursor.fetchone()
+        self.db_client.commit()
+        cursor.close()
+        return result
+
+    @mysql_checker
     def get_urls_from_trustlist(self):
         """
 
@@ -227,6 +244,24 @@ class Data:
         cursor.execute(
             "INSERT INTO `blacklist`(`url`, `date`) VALUES (%s, %s)",
             (url, date)
+        )
+        self.db_client.commit()
+        cursor.close()
+        return True
+
+    @mysql_checker
+    def mark_as_warnlist(self, url: str, origin_url: str):
+        """
+
+        :param origin_url:
+        :param url:
+        :return:
+        """
+        cursor = self.db_client.cursor()
+        date = Tools.get_time("%Y-%m-%d %H:%M:%S")
+        cursor.execute(
+            "INSERT INTO `warnlist`(`url`, `origin`, `date`) VALUES (%s, %s, %s)",
+            (url, origin_url, date)
         )
         self.db_client.commit()
         cursor.close()

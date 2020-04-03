@@ -3,7 +3,6 @@ import json
 import sys
 from configparser import ConfigParser
 from hashlib import sha256
-from multiprocessing import Process, Queue
 
 import urllib3
 import validators
@@ -142,6 +141,9 @@ class Analytics:
         elif self.data_control.check_blacklist(url):
             score = 0
 
+        elif self.data_control.check_warnlist(url):
+            score = 0.5
+
         elif self.safe_browsing.lookup([url]):
             score = 0
             self.data_control.mark_as_blacklist(url)
@@ -165,39 +167,17 @@ class Analytics:
         :param url:
         :return:
         """
-        origin_scores = Queue()
-        thread = None
-        data_num = 0
-
         if "type" in data:
             target_type = data.get("type")
         else:
             target_type = 0
 
-        def _origin_check(origin):
-            origin_scores.put(
-                1
-            )
-
+        origin_url = ""
         async for origin_url in self.view_survey.analytics(target_type, url):
-            thread = Process(
-                target=_origin_check,
-                args=(origin_url,)
-            )
-            thread.start()
-            data_num += 1
+            self.data_control.mark_as_warnlist(url, origin_url)
 
-        if thread:
-            thread.join()
-
-        results = []
-        for _ in range(data_num):
-            results.append(origin_scores.get())
-
-        if results and max(results) < 0.5:
-            self.data_control.mark_as_blacklist(url)
-            return 0
-
+        if origin_url:
+            return 0.5
         return 1
 
     async def gen_sample(self):
