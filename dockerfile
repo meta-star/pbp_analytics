@@ -28,8 +28,6 @@ EXPOSE 2020
 
 # Disable python buffered for display
 ENV PYTHONUNBUFFERED true
-# Set Timezone to GMT +8 for PBP Network
-ENV TZ Asia/Taipei
 
 # Execute Analytics
 CMD ["python3.7", "main.py"]
