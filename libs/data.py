@@ -1,7 +1,5 @@
 import mysql.connector as sql_client
 
-from .tools import Tools
-
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
 
@@ -240,10 +238,9 @@ class Data:
         :return:
         """
         cursor = self.db_client.cursor()
-        date = Tools.get_time("%Y-%m-%d %H:%M:%S")
         cursor.execute(
-            "INSERT INTO `blacklist`(`url`, `date`) VALUES (%s, %s)",
-            (url, date)
+            "INSERT INTO `blacklist`(`url`, `date`) VALUES (%s, NOW())",
+            (url,)
         )
         self.db_client.commit()
         cursor.close()
@@ -258,10 +255,9 @@ class Data:
         :return:
         """
         cursor = self.db_client.cursor()
-        date = Tools.get_time("%Y-%m-%d %H:%M:%S")
         cursor.execute(
-            "INSERT INTO `warnlist`(`url`, `origin`, `date`) VALUES (%s, %s, %s)",
-            (url, origin_url, date)
+            "INSERT INTO `warnlist`(`url`, `origin`, `date`) VALUES (%s, %s, NOW())",
+            (url, origin_url)
         )
         self.db_client.commit()
         cursor.close()
