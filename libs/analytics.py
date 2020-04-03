@@ -174,7 +174,8 @@ class Analytics:
 
         origin_url = ""
         async for origin_url in self.view_survey.analytics(target_type, url):
-            self.data_control.mark_as_warnlist(url, origin_url)
+            if origin_url:
+                self.data_control.mark_as_warnlist(url, origin_url)
 
         if origin_url:
             return 0.5
