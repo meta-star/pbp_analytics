@@ -37,6 +37,7 @@ class Data:
         Configure and initialize database details
         :param pbp_handle:
         """
+        self.pbp_handle = pbp_handle
         self.db_client = sql_client.connect(**pbp_handle.cfg["MySQL"])
 
     @mysql_checker
