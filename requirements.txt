@@ -9,5 +9,5 @@ tornado==6.0.4
 requests==2.23.0
 scikit-image==0.16.2
 mysql-connector-python==8.0.19
-blink2png
-blink2png-bridge
+blink2png==0.9.3
+blink2png-bridge==0.1.1

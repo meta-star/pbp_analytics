@@ -1,4 +1,5 @@
 from selenium import webdriver
+from blink2png_bridge import Blink2pngBridge
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -18,7 +19,19 @@ class BrowserRender:
     But we plan using Gecko/Servo to replace someday.
     """
 
-    def __init__(self):
+    driver = None
+
+    def __init__(self, capture_browser: str):
+        self.using = capture_browser  # Not Use
+        self.driver = Blink2pngBridge()
+
+    def capture(self, url: str, path: str, size: str = "1920,1080"):
+        assert self.driver, "Web Driver Not Existed."
+        (width, height) = size.split(",")
+        self.driver.set_window_size(width, height)
+        self.driver.save_screenshot(url, path)
+
+    def close(self):
         pass
 
 
