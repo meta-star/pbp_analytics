@@ -21,13 +21,15 @@ RUN sudo apt-get update
 RUN sudo apt-get upgrade -y
 RUN sudo apt-get install -y python3.7 python3-pip
 RUN python3.7 -m pip install --upgrade pip
-RUN python3.7 -m pip install --trusted-host pypi.python.org -r requirements.txt --no-warn-script-location
+RUN python3.7 -m pip install --trusted-host pypi.python.org -r requirements.txt
 
 # Expose port
 EXPOSE 2020
 
 # Disable python buffered for display
 ENV PYTHONUNBUFFERED true
+# Set User PATH
+ENV PATH $HOME/.local/bin:$PATH
 
 # Execute Analytics
 CMD ["python3.7", "main.py"]
