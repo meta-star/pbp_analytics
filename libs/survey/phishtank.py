@@ -27,7 +27,7 @@ class PhishTank:
         self.username = username
         self.api_key = api_key
 
-        self.api_url = "https://checkurl.phishtank.com/checkurl"
+        self.api_url = "https://checkurl.phishtank.com/checkurl/"
         self.db_url = "http://data.phishtank.com/data/{}/online-valid.json.gz".format(api_key)
 
     def lookup(self, url: str):
@@ -44,7 +44,7 @@ class PhishTank:
             "app_key": self.api_key
         }
 
-        return requests.post(self.api_url, header=header, json=query_data).json()
+        return requests.post(self.api_url, headers=header, params=query_data)
 
     def get_database(self):
         """
