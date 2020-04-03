@@ -52,5 +52,5 @@ class PhishTank:
         :return:
         """
         data = requests.get(self.db_url)
-        uncompressed_data = gzip.decompress(data.content)
-        return json.loads(uncompressed_data)
+        decompressed_data = gzip.decompress(data.content)
+        return json.loads(decompressed_data)
