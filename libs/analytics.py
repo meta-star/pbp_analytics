@@ -172,12 +172,14 @@ class Analytics:
         else:
             target_type = 0
 
-        origin_url = ""
+        origin_urls = []
         async for origin_url in self.view_survey.analytics(target_type, url):
             if origin_url:
-                self.data_control.mark_as_warnlist(url, origin_url)
+                origin_urls.append(origin_url)
 
-        if origin_url:
+        if origin_urls:
+            origin_urls_json = json.dumps(origin_urls)
+            self.data_control.mark_as_warnlist(url, origin_urls_json)
             return 0.5
         return 1
 
