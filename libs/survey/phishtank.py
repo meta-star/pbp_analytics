@@ -49,7 +49,7 @@ class PhishTank:
     def get_database(self):
         """
         Get database from PhishTank
-        :return:
+        :return: dict
         """
         data = requests.get(self.db_url)
         decompressed_data = gzip.decompress(data.content)

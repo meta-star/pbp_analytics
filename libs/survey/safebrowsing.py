@@ -52,3 +52,34 @@ class GoogleSafeBrowsing:
         }
 
         return requests.post(self.lookup_url, json=query_data).json()
+
+    def get_database(self):
+        """
+        Get database from Google SafeBrowsing
+        :return: dict
+        """
+        def _request(request_type: str):
+            return {
+                "threatType": request_type,
+                "platformType": "ANY_PLATFORM",
+                "threatEntryType": "URL",
+                "constraints": {
+                    "maxUpdateEntries": 2048,
+                    "maxDatabaseEntries": 4096,
+                    "region": "TW",
+                    "supportedCompressions": ["RAW"]
+                }
+            }
+
+        query_data = {
+            "client": {
+                "clientId": "Phishing Blocker Project - Analytics",
+                "clientVersion": "0.1"
+            },
+            "listUpdateRequests": [
+                _request("MALWARE"),
+                _request("SOCIAL_ENGINEERING")
+            ]
+        }
+
+        return requests.post(self.update_url, json=query_data).json()
