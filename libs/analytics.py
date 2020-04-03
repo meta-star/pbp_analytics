@@ -100,7 +100,7 @@ class Analytics:
                 "status": 505
             }
 
-        if validators.url(data.get("url")):
+        if "url" in data and validators.url(data["url"]):
             return await self.analytics(data)
 
         return {
