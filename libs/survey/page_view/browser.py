@@ -1,5 +1,7 @@
-from selenium import webdriver
+import os
+
 from blink2png_bridge import Blink2pngBridge
+from selenium import webdriver
 
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
@@ -22,7 +24,7 @@ class BrowserRender:
     driver = None
 
     def __init__(self, capture_browser: str):
-        self.using = capture_browser  # Not Use
+        self.using = capture_browser  # Not used
         self.driver = Blink2pngBridge()
 
     def capture(self, url: str, path: str, size: str = "1920,1080"):
@@ -30,6 +32,8 @@ class BrowserRender:
         (width, height) = size.split(",")
         self.driver.set_window_size(width, height)
         self.driver.save_screenshot(url, path)
+        while not os.path.isfile(path):
+            pass
 
     def close(self):
         pass
