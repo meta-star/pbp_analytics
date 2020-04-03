@@ -31,6 +31,7 @@ class BrowserRender:
         assert self.driver, "Web Driver Not Existed."
         (width, height) = size.split(",")
         self.driver.set_window_size(width, height)
+        self.driver.set_wait(1)
         self.driver.save_screenshot(url, path)
         while not os.path.isfile(path):
             pass
