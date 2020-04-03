@@ -1,6 +1,7 @@
 # Custom file
 config.ini
-data/
+cache/
+core.*
 
 # Editor config
 .theia
