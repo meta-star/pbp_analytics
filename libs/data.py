@@ -235,7 +235,7 @@ class Data:
         :return:
         """
         cursor = self.db_client.cursor()
-        cursor.execute("DELETE FROM `result_cache`")
+        cursor.execute("TRUNCATE TABLE `result_cache`")
         self.db_client.commit()
         cursor.close()
         return True
