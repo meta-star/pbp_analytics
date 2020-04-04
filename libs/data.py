@@ -41,6 +41,36 @@ class Data:
         self.db_client = sql_client.connect(**pbp_handle.cfg["MySQL"])
 
     @mysql_checker
+    def set_ready(self, status: bool):
+        cursor = self.db_client.cursor()
+        if self.check_ready() is not None:
+            cursor.execute(
+                "UPDATE `settings` SET `data` = %s WHERE `field` = 'ready'",
+                (status,)
+            )
+        else:
+            cursor.execute(
+                "INSERT INTO `settings`(`field`, `data`) VALUES ('ready', %s)",
+                (status,)
+            )
+        self.db_client.commit()
+        cursor.close()
+
+    @mysql_checker
+    def check_ready(self):
+        cursor = self.db_client.cursor()
+        cursor.execute(
+            "SELECT `data` FROM `settings` WHERE `field` = 'ready'",
+        )
+        result = cursor.fetchone()
+        self.db_client.commit()
+        cursor.close()
+        if result:
+            if result[0] == "1":
+                return True
+            return False
+
+    @mysql_checker
     def check_trustlist(self, url: str):
         """
 

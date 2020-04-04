@@ -26,9 +26,6 @@ from .tools import Tools
 
 class Analytics:
 
-    # Checkpoint
-    ready = False
-
     # Loading Configs
     cfg = ConfigParser()
     cfg.read("config.ini")
@@ -48,6 +45,7 @@ class Analytics:
             self.cfg["PhishTank"]["api_key"]
         )
         self.web_agent = urllib3.PoolManager()
+        self.data_control.set_ready(False)
         self.cron_job.start()
 
     def start(self, port: int = 2020):
@@ -55,7 +53,7 @@ class Analytics:
         Start to listen online
         :return:
         """
-        while not self.ready:
+        while not self.data_control.check_ready():
             pass
         server = WebServer(self)
         print(

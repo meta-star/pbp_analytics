@@ -44,7 +44,7 @@ class CronTimer(multiprocessing.Process):
                     Tools.get_time(),
                     "[Update] Database was refreshed."
                 )
-                self.handle.ready = True
+                self.handle.data_control.set_ready(True)
 
 
 class Update(multiprocessing.Process):
