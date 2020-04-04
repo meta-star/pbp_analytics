@@ -34,12 +34,7 @@ class BrowserRender:
         self.driver.set_window_size(width, height)
         self.driver.set_wait(1)
         self.driver.set_timeout(3)
-        count, timeout = 0, 5
-        while not os.path.isfile(path):
-            assert count < timeout, "Timeout while checking snapshot existed"
-            self.driver.save_screenshot(url, path)
-            time.sleep(1)
-            count += 1
+        self.driver.save_screenshot(url, path)
 
     def close(self):
         pass
