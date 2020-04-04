@@ -1,4 +1,5 @@
 import os
+import time
 
 from blink2png_bridge import Blink2pngBridge
 from selenium import webdriver
@@ -32,7 +33,9 @@ class BrowserRender:
         (width, height) = size.split(",")
         self.driver.set_window_size(width, height)
         self.driver.set_wait(1)
-        self.driver.save_screenshot(url, path)
+        while not os.path.isfile(path):
+            self.driver.save_screenshot(url, path)
+            time.sleep(1)
 
     def close(self):
         pass

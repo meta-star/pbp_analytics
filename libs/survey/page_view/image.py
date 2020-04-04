@@ -45,7 +45,6 @@ class Image:
         image_num_array = None
         while image_num_array is None:
             image_num_array = self.capture_handle.image_object(layout_path)
-        print(1)
         hash_object = sha256(image_num_array)
         self.capture_handle.delete_page_image(cache_file)
         return hash_object.hexdigest(), image_num_array
