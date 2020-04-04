@@ -33,7 +33,10 @@ class BrowserRender:
         (width, height) = size.split(",")
         self.driver.set_window_size(width, height)
         self.driver.set_wait(1)
+        count, timeout = 0, 5
         while not os.path.isfile(path):
+            if count > timeout:
+                break
             self.driver.save_screenshot(url, path)
             time.sleep(1)
 
