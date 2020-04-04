@@ -1,5 +1,6 @@
 import base64
 import os
+import time
 import pickle
 from hashlib import sha256
 from multiprocessing import Process, Queue
@@ -47,6 +48,7 @@ class Image:
         while image_num_array is None:
             assert count < timeout, "Timeout while reading image_num_array"
             image_num_array = self.capture_handle.image_object(layout_path)
+            time.sleep(1)
             count += 1
         hash_object = sha256(image_num_array)
         self.capture_handle.delete_page_image(cache_file)
