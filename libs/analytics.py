@@ -195,7 +195,11 @@ class Analytics:
         await self.view_survey.generate()
 
     def update_blacklist_from_phishtank(self):
-        blacklist = self.phishtank.get_database()
+        try:
+            blacklist = self.phishtank.get_database()
+        except OSError:
+            print(Tools.get_time(), "[Notice] PhishTank forbidden temporary.")
+            return
         for target in blacklist:
             if not self.data_control.check_blacklist(target.get("url")):
                 self.data_control.mark_as_blacklist(target.get("url"))
