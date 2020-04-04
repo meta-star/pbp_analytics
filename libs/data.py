@@ -159,7 +159,7 @@ class Data:
         self.db_client.commit()
         cursor.close()
         if result:
-            return result[0]
+            return result[0][0]
         return None
 
     @mysql_checker
@@ -178,7 +178,7 @@ class Data:
         self.db_client.commit()
         cursor.close()
         if result:
-            return result[0]
+            return result[0][0]
         return None
 
     @mysql_checker
