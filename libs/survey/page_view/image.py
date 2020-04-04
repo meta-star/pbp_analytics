@@ -43,8 +43,11 @@ class Image:
             output_image=cache_file
         )
         image_num_array = None
+        count, timeout = 0, 5
         while image_num_array is None:
+            assert count < timeout, "Timeout while reading image_num_array"
             image_num_array = self.capture_handle.image_object(layout_path)
+            count += 1
         hash_object = sha256(image_num_array)
         self.capture_handle.delete_page_image(cache_file)
         return hash_object.hexdigest(), image_num_array

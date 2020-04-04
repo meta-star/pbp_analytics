@@ -36,8 +36,7 @@ class BrowserRender:
         self.driver.set_timeout(3)
         count, timeout = 0, 5
         while not os.path.isfile(path):
-            if count > timeout:
-                break
+            assert count < timeout, "Timeout while checking snapshot existed"
             self.driver.save_screenshot(url, path)
             time.sleep(1)
             count += 1
