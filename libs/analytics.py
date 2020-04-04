@@ -1,10 +1,11 @@
-import http.client
 import json
 import sys
 from configparser import ConfigParser
 from hashlib import sha256
 
-import urllib3
+from urllib.parse import urlparse
+import ipaddress
+import requests
 import validators
 from url_normalize import url_normalize
 
@@ -32,7 +33,6 @@ class Analytics:
     def __init__(self):
         Initialize(self)
         # Initialization
-        http.client._MAXHEADERS = 1000
         self.data_control = Data(self)
         self.view_survey = View(self)
         self.cron_job = Cron(self)
@@ -43,7 +43,6 @@ class Analytics:
             self.cfg["PhishTank"]["username"],
             self.cfg["PhishTank"]["api_key"]
         )
-        self.web_agent = urllib3.PoolManager()
         Tools.set_ready(False)
         self.cron_job.start()
 
@@ -120,17 +119,26 @@ class Analytics:
         url_hash = sha256(url.encode("utf-8")).hexdigest()
 
         try:
-            response = self.web_agent.request('GET', url)
-        except urllib3.exceptions.MaxRetryError as e:
+            response = requests.get(url)
+        except requests.exceptions as e:
             return {
                 "status": 403,
                 "reason": str(e.reason)
             }
 
-        if response.status != 200:
+        if response.status_code != 200:
             return {
                 "status": 404,
-                "http_code": response.status
+                "http_code": response.status_code
+            }
+
+        url = response.url
+
+        host = urlparse(url).netloc.replace(":", "/")
+        if (validators.ipv4(host) or validators.ipv6(host)) and ipaddress.ip_address(host).is_private:
+            return {
+                "status": 403,
+                "reason": "forbidden"
             }
 
         cache = self.data_control.find_result_cache_by_url_hash(url_hash)

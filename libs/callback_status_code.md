@@ -3,7 +3,7 @@
 - `202` Success Without Any Response
 - `400` No `version` Tag Found From Request
 - `401` Request Decode Error
-- `403` urllib3 Got Error
+- `403` `requests` Got Error
 - `404` URL Request Not Found
 - `500` Empty Response
 

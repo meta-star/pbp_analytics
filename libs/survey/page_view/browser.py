@@ -33,6 +33,7 @@ class BrowserRender:
         (width, height) = size.split(",")
         self.driver.set_window_size(width, height)
         self.driver.set_wait(1)
+        self.driver.set_timeout(3)
         count, timeout = 0, 5
         while not os.path.isfile(path):
             if count > timeout:
