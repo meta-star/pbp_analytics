@@ -82,7 +82,7 @@ class WSHandler(WebSocketHandler, ABC):
 
 class WebServer:
     """
-
+    Web service of API protocol
     """
 
     def __init__(self, pbp_handle):
@@ -91,7 +91,7 @@ class WebServer:
         response_handle = (pbp_handle.server_response,)
 
     @staticmethod
-    def listen(port):
+    def listen(port: int):
         """
         Start listen on web services
         :return:
