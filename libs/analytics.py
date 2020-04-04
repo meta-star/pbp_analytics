@@ -120,10 +120,10 @@ class Analytics:
 
         try:
             response = requests.get(url)
-        except requests.exceptions as e:
+        except requests.exceptions.ConnectionError as e:
             return {
                 "status": 403,
-                "reason": str(e.reason)
+                "reason": str(e)
             }
 
         if response.status_code != 200:
