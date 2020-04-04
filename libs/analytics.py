@@ -25,7 +25,7 @@ from .tools import Tools
 
 
 class Analytics:
-
+    ready = False
     # Loading Configs
     cfg = ConfigParser()
     cfg.read("config.ini")
