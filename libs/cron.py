@@ -1,7 +1,6 @@
 import asyncio
 import multiprocessing
 import time
-import requests
 
 from .tools import Tools
 
@@ -45,9 +44,7 @@ class CronTimer(multiprocessing.Process):
                     "[Update] Database was refreshed."
                 )
                 if self.last_time == -1:
-                    requests.get(
-                        "http://localhost:2020/?ready_pw={}".format(self.handle.ready_pw)
-                    )
+                    Tools.set_ready(True)
                 self.last_time = time.localtime().tm_hour
 
 

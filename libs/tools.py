@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 import traceback
@@ -43,3 +44,17 @@ class Tools:
                 log.write(error_msg + "\n")
         else:
             print(error_msg)
+
+    @staticmethod
+    def set_ready(status: bool):
+        check_file = ".alive"
+        if status and not os.path.exists(check_file):
+            with open(check_file, "w") as f:
+                return f.write("")
+        elif not status and os.path.exists(check_file):
+            return os.remove(check_file)
+
+    @staticmethod
+    def check_ready():
+        check_file = ".alive"
+        return os.path.isfile(check_file)

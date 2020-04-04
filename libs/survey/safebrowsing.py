@@ -58,6 +58,7 @@ class GoogleSafeBrowsing:
         Get database from Google SafeBrowsing
         :return: dict
         """
+
         def _request(request_type: str):
             return {
                 "threatType": request_type,

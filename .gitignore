@@ -2,6 +2,7 @@
 config.ini
 cache/
 core.*
+.alive
 
 # Editor config
 .theia

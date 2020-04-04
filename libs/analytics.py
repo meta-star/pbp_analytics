@@ -25,7 +25,6 @@ from .tools import Tools
 
 
 class Analytics:
-    ready = False
     # Loading Configs
     cfg = ConfigParser()
     cfg.read("config.ini")
@@ -45,7 +44,7 @@ class Analytics:
             self.cfg["PhishTank"]["api_key"]
         )
         self.web_agent = urllib3.PoolManager()
-        self.ready_pw = hash(Initialize)
+        Tools.set_ready(False)
         self.cron_job.start()
 
     def start(self, port: int = 2020):
@@ -54,6 +53,8 @@ class Analytics:
         :return:
         """
         server = WebServer(self)
+        while not Tools.check_ready():
+            pass
         print(
             Tools.get_time(),
             "[Start] Listening WebServer port {}".format(port)

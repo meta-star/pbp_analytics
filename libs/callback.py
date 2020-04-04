@@ -14,8 +14,6 @@ from tornado.websocket import WebSocketHandler
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
-ready = None
-ready_pw = None
 response_handle = ()
 
 hello_msg = '''
@@ -34,10 +32,6 @@ class HttpHandler(RequestHandler, ABC):
     """
 
     async def get(self):
-        key = self.get_argument('ready_pw', "")
-        if key == ready_pw:
-            global ready
-            ready = True
         self.write(hello_msg)
         await self.finish()
 
@@ -45,7 +39,7 @@ class HttpHandler(RequestHandler, ABC):
         req_body = self.request.body
         req_str = req_body.decode('utf8')
         result = {"status": 202}
-        if response_handle and ready:
+        if response_handle:
             for handle in response_handle:
                 result = await handle(req_str)
         self.write(json.dumps(result))
@@ -71,7 +65,7 @@ class WSHandler(WebSocketHandler, ABC):
 
     async def on_message(self, message):
         result = {"status": 202}
-        if response_handle and ready:
+        if response_handle:
             for handle in response_handle:
                 result = await handle(message)
         await self.write_message(json.dumps(result))
@@ -86,9 +80,7 @@ class WebServer:
     """
 
     def __init__(self, pbp_handle):
-        global response_handle, ready_pw, ready
-        ready = pbp_handle.ready
-        ready_pw = str(pbp_handle.ready_pw)
+        global response_handle
         response_handle = (pbp_handle.server_response,)
 
     @staticmethod
