@@ -132,6 +132,11 @@ class Analytics:
                 "http_code": response.status_code
             }
 
+        if "text/html" not in response.headers["content-type"]:
+            return {
+                "status": 405
+            }
+
         url = response.url
 
         host = urlparse(url).hostname
