@@ -49,8 +49,26 @@ class Data:
         """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
-            "SELECT `url` FROM `trustlist` WHERE `url` = %s",
+            "SELECT `uuid` FROM `trustlist` WHERE `url` = %s",
             (url,)
+        )
+        result = cursor.fetchall()
+        self.db_client.commit()
+        cursor.close()
+        if result:
+            return result[0]
+
+    @mysql_checker
+    def check_trust_domain(self, domain: str):
+        """
+
+        :param domain:
+        :return:
+        """
+        cursor = self.db_client.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT `uuid` FROM `trust_domain` WHERE `domain` = %s",
+            (domain,)
         )
         result = cursor.fetchall()
         self.db_client.commit()

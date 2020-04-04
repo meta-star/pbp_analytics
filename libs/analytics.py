@@ -154,6 +154,9 @@ class Analytics:
         elif self.data_control.check_trustlist(url):
             score = 1
 
+        elif self.data_control.check_trust_domain(host):
+            score = 1
+
         elif self.data_control.check_blacklist(url):
             score = 0
 
