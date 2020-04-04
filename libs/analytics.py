@@ -45,7 +45,7 @@ class Analytics:
             self.cfg["PhishTank"]["api_key"]
         )
         self.web_agent = urllib3.PoolManager()
-        self.data_control.set_ready(False)
+        self.ready_pw = hash(Initialize)
         self.cron_job.start()
 
     def start(self, port: int = 2020):
@@ -53,8 +53,6 @@ class Analytics:
         Start to listen online
         :return:
         """
-        while not self.data_control.check_ready():
-            pass
         server = WebServer(self)
         print(
             Tools.get_time(),
