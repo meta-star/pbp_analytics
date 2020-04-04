@@ -40,6 +40,7 @@ class BrowserRender:
                 break
             self.driver.save_screenshot(url, path)
             time.sleep(1)
+            count += 1
 
     def close(self):
         pass
