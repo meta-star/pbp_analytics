@@ -2,6 +2,8 @@ import asyncio
 import multiprocessing
 import time
 
+from .tools import Tools
+
 """
     Copyright (c) 2019 SuperSonic(https://randychen.tk)
 
@@ -37,6 +39,12 @@ class CronTimer(multiprocessing.Process):
                 self.last_time = time.localtime().tm_hour
                 threads = Update(self.handle)
                 threads.start()
+                threads.join()
+                print(
+                    Tools.get_time(),
+                    "[Update] Database was refreshed."
+                )
+                self.handle.ready = True
 
 
 class Update(multiprocessing.Process):

@@ -25,6 +25,10 @@ from .tools import Tools
 
 
 class Analytics:
+
+    # Checkpoint
+    ready = False
+
     # Loading Configs
     cfg = ConfigParser()
     cfg.read("config.ini")
@@ -51,6 +55,8 @@ class Analytics:
         Start to listen online
         :return:
         """
+        while not self.ready:
+            pass
         server = WebServer(self)
         print(
             Tools.get_time(),
