@@ -87,13 +87,13 @@ class WebServer:
 
     def __init__(self, pbp_handle):
         global response_handle, ready_pw
-        ready_pw = pbp_handle.ready_pw
+        ready_pw = str(pbp_handle.ready_pw)
         response_handle = (pbp_handle.server_response,)
 
     @staticmethod
     def listen(port):
         """
-
+        Start listen on web services
         :return:
         """
         app = Application([
