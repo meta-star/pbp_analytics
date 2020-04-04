@@ -30,7 +30,7 @@ class HttpHandler(RequestHandler, ABC):
     Http Handle
     ---
     Default URL:
-        https://localhost:2020/
+        http://localhost:2020/
     """
 
     async def get(self):
@@ -57,7 +57,7 @@ class WSHandler(WebSocketHandler, ABC):
     WebSocket handle
     ---
     Default URL:
-        https://localhost:2020/ws
+        http://localhost:2020/ws
     """
 
     def check_origin(self, origin):

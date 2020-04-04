@@ -46,7 +46,7 @@ class CronTimer(multiprocessing.Process):
                 )
                 if self.last_time == -1:
                     requests.get(
-                        "https://localhost:2020/?ready_pw={}".format(self.handle.ready_pw)
+                        "http://localhost:2020/?ready_pw={}".format(self.handle.ready_pw)
                     )
                 self.last_time = time.localtime().tm_hour
 
