@@ -47,15 +47,16 @@ class Data:
         :param url:
         :return:
         """
-        cursor = self.db_client.cursor(buffered=True, dictionary=True)
+        cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
             "SELECT `url` FROM `trustlist` WHERE `url` = %s",
             (url,)
         )
-        result = cursor.fetchone()
+        result = cursor.fetchall()
         self.db_client.commit()
         cursor.close()
-        return result
+        if result:
+            return result[0]
 
     @mysql_checker
     def check_blacklist(self, url: str):
@@ -64,15 +65,16 @@ class Data:
         :param url:
         :return:
         """
-        cursor = self.db_client.cursor(buffered=True, dictionary=True)
+        cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
             "SELECT `url`, `date` FROM `blacklist` WHERE `url` = %s",
             (url,)
         )
-        result = cursor.fetchone()
+        result = cursor.fetchall()
         self.db_client.commit()
         cursor.close()
-        return result
+        if result:
+            return result[0]
 
     @mysql_checker
     def check_warnlist(self, url: str):
@@ -81,15 +83,16 @@ class Data:
         :param url:
         :return:
         """
-        cursor = self.db_client.cursor(buffered=True, dictionary=True)
+        cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
             "SELECT `url`, `origin`, `date` FROM `warnlist` WHERE `url` = %s",
             (url,)
         )
-        result = cursor.fetchone()
+        result = cursor.fetchall()
         self.db_client.commit()
         cursor.close()
-        return result
+        if result:
+            return result[0]
 
     @mysql_checker
     def get_urls_from_trustlist(self):
@@ -147,12 +150,12 @@ class Data:
         :param signature:
         :return:
         """
-        cursor = self.db_client.cursor(buffered=True)
+        cursor = self.db_client.cursor()
         cursor.execute(
             "SELECT `url` FROM `trustlist` WHERE `target_view_signature` = %s",
             (signature,)
         )
-        result = cursor.fetchone()
+        result = cursor.fetchall()
         self.db_client.commit()
         cursor.close()
         if result:
@@ -166,12 +169,12 @@ class Data:
         :param url_hash:
         :return:
         """
-        cursor = self.db_client.cursor(buffered=True)
+        cursor = self.db_client.cursor()
         cursor.execute(
             "SELECT `score` FROM `result_cache` WHERE `url_hash` = %s",
             (url_hash,)
         )
-        result = cursor.fetchone()
+        result = cursor.fetchall()
         self.db_client.commit()
         cursor.close()
         if result:
