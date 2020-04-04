@@ -33,8 +33,6 @@ class BrowserRender:
         self.driver.set_window_size(width, height)
         self.driver.set_wait(1)
         self.driver.save_screenshot(url, path)
-        while not os.path.isfile(path):
-            pass
 
     def close(self):
         pass
