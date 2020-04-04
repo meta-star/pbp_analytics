@@ -1,10 +1,10 @@
+import ipaddress
 import json
 import sys
 from configparser import ConfigParser
 from hashlib import sha256
-
 from urllib.parse import urlparse
-import ipaddress
+
 import requests
 import validators
 from url_normalize import url_normalize
@@ -134,7 +134,7 @@ class Analytics:
 
         url = response.url
 
-        host = urlparse(url).netloc.replace(":", "/")
+        host = urlparse(url).hostname
         if (validators.ipv4(host) or validators.ipv6(host)) and ipaddress.ip_address(host).is_private:
             return {
                 "status": 403,
