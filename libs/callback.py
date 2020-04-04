@@ -39,9 +39,8 @@ class HttpHandler(RequestHandler, ABC):
         req_body = self.request.body
         req_str = req_body.decode('utf8')
         result = {"status": 202}
-        if response_handle:
-            for handle in response_handle:
-                result = await handle(req_str)
+        for handle in response_handle:
+            result = await handle(req_str)
         self.write(json.dumps(result))
         await self.finish()
 
@@ -65,9 +64,8 @@ class WSHandler(WebSocketHandler, ABC):
 
     async def on_message(self, message):
         result = {"status": 202}
-        if response_handle:
-            for handle in response_handle:
-                result = await handle(message)
+        for handle in response_handle:
+            result = await handle(message)
         await self.write_message(json.dumps(result))
 
     def on_close(self):
