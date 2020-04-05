@@ -44,7 +44,6 @@ class Analytics:
             self.cfg["PhishTank"]["api_key"]
         )
         Tools.set_ready(False)
-        self.cron_job.start()
 
     def start(self, port: int = 2020):
         """
@@ -53,6 +52,7 @@ class Analytics:
         """
         try:
             server = WebServer(self)
+            self.cron_job.start()
             while not Tools.check_ready():
                 pass
             print(
@@ -73,7 +73,7 @@ class Analytics:
 
     async def server_response(self, message: str):
         """
-        
+
         :param message:
         :return:
         """
