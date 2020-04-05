@@ -1,4 +1,5 @@
 from .tools import Tools
+import mysql.connector as sql_client
 
 """
     Copyright (c) 2020 Star Inc.(https://starinc.xyz)
@@ -43,8 +44,12 @@ class Initialize:
         }
     }
 
-    mysql = [
-
+    mysql_tables = [
+        "blacklist",
+        "result_cache",
+        "trustlist",
+        "trust_domain",
+        "warnlist"
     ]
 
     def __init__(self, pbp_handle):
@@ -67,13 +72,32 @@ class Initialize:
                     self.handle.cfg[item][item_] = self.handle.config[item][item_]
                 else:
                     self.handle.cfg[item][item_] = self.default_configs[item][item_]
-                assert self.handle.cfg[item][item_] is not None,\
+                assert self.handle.cfg[item][item_] is not None, \
                     "{}/{} is not found in config.ini".format(item, item_)
         return self.__mysql_checker()
 
     def __mysql_checker(self):
         """
-        Check databases
+        Check databases simply
         :return:
         """
-        pass
+        client = sql_client.connect(**self.handle.cfg["MySQL"])
+
+        def check_table_exists(table: str):
+            """
+            To check table whether exists in database
+            :param table: name of table
+            :return: bool
+            """
+            cursor = client.cursor(dictionary=True)
+            cursor.execute("SHOW TABLES LIKE %s", (table,))
+            result = cursor.fetchall()
+            client.commit()
+            cursor.close()
+            if result:
+                return True
+            return False
+
+        for item in self.mysql_tables:
+            assert check_table_exists(item), \
+                "Table {} does not exists in database".format(item)

@@ -37,7 +37,7 @@ class Data:
         Configure and initialize database details
         :param pbp_handle: Analytics object
         """
-        self.pbp_handle = pbp_handle
+        self.handle = pbp_handle
         self.db_client = sql_client.connect(**pbp_handle.cfg["MySQL"])
 
     @mysql_checker
@@ -62,7 +62,7 @@ class Data:
     def check_trust_domain(self, domain: str):
         """
         To check URL whether exists in trust_domain list
-        :param url: URL
+        :param domain: domain
         :return: string of UUID or NoneType
         """
         cursor = self.db_client.cursor(dictionary=True)
