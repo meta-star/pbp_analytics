@@ -17,7 +17,7 @@ from .survey import View, GoogleSafeBrowsing, PhishTank
 from .tools import Tools
 
 """
-    Copyright (c) 2019 SuperSonic(https://randychen.tk)
+    Copyright (c) 2020 Star Inc.(https://starinc.xyz)
 
     This Source Code Form is subject to the terms of the Mozilla Public
     License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,13 +59,6 @@ class Analytics:
             "[Start] Listening WebServer on port {}".format(port)
         )
         server.listen(port)
-
-    def test(self):
-        """
-
-        :return:
-        """
-        pass
 
     def stop(self):
         """

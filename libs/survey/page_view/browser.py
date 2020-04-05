@@ -5,7 +5,7 @@ from blink2png_bridge import Blink2pngBridge
 from selenium import webdriver
 
 """
-    Copyright (c) 2019 SuperSonic(https://randychen.tk)
+    Copyright (c) 2020 Star Inc.(https://starinc.xyz)
 
     This Source Code Form is subject to the terms of the Mozilla Public
     License, v. 2.0. If a copy of the MPL was not distributed with this

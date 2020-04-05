@@ -1,5 +1,5 @@
 # Phishing Blocker Project - Analytics
-# (c)2019 SuperSonic(https://randychen.tk).
+# (c)2020 Star Inc.(https://starinc.xyz).
 
 ### Select the browser you prefer
 # Google Chrome
