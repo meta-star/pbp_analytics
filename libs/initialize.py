@@ -60,14 +60,15 @@ class Initialize:
         Check configs
         :return:
         """
+        self.handle.cfg = self.default_configs
         for item in self.default_configs:
-            if item in self.handle.cfg:
-                for item_ in self.default_configs.get(item):
-                    if item_ not in self.handle.cfg.get(item):
-                        self.handle.cfg[item][item_] = self.default_configs[item][item_]
-                    assert self.handle.cfg[item][item_] is not None
-            else:
-                self.handle.cfg[item] = self.default_configs[item]
+            for item_ in self.default_configs.get(item):
+                if item in self.handle.config and item_ in self.handle.config[item]:
+                    self.handle.cfg[item][item_] = self.handle.config[item][item_]
+                else:
+                    self.handle.cfg[item][item_] = self.default_configs[item][item_]
+                assert self.handle.cfg[item][item_] is not None,\
+                    "{}/{} is not found in config.ini".format(item, item_)
         return self.__mysql_checker()
 
     def __mysql_checker(self):

@@ -27,8 +27,9 @@ from .tools import Tools
 
 class Analytics:
     # Loading Configs
-    cfg = ConfigParser()
-    cfg.read("config.ini")
+    cfg = {}
+    config = ConfigParser()
+    config.read("config.ini")
 
     def __init__(self):
         Initialize(self)
