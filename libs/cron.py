@@ -36,13 +36,17 @@ class CronTimer(multiprocessing.Process):
     def run(self):
         while True:
             if time.localtime().tm_hour != self.last_time:
-                threads = Update(self.handle)
-                threads.start()
-                threads.join()
-                print(
-                    Tools.get_time(),
-                    "[Update] Database was refreshed."
-                )
+                try:
+                    threads = Update(self.handle)
+                    threads.start()
+                    threads.join()
+                    print(
+                        Tools.get_time(),
+                        "[Update] Database was refreshed."
+                    )
+                except:
+                    error_report = Tools.error_report()
+                    Tools.logger(error_report)
                 if self.last_time == -1:
                     Tools.set_ready(True)
                 self.last_time = time.localtime().tm_hour

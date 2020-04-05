@@ -56,7 +56,7 @@ class Analytics:
             pass
         print(
             Tools.get_time(),
-            "[Start] Listening WebServer port {}".format(port)
+            "[Start] Listening WebServer on port {}".format(port)
         )
         server.listen(port)
 
