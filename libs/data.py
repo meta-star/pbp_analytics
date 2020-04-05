@@ -27,7 +27,7 @@ def mysql_checker(function):
 
 class Data:
     """
-    To control data for PBP
+    To control MySQL for PBP
     """
 
     db_error_checkpoint = 0
@@ -35,7 +35,7 @@ class Data:
     def __init__(self, pbp_handle):
         """
         Configure and initialize database details
-        :param pbp_handle:
+        :param pbp_handle: Analytics object
         """
         self.pbp_handle = pbp_handle
         self.db_client = sql_client.connect(**pbp_handle.cfg["MySQL"])
@@ -43,9 +43,9 @@ class Data:
     @mysql_checker
     def check_trustlist(self, url: str):
         """
-
-        :param url:
-        :return:
+        To check URL whether exists in trustlist
+        :param url: string of URL
+        :return: string of UUID or NoneType
         """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
@@ -61,9 +61,9 @@ class Data:
     @mysql_checker
     def check_trust_domain(self, domain: str):
         """
-
-        :param domain:
-        :return:
+        To check URL whether exists in trust_domain list
+        :param url: string of URL
+        :return: string of UUID or NoneType
         """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
@@ -79,9 +79,9 @@ class Data:
     @mysql_checker
     def check_blacklist(self, url: str):
         """
-
-        :param url:
-        :return:
+        To check URL whether exists in blacklist
+        :param url: string of URL
+        :return: dict of URL and Mark-Date or NoneType
         """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
@@ -97,9 +97,9 @@ class Data:
     @mysql_checker
     def check_warnlist(self, url: str):
         """
-
-        :param url:
-        :return:
+        To check URL whether exists in warnlist
+        :param url: string of URL
+        :return: dict of URL, similar URL and Mark-Date or NoneType
         """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
@@ -115,8 +115,8 @@ class Data:
     @mysql_checker
     def get_urls_from_trustlist(self):
         """
-
-        :return:
+        Fetch all URL in trustlist
+        :return: list of URL
         """
         cursor = self.db_client.cursor()
         cursor.execute(
@@ -132,8 +132,8 @@ class Data:
     @mysql_checker
     def get_view_narray_from_trustlist(self):
         """
-
-        :return:
+        Fetch all target_view_narray in trustlist
+        :return: dict of URL and numarray
         """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
@@ -147,9 +147,9 @@ class Data:
     @mysql_checker
     def get_view_narray_from_trustlist_with_target_type(self, target_type: int):
         """
-
-        :param target_type:
-        :return:
+        Fetch all URL and target_view_narray in trustlist
+        :param target_type: integer
+        :return: dict of URL and numarray
         """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
@@ -164,9 +164,9 @@ class Data:
     @mysql_checker
     def find_page_by_view_signature(self, signature: str):
         """
-
-        :param signature:
-        :return:
+        Search URL by view_signature in trustlist
+        :param signature: string hashed
+        :return: string of URL or NoneType
         """
         cursor = self.db_client.cursor()
         cursor.execute(
@@ -183,9 +183,9 @@ class Data:
     @mysql_checker
     def find_result_cache_by_url_hash(self, url_hash: str):
         """
-
-        :param url_hash:
-        :return:
+        Search cache by url_hash in result_cache
+        :param url_hash: string of URL hashed
+        :return: float of the-trust-score or NoneType
         """
         cursor = self.db_client.cursor()
         cursor.execute(
@@ -202,9 +202,9 @@ class Data:
     @mysql_checker
     def upload_result_cache(self, url_hash: str, score: float):
         """
-
-        :param url_hash:
-        :param score:
+        Upload the-trust-score to cache
+        :param url_hash: string of URL hashed
+        :param score: float of the-trust-score
         :return:
         """
         cursor = self.db_client.cursor()
@@ -219,8 +219,8 @@ class Data:
     @mysql_checker
     def clean_result_cache(self):
         """
-
-        :return:
+        Clean result caches
+        :return: True
         """
         cursor = self.db_client.cursor()
         cursor.execute("TRUNCATE TABLE `result_cache`")
@@ -231,11 +231,11 @@ class Data:
     @mysql_checker
     def upload_view_sample(self, url: str, view_signature: str, view_data: str):
         """
-
-        :param url:
-        :param view_signature:
-        :param view_data:
-        :return:
+        Upload ViewSample for PageView
+        :param url: URL of Sample
+        :param view_signature: string hashed with view_data
+        :param view_data: string of num array base64 encoded
+        :return: True
         """
         cursor = self.db_client.cursor()
         if self.check_trustlist(url):
@@ -255,9 +255,9 @@ class Data:
     @mysql_checker
     def mark_as_blacklist(self, url: str):
         """
-
-        :param url:
-        :return:
+        Mark URL to blacklist by Database
+        :param url: URL to mark
+        :return: True
         """
         cursor = self.db_client.cursor()
         cursor.execute(
@@ -271,10 +271,10 @@ class Data:
     @mysql_checker
     def mark_as_warnlist(self, url: str, origin_url: str):
         """
-
-        :param origin_url:
-        :param url:
-        :return:
+        Mark URL to warnlist by PageView
+        :param url: URL to mark
+        :param origin_url: the URL similar to
+        :return: True
         """
         cursor = self.db_client.cursor()
         cursor.execute(

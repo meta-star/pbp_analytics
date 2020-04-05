@@ -67,7 +67,7 @@ class Tools:
     @staticmethod
     def check_ready():
         """
-        Check status if server is ready
+        Check status that service is ready or not
         :return: bool of status
         """
         return os.path.isfile(check_file)

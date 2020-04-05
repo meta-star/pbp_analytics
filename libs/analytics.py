@@ -48,6 +48,7 @@ class Analytics:
     def start(self, port: int = 2020):
         """
         Start web service
+        :param port: integer of port to listen online
         :return:
         """
         try:
