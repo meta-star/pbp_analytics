@@ -18,8 +18,8 @@ class Tools:
     @staticmethod
     def get_time(time_format: str = "%b %d %Y %H:%M:%S %Z"):
         """
-
-        :param time_format:
+        Get datetime with format
+        :param time_format: string of format codes
         :return:
         """
         time_ = time.localtime(time.time())
@@ -35,13 +35,17 @@ class Tools:
         err1, err2, err3 = sys.exc_info()
         traceback.print_tb(err3)
         tb_info = traceback.extract_tb(err3)
-        filename, line, func, text = tb_info[-1]
+        filename, line, _, text = tb_info[-1]
         error_info = "occurred in\n{}\non line {}\nin statement {}".format(filename, line, text)
         return "%s\nSystem Error:\n%s\n%s\n%s\n%s\n" % (occur_time, err1, err2, err3, error_info)
 
     @staticmethod
-    def logger(error_msg, silence: bool = True):
-        if silence:
+    def logger(error_msg, silent: bool = True):
+        """
+        Journal or print error message
+        :return:
+        """
+        if silent:
             with open("service.log", "a+") as log:
                 log.write(error_msg + "\n")
         else:
@@ -49,12 +53,21 @@ class Tools:
 
     @staticmethod
     def set_ready(status: bool):
+        """
+        Set status whether service is ready or not
+        :param status: bool of status
+        :return:
+        """
         if status and not os.path.exists(check_file):
             with open(check_file, "w") as f:
-                return f.write("")
+                f.write("")
         elif not status and os.path.exists(check_file):
-            return os.remove(check_file)
+            os.remove(check_file)
 
     @staticmethod
     def check_ready():
+        """
+        Check status if server is ready
+        :return: bool of status
+        """
         return os.path.isfile(check_file)

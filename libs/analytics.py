@@ -47,7 +47,7 @@ class Analytics:
 
     def start(self, port: int = 2020):
         """
-        Start to listen online
+        Start web service
         :return:
         """
         try:
@@ -65,7 +65,7 @@ class Analytics:
 
     def stop(self):
         """
-
+        Shutdown web service
         :return:
         """
         self.cron_job.stop()
@@ -73,9 +73,9 @@ class Analytics:
 
     async def server_response(self, message: str):
         """
-
-        :param message:
-        :return:
+        Check responses from web service
+        :param message: string of JSON format
+        :return: dict to response
         """
         try:
             req_res = json.loads(message)
@@ -92,9 +92,9 @@ class Analytics:
 
     async def _server_response(self, data: dict):
         """
-
-        :param data:
-        :return:
+        Handle responses from web service
+        :param data: dict from message decoded
+        :return: dict to response
         """
         if data.get("version") < 1:
             return {
@@ -110,9 +110,9 @@ class Analytics:
 
     async def analytics(self, data: dict):
         """
-
-        :param data:
-        :return:
+        Do analytics from URL sent by message with databases
+        :param data: dict from message decoded
+        :return: dict to response
         """
         url = url_normalize(data.get("url"))
         url_hash = sha256(url.encode("utf-8")).hexdigest()
@@ -180,10 +180,10 @@ class Analytics:
 
     async def _analytics_inside(self, data: dict, url: str):
         """
-
-        :param data:
-        :param url:
-        :return:
+        Analytics URL with PageView
+        :param data: dict from message decoded
+        :param url: URL that latest get via `requests`
+        :return: float of the-trust-score between 0 to 1
         """
         if "type" in data:
             target_type = data.get("type")
@@ -203,12 +203,16 @@ class Analytics:
 
     async def gen_sample(self):
         """
-
+        Generate PageView samples with trustlist
         :return:
         """
         await self.view_survey.generate()
 
     def update_blacklist_from_phishtank(self):
+        """
+        Update database for blacklist from PhishTank
+        :return:
+        """
         try:
             blacklist = self.phishtank.get_database()
         except OSError:
