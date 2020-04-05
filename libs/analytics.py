@@ -51,14 +51,17 @@ class Analytics:
         Start to listen online
         :return:
         """
-        server = WebServer(self)
-        while not Tools.check_ready():
-            pass
-        print(
-            Tools.get_time(),
-            "[Start] Listening WebServer on port {}".format(port)
-        )
-        server.listen(port)
+        try:
+            server = WebServer(self)
+            while not Tools.check_ready():
+                pass
+            print(
+                Tools.get_time(),
+                "[Start] Listening WebServer on port {}".format(port)
+            )
+            server.listen(port)
+        except KeyboardInterrupt:
+            self.stop()
 
     def stop(self):
         """
@@ -69,6 +72,11 @@ class Analytics:
         sys.exit(0)
 
     async def server_response(self, message: str):
+        """
+        
+        :param message:
+        :return:
+        """
         try:
             req_res = json.loads(message)
         except json.decoder.JSONDecodeError:
@@ -76,8 +84,6 @@ class Analytics:
         if req_res.get("version") is not None:
             try:
                 return await self._server_response(req_res)
-            except KeyboardInterrupt:
-                self.stop()
             except:
                 error_report = Tools.error_report()
                 Tools.logger(error_report)
