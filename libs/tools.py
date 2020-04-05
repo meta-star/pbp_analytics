@@ -11,6 +11,8 @@ import traceback
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 
+check_file = ".alive"
+
 
 class Tools:
     @staticmethod
@@ -47,7 +49,6 @@ class Tools:
 
     @staticmethod
     def set_ready(status: bool):
-        check_file = ".alive"
         if status and not os.path.exists(check_file):
             with open(check_file, "w") as f:
                 return f.write("")
@@ -56,5 +57,4 @@ class Tools:
 
     @staticmethod
     def check_ready():
-        check_file = ".alive"
         return os.path.isfile(check_file)

@@ -22,11 +22,40 @@ class Initialize:
     ===
     """.format(Tools.get_time()))
 
+    config_type = {
+        "WebCapture": [
+            "capture_type",
+            "cache_path",
+            "capture_browser"
+        ],
+        "MySQL": [
+            "host",
+            "user",
+            "passwd",
+            "database"
+        ],
+        "Google Safe Browsing": [
+            "google_api_key"
+        ],
+        "PhishTank": [
+            "username",
+            "api_key"
+        ]
+    }
+
+    mysql = [
+
+    ]
+
     def __init__(self, pbp_handle):
         self.handle = pbp_handle
         self.__config_checker()
 
     def __config_checker(self):
+        for item in self.config_type:
+            assert item in self.handle.cfg
+            for item_ in self.config_type.get(item):
+                assert item_ in self.handle.cfg[item]
         return self.__mysql_checker()
 
     def __mysql_checker(self):
