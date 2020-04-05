@@ -21,7 +21,7 @@ class View:
 
     async def analytics(self, target_type, target_url):
         """
-
+        Analytics URL
         :param target_type:
         :param target_url:
         :return:
@@ -44,7 +44,7 @@ class View:
 
     async def generate(self):
         """
-
+        Generate samples
         :return:
         """
         thread = None
@@ -52,7 +52,7 @@ class View:
 
         async def _upload(url):
             """
-
+            Child function, to upload data to database
             :param url:
             :return:
             """

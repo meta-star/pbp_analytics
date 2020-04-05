@@ -22,7 +22,7 @@ from .browser import BrowserRender, BrowserAgent
 
 class Image:
     """
-
+    Handle images for PageView
     """
 
     def __init__(self, pbp_handle):
@@ -31,7 +31,7 @@ class Image:
 
     async def capture(self, url: str):
         """
-
+        Capture Web Page by URL
         :param url:
         :return:
         """
@@ -60,9 +60,7 @@ class Image:
         :param hex_digest:
         :return:
         """
-        query = self.data_control.find_page_by_view_signature(hex_digest)
-        if query:
-            return query[0]
+        return self.data_control.find_page_by_view_signature(hex_digest)
 
     async def rank(self, target_type: int, target_num_array: str):
         """
