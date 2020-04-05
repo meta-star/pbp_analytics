@@ -18,8 +18,8 @@ from selenium import webdriver
 class BrowserRender:
     """
     The main solution
-    To render web page from QTWebEngine with blink2png.
-    But we plan using Gecko/Servo to replace someday.
+    To render web page from QTWebEngine with blink2png
+    But we plan using Gecko/Servo to replace someday
     """
 
     driver = None
@@ -43,8 +43,8 @@ class BrowserRender:
 class BrowserAgent:
     """
     As a backup solution
-    To capture web page via Selenium with webdriver.
-    The class will allow you to use your browser as the agent to take a screenshot form it.
+    To capture web page via Selenium with webdriver
+    The class will allow you to use your browser as the agent to take a screenshot from it
     """
 
     driver = None
