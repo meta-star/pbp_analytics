@@ -44,7 +44,7 @@ class Data:
     def check_trustlist(self, url: str):
         """
         To check URL whether exists in trustlist
-        :param url: string of URL
+        :param url: URL
         :return: string of UUID or NoneType
         """
         cursor = self.db_client.cursor(dictionary=True)
@@ -62,7 +62,7 @@ class Data:
     def check_trust_domain(self, domain: str):
         """
         To check URL whether exists in trust_domain list
-        :param url: string of URL
+        :param url: URL
         :return: string of UUID or NoneType
         """
         cursor = self.db_client.cursor(dictionary=True)
@@ -80,7 +80,7 @@ class Data:
     def check_blacklist(self, url: str):
         """
         To check URL whether exists in blacklist
-        :param url: string of URL
+        :param url: URL
         :return: dict of URL and Mark-Date or NoneType
         """
         cursor = self.db_client.cursor(dictionary=True)
@@ -98,7 +98,7 @@ class Data:
     def check_warnlist(self, url: str):
         """
         To check URL whether exists in warnlist
-        :param url: string of URL
+        :param url: URL
         :return: dict of URL, similar URL and Mark-Date or NoneType
         """
         cursor = self.db_client.cursor(dictionary=True)
@@ -133,7 +133,7 @@ class Data:
     def get_view_narray_from_trustlist(self):
         """
         Fetch all target_view_narray in trustlist
-        :return: dict of URL and numarray
+        :return: dict of URL and NumPy Array
         """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
@@ -149,7 +149,7 @@ class Data:
         """
         Fetch all URL and target_view_narray in trustlist
         :param target_type: integer
-        :return: dict of URL and numarray
+        :return: dict of URL and NumPy Array
         """
         cursor = self.db_client.cursor(dictionary=True)
         cursor.execute(
@@ -166,7 +166,7 @@ class Data:
         """
         Search URL by view_signature in trustlist
         :param signature: string hashed
-        :return: string of URL or NoneType
+        :return: URL or NoneType
         """
         cursor = self.db_client.cursor()
         cursor.execute(
@@ -184,7 +184,7 @@ class Data:
     def find_result_cache_by_url_hash(self, url_hash: str):
         """
         Search cache by url_hash in result_cache
-        :param url_hash: string of URL hashed
+        :param url_hash: URL hashed
         :return: float of the-trust-score or NoneType
         """
         cursor = self.db_client.cursor()
@@ -203,7 +203,7 @@ class Data:
     def upload_result_cache(self, url_hash: str, score: float):
         """
         Upload the-trust-score to cache
-        :param url_hash: string of URL hashed
+        :param url_hash: URL hashed
         :param score: float of the-trust-score
         :return:
         """

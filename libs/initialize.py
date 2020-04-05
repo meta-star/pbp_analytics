@@ -22,25 +22,25 @@ class Initialize:
     ===
     """.format(Tools.get_time()))
 
-    config_type = {
-        "WebCapture": [
-            "capture_type",
-            "cache_path",
-            "capture_browser"
-        ],
-        "MySQL": [
-            "host",
-            "user",
-            "passwd",
-            "database"
-        ],
-        "Google Safe Browsing": [
-            "google_api_key"
-        ],
-        "PhishTank": [
-            "username",
-            "api_key"
-        ]
+    default_configs = {
+        "WebCapture": {
+            "capture_type": "2",
+            "cache_path": "./cache/",
+            "capture_browser": "firefox"
+        },
+        "MySQL": {
+            "host": "localhost",
+            "user": None,
+            "passwd": None,
+            "database": None
+        },
+        "Google Safe Browsing": {
+            "google_api_key": None
+        },
+        "PhishTank": {
+            "username": None,
+            "api_key": None
+        }
     }
 
     mysql = [
@@ -48,21 +48,31 @@ class Initialize:
     ]
 
     def __init__(self, pbp_handle):
+        """
+        Load configs and databases from config.ini
+        :param pbp_handle: Analytics object
+        """
         self.handle = pbp_handle
         self.__config_checker()
 
     def __config_checker(self):
-        for item in self.config_type:
-            assert item in self.handle.cfg
-            for item_ in self.config_type.get(item):
-                assert item_ in self.handle.cfg[item]
+        """
+        Check configs
+        :return:
+        """
+        for item in self.default_configs:
+            if item in self.handle.cfg:
+                for item_ in self.default_configs.get(item):
+                    if item_ not in self.handle.cfg.get(item):
+                        self.handle.cfg[item][item_] = self.default_configs[item][item_]
+                    assert self.handle.cfg[item][item_] is not None
+            else:
+                self.handle.cfg[item] = self.default_configs[item]
         return self.__mysql_checker()
 
     def __mysql_checker(self):
-        pass
-
-    def __mysql_checker_initialize(self):
-        pass
-
-    def __mysql_checker_repair(self):
+        """
+        Check databases
+        :return:
+        """
         pass

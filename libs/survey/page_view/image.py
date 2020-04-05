@@ -32,8 +32,8 @@ class Image:
     async def capture(self, url: str):
         """
         Capture Web Page by URL
-        :param url:
-        :return:
+        :param url: URL to capture
+        :return: string hashed and NumPy Array
         """
         url_hash = sha256(url.encode("utf-8"))
         cache_file = "{}.png".format(
@@ -56,26 +56,26 @@ class Image:
 
     async def signature(self, hex_digest: str):
         """
-
-        :param hex_digest:
-        :return:
+        Match PageView signature from database
+        :param hex_digest: string hashed
+        :return: URL or NoneType
         """
         return self.data_control.find_page_by_view_signature(hex_digest)
 
     async def rank(self, target_type: int, target_num_array: str):
         """
-
-        :param target_type:
-        :param target_num_array:
-        :return:
+        To rank URL not registered if it same/similar to someone in trustlist.
+        :param target_type: integer
+        :param target_num_array: NumPy Array
+        :return: URLs that similar to the target
         """
         q = Queue()
         thread = None
 
         def _compare(sample: dict):
             """
-
-            :param sample:
+            Child function, rank sample of URL with samples in trustlist
+            :param sample: NumPy Array
             :return:
             """
             origin_sample = self.capture_handle.image_object_from_b64(

@@ -22,9 +22,9 @@ class View:
     async def analytics(self, target_type, target_url):
         """
         Analytics URL
-        :param target_type:
-        :param target_url:
-        :return:
+        :param target_type: integer
+        :param target_url: URL
+        :return: URLs similar to in trustlist
         """
         (view_signature, view_data) = await self.image_handle.capture(target_url)
 
@@ -50,10 +50,10 @@ class View:
         thread = None
         lock = Lock()
 
-        async def _upload(url):
+        async def _upload(url: str):
             """
             Child function, to upload data to database
-            :param url:
+            :param url: URL
             :return:
             """
             lock.acquire()
