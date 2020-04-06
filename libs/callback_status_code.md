@@ -8,7 +8,7 @@
 - `405` URL Requested Was Not HTML
 - `500` Empty Response
 
-Correct Response:
+Correct Request:
 
     {
         "version":1,
