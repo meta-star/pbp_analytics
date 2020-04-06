@@ -16,7 +16,7 @@ This OSS(Open Source Software) is licensed under [Mozilla Public License 2.0](LI
 
 Install one of them, and create a database with any name you like, then import [initialize.sql](initialize.sql) to the database.
 
-Filling the connect information of the database into `config.ini` as [config.sample.ini](config.sample.ini) did.
+Filling the information for connect to the database into `config.ini` as [config.sample.ini](config.sample.ini) did.
 
 ## Development
 
@@ -34,12 +34,11 @@ For improving and researching on the platform.
 
 - Follow these commands:
 
+        python3.7 -m pip install requirements.txt
+        python3.7 main.py
 
-    python3.7 -m pip install requirements.txt
-    python3.7 main.py
-    
 Enjoy for using and developing.
-    
+
 ## Production
 
 In order to security reason, ought not to using without [docker](https://docker.io) for decreasing danger on the host server.
@@ -50,10 +49,9 @@ In order to security reason, ought not to using without [docker](https://docker.
 
 - Follow these commands:
 
-
-    sudo docker build -t pbpa .
-    sudo docker run --network=host --detach pbpa
-    
+        sudo docker build -t pbpa .
+        sudo docker run --network=host --detach pbpa
+  
 It should be work.
 
 > (c) 2020 Star Inc.
