@@ -140,7 +140,7 @@ class Analytics:
 
         url = response.url
 
-        host = urlparse(url).hostname
+        host = urlparse(url).hostname if urlparse(url).hostname != "localhost" else "127.0.0.1"
         if (validators.ipv4(host) or validators.ipv6(host)) and ipaddress.ip_address(host).is_private:
             return {
                 "status": 403,
