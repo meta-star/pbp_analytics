@@ -19,7 +19,7 @@ def mysql_checker(function):
             if args[0].db_error_checkpoint:
                 assert "sql_error"
             args[0].db_error_checkpoint = 1
-            args[0].__init__(args[0].pbp_handle)
+            args[0].__init__(args[0].handle)
             return function(*args)
 
     return wrapper
