@@ -15,33 +15,44 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 CREATE TABLE `blacklist` (
+  `uuid` varchar(36) NOT NULL,
   `url` text NOT NULL,
   `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `result_cache` (
-  `url_hash` text NOT NULL,
+  `url_hash` varchar(64) NOT NULL,
   `score` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `trustlist` (
-  `type` int(2) NOT NULL DEFAULT '0',
+  `uuid` varchar(36) NOT NULL,
+  `type` int(2) NOT NULL DEFAULT 0,
   `url` text NOT NULL,
-  `target_view_narray` mediumblob,
-  `target_view_signature` text,
-  `uuid` text NOT NULL
+  `target_view_narray` mediumblob DEFAULT NULL,
+  `target_view_signature` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `trust_domain` (
-  `uuid` text NOT NULL,
+  `uuid` varchar(36) NOT NULL,
   `domain` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `warnlist` (
+  `uuid` varchar(36) NOT NULL,
   `url` text NOT NULL,
   `origin` text NOT NULL,
   `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `result_cache`
+  ADD PRIMARY KEY (`url_hash`);
+
+ALTER TABLE `trustlist`
+  ADD PRIMARY KEY (`uuid`);
+
+ALTER TABLE `warnlist`
+  ADD PRIMARY KEY (`uuid`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

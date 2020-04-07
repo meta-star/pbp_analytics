@@ -245,7 +245,9 @@ class Data:
             )
         else:
             cursor.execute(
-                "INSERT INTO `trustlist`(`url`, `target_view_signature`, `target_view_narray`) VALUES (%s, %s, %s)",
+                "INSERT INTO "
+                "`trustlist`(`uuid`, `url`, `target_view_signature`, `target_view_narray`) "
+                "VALUES (UUID(), %s, %s, %s)",
                 (url, view_signature, view_data)
             )
         self.db_client.commit()
@@ -261,7 +263,7 @@ class Data:
         """
         cursor = self.db_client.cursor()
         cursor.execute(
-            "INSERT INTO `blacklist`(`url`, `date`) VALUES (%s, NOW())",
+            "INSERT INTO `blacklist`(`uuid`, `url`, `date`) VALUES (UUID(), %s, NOW())",
             (url,)
         )
         self.db_client.commit()
@@ -278,7 +280,7 @@ class Data:
         """
         cursor = self.db_client.cursor()
         cursor.execute(
-            "INSERT INTO `warnlist`(`url`, `origin`, `date`) VALUES (%s, %s, NOW())",
+            "INSERT INTO `warnlist`(`uuid`, `url`, `origin`, `date`) VALUES (UUID(), %s, %s, NOW())",
             (url, origin_url)
         )
         self.db_client.commit()
