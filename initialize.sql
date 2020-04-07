@@ -35,6 +35,7 @@ CREATE TABLE `trustlist` (
 
 CREATE TABLE `trust_domain` (
   `uuid` varchar(36) NOT NULL,
+  `foreign_key` varchar(36) NOT NULL,
   `domain` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -50,6 +51,10 @@ ALTER TABLE `result_cache`
 
 ALTER TABLE `trustlist`
   ADD PRIMARY KEY (`uuid`);
+
+ALTER TABLE `trust_domain`
+  ADD PRIMARY KEY (`uuid`);
+COMMIT;
 
 ALTER TABLE `warnlist`
   ADD PRIMARY KEY (`uuid`);
