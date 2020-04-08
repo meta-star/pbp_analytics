@@ -71,3 +71,14 @@ class Tools:
         :return: bool of status
         """
         return os.path.isfile(check_file)
+
+    @staticmethod
+    def lists_separate(lists: list, numbers: int):
+        """
+        Split lists to average
+        :param lists: list you want to separate
+        :param numbers: numbers in part you want
+        :return:
+        """
+        for count in range(0, len(lists), numbers):
+            yield lists[count:count + numbers]

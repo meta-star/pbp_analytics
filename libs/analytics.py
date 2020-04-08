@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 
 import requests
 import validators
+import threading
 from url_normalize import url_normalize
 
 from .callback import WebServer
@@ -220,6 +221,30 @@ class Analytics:
         except OSError:
             print(Tools.get_time(), "[Notice] PhishTank forbidden temporary.")
             return
-        for target in blacklist:
-            if not self.data_control.check_blacklist(target.get("url")):
-                self.data_control.mark_as_blacklist(target.get("url"))
+
+        thread = None
+        lock = threading.Lock()
+
+        def _upload(data):
+            """
+            Child function, to upload data to database
+            :param data: dict
+            :return:
+            """
+            for target in data:
+                lock.acquire()
+                if not self.data_control.check_blacklist(target.get("url")):
+                    self.data_control.mark_as_blacklist(target.get("url"))
+                lock.release()
+
+        for part in Tools.lists_separate(blacklist, 100):
+            thread = threading.Thread(
+                target=_upload,
+                args=(
+                    part,
+                )
+            )
+            thread.start()
+
+        if thread:
+            thread.join()
