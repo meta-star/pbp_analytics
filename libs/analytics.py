@@ -231,11 +231,11 @@ class Analytics:
             :param data: dict
             :return:
             """
+            lock.acquire()
             for target in data:
-                lock.acquire()
                 if not self.data_control.check_blacklist(target.get("url")):
                     self.data_control.mark_as_blacklist(target.get("url"))
-                lock.release()
+            lock.release()
 
         for part in Tools.lists_separate(blacklist, 100):
             thread = threading.Thread(
