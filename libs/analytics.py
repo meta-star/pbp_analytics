@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 import requests
 import validators
-import threading
+import multiprocessing
 from url_normalize import url_normalize
 
 from .callback import WebServer
@@ -222,8 +222,7 @@ class Analytics:
             print(Tools.get_time(), "[Notice] PhishTank forbidden temporary.")
             return
 
-        thread = None
-        lock = threading.Lock()
+        process = None
 
         def _upload(data):
             """
@@ -231,20 +230,18 @@ class Analytics:
             :param data: dict
             :return:
             """
-            lock.acquire()
             for target in data:
                 if not self.data_control.check_blacklist(target.get("url")):
                     self.data_control.mark_as_blacklist(target.get("url"))
-            lock.release()
 
         for part in Tools.lists_separate(blacklist, 100):
-            thread = threading.Thread(
+            process = multiprocessing.Process(
                 target=_upload,
                 args=(
                     part,
                 )
             )
-            thread.start()
+            process.start()
 
-        if thread:
-            thread.join()
+        if process:
+            process.join()
