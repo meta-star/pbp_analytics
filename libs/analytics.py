@@ -3,11 +3,11 @@ import json
 import sys
 from configparser import ConfigParser
 from hashlib import sha256
+from threading import Thread, Lock
 from urllib.parse import urlparse
 
 import requests
 import validators
-import multiprocessing
 from url_normalize import url_normalize
 
 from .callback import WebServer
@@ -222,7 +222,8 @@ class Analytics:
             print(Tools.get_time(), "[Notice] PhishTank forbidden temporary.")
             return
 
-        process = None
+        thread = None
+        lock = Lock()
 
         def _upload(data):
             """
@@ -231,17 +232,19 @@ class Analytics:
             :return:
             """
             for target in data:
+                lock.acquire()
                 if not self.data_control.check_blacklist(target.get("url")):
                     self.data_control.mark_as_blacklist(target.get("url"))
+                lock.release()
 
         for part in Tools.lists_separate(blacklist, 100):
-            process = multiprocessing.Process(
+            thread = Thread(
                 target=_upload,
                 args=(
                     part,
                 )
             )
-            process.start()
+            thread.start()
 
-        if process:
-            process.join()
+        if thread:
+            thread.join()

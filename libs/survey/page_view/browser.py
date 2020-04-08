@@ -1,6 +1,3 @@
-import os
-import time
-
 from blink2png_bridge import Blink2pngBridge
 from selenium import webdriver
 
