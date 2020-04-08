@@ -39,7 +39,7 @@ class View:
             query[url] = score
 
         for url in query:
-            if query[url] > 0.95 and query[url] == max(query.values()):
+            if query[url] > 0.9 and query[url] == max(query.values()):
                 yield url
 
     async def generate(self):
