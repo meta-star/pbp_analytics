@@ -105,15 +105,15 @@ class Analytics:
             }
 
         if "url" in data and validators.url(data["url"]):
-            return await self.analytics(data)
+            return await self.analyze(data)
 
         return {
             "status": 401
         }
 
-    async def analytics(self, data: dict):
+    async def analyze(self, data: dict):
         """
-        Do analytics from URL sent by message with databases
+        Do analysis from URL sent by message with databases
         :param data: dict from message decoded
         :return: dict to response
         """
@@ -170,7 +170,7 @@ class Analytics:
             self.data_control.mark_as_blacklist(url)
 
         else:
-            score = await self._analytics_inside(data, url)
+            score = await self._deep_analyze(data, url)
 
         if cache is None:
             self.data_control.upload_result_cache(url_hash, score)
@@ -181,9 +181,9 @@ class Analytics:
             "trust_score": score
         }
 
-    async def _analytics_inside(self, data: dict, url: str):
+    async def _deep_analyze(self, data: dict, url: str):
         """
-        Analytics URL with PageView
+        Analyze URL with PageView
         :param data: dict from message decoded
         :param url: URL that latest get via `requests`
         :return: float of the-trust-score between 0 to 1
@@ -194,7 +194,7 @@ class Analytics:
             target_type = 0
 
         origin_urls = []
-        async for origin_url in self.view_survey.analytics(target_type, url):
+        async for origin_url in self.view_survey.analyze(target_type, url):
             if origin_url:
                 origin_urls.append(origin_url)
 

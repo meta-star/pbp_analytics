@@ -19,9 +19,9 @@ class View:
         self.data_control = pbp_handle.data_control
         self.image_handle = Image(pbp_handle)
 
-    async def analytics(self, target_type, target_url):
+    async def analyze(self, target_type, target_url):
         """
-        Analytics URL
+        Analyze URL
         :param target_type: integer
         :param target_url: URL
         :return: URLs similar to in trustlist
