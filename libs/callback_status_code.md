@@ -1,4 +1,4 @@
-- `200` Success With `url` And `trust-score` Tag
+- `200` Success With `url` And `trust_score` Tag
 - `201` Success With `msg` Tag
 - `202` Success Without Any Response
 - `400` No `version` Tag Found From Request
