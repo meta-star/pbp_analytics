@@ -2,6 +2,7 @@ import base64
 import os
 import pickle
 import time
+import uuid
 from hashlib import sha256
 from multiprocessing import Process, Queue
 
@@ -35,9 +36,8 @@ class Image:
         :param url: URL to capture
         :return: string hashed and NumPy Array
         """
-        url_hash = sha256(url.encode("utf-8"))
         cache_file = "{}.png".format(
-            url_hash.hexdigest()
+            uuid.uuid5(uuid.NAMESPACE_URL, url).hex
         )
         layout_path = self.capture_handle.get_page_image(
             target_url=url,

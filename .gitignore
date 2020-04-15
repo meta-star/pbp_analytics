@@ -1,6 +1,7 @@
 # Custom file
 config.ini
 cache/
+tools/cache/
 core.*
 .alive
 

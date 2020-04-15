@@ -30,11 +30,12 @@ class Analytics:
     # Loading Configs
     cfg = {}
     config = ConfigParser()
-    config.read("config.ini")
 
-    def __init__(self):
-        Initialize(self)
+    def __init__(self, config: str = "config.ini"):
+        # Read Config
+        self.config.read(config)
         # Initialization
+        Initialize(self)
         self.data_control = Data(self)
         self.view_survey = View(self)
         self.cron_job = Cron(self)
