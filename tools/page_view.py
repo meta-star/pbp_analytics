@@ -10,8 +10,22 @@ Phishing Blocker Project - Analytics
 ===
 """
 
+import sys
+import asyncio
+
+sys.path.append("..")
 from libs import Analytics
 
-if __name__ == "__main__":
+
+async def main():
     config = "../config.ini"
     handle = Analytics(config)
+    if len(sys.argv) != 2:
+        handle.stop()
+        sys.exit()
+    async for x in handle.view_survey.analyze(0, sys.argv[1]):
+        print(x)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
