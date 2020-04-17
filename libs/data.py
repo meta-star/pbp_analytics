@@ -145,23 +145,6 @@ class Data:
         return result
 
     @mysql_checker
-    def get_view_narray_from_trustlist_with_target_type(self, target_type: int):
-        """
-        Fetch all URL and target_view_narray in trustlist
-        :param target_type: integer
-        :return: dict of URL and NumPy Array
-        """
-        cursor = self.db_client.cursor(dictionary=True)
-        cursor.execute(
-            "SELECT `url`, `target_view_narray` FROM `trustlist` WHERE `type` = %s",
-            (target_type,)
-        )
-        result = cursor.fetchall()
-        self.db_client.commit()
-        cursor.close()
-        return result
-
-    @mysql_checker
     def find_page_by_view_signature(self, signature: str):
         """
         Search URL by view_signature in trustlist

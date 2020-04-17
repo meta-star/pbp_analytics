@@ -19,10 +19,9 @@ class View:
         self.data_control = pbp_handle.data_control
         self.image_handle = Image(pbp_handle)
 
-    async def analyze(self, target_type, target_url):
+    async def analyze(self, target_url: str):
         """
         Analyze URL
-        :param target_type: integer
         :param target_url: URL
         :return: URLs similar to in trustlist
         """
@@ -35,7 +34,7 @@ class View:
             return
 
         query = {}
-        async for url, score in self.image_handle.rank(target_type, view_data):
+        async for url, score in self.image_handle.rank(view_data):
             query[url] = score
 
         for url in query:

@@ -62,10 +62,9 @@ class Image:
         """
         return self.data_control.find_page_by_view_signature(hex_digest)
 
-    async def rank(self, target_type: int, target_num_array: str):
+    async def rank(self, target_num_array: str):
         """
         To rank URL not registered if it same/similar to someone in trustlist.
-        :param target_type: integer
         :param target_num_array: NumPy Array
         :return: URLs that similar to the target
         """
@@ -89,7 +88,7 @@ class Image:
                 )
             ])
 
-        trust_samples = self.data_control.get_view_narray_from_trustlist_with_target_type(target_type)
+        trust_samples = self.data_control.get_view_narray_from_trustlist()
         for record in trust_samples:
             thread = Process(
                 target=_compare,

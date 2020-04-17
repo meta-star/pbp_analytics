@@ -10,8 +10,8 @@ Phishing Blocker Project - Analytics
 ===
 """
 
-import sys
 import asyncio
+import sys
 
 sys.path.append("..")
 from libs import Analytics

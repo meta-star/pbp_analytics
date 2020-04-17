@@ -171,7 +171,7 @@ class Analytics:
             self.data_control.mark_as_blacklist(url)
 
         else:
-            score = await self._deep_analyze(data, url)
+            score = await self._deep_analyze(url)
 
         if cache is None:
             self.data_control.upload_result_cache(url_hash, score)
@@ -182,20 +182,14 @@ class Analytics:
             "trust_score": score
         }
 
-    async def _deep_analyze(self, data: dict, url: str):
+    async def _deep_analyze(self, url: str):
         """
         Analyze URL with PageView
-        :param data: dict from message decoded
         :param url: URL that latest get via `requests`
         :return: float of the-trust-score between 0 to 1
         """
-        if "type" in data:
-            target_type = data.get("type")
-        else:
-            target_type = 0
-
         origin_urls = []
-        async for origin_url in self.view_survey.analyze(target_type, url):
+        async for origin_url in self.view_survey.analyze(url):
             if origin_url:
                 origin_urls.append(origin_url)
 
