@@ -11,7 +11,10 @@ Welcome to Phishing Blocker Project - Analytics's documentation!
    :caption: Contents:
 
    analytics
-
+   callback
+   data
+   initialize
+   tools
 
 Indices and tables
 ==================
