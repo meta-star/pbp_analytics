@@ -1,6 +1,6 @@
 # Phishing Blocker Project - Analytics
 
-![License](https://img.shields.io/badge/license-MPL--2.0-FF6600.svg) ![Python](https://img.shields.io/badge/python-3.7-0066FF.svg) [![Scrutinizer-CI_Quality](https://scrutinizer-ci.com/g/star-inc/pbp-analytics/badges/quality-score.png?b=master) ![Scrutinizer-CI_Build](https://scrutinizer-ci.com/g/star-inc/pbp-analytics/badges/build.png?b=master)](https://scrutinizer-ci.com/g/star-inc/pbp-analytics/)
+![License](https://img.shields.io/badge/license-MPL--2.0-FF6600.svg) ![Python](https://img.shields.io/badge/python-3.7-0066FF.svg) [![Scrutinizer-CI_Quality](https://scrutinizer-ci.com/g/star-inc/pbp-analytics/badges/quality-score.png?b=master) ![Scrutinizer-CI_Build](https://scrutinizer-ci.com/g/star-inc/pbp-analytics/badges/build.png?b=master)](https://scrutinizer-ci.com/g/star-inc/pbp-analytics/) [![API_Reference](https://readthedocs.org/projects/pbp-analytics/badge/?version=latest)](https://pbp-analytics.rtfd.io)
 
 The server side of PB Project that analyze URLs with `PageView Technology` which by `structural similarity index`.
 
