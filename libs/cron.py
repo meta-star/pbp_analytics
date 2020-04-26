@@ -17,6 +17,7 @@ class Cron:
     def __init__(self, pbp_handle):
         """
         Create a child process as the scheduler
+
         :param pbp_handle: Analytics object
         """
         self.handle = pbp_handle
@@ -25,6 +26,7 @@ class Cron:
     def start(self):
         """
         Start scheduler
+
         :return:
         """
         self.task = CronTimer(self.handle)
@@ -33,6 +35,7 @@ class Cron:
     def stop(self):
         """
         Stop scheduler
+
         :return:
         """
         if self.task:
@@ -43,6 +46,7 @@ class CronTimer(multiprocessing.Process):
     def __init__(self, pbp_handle):
         """
         Scheduler for database
+
         :param pbp_handle: Analytics object
         """
         multiprocessing.Process.__init__(self)
@@ -52,6 +56,7 @@ class CronTimer(multiprocessing.Process):
     def run(self):
         """
         Task of Scheduler to check databases
+
         :return:
         """
         while True:
@@ -76,6 +81,7 @@ class Update(multiprocessing.Process):
     def __init__(self, pbp_handle):
         """
         Action to update databases
+
         :param pbp_handle: Analytics object
         """
         multiprocessing.Process.__init__(self)
@@ -84,6 +90,7 @@ class Update(multiprocessing.Process):
     def run(self):
         """
         Action to checkout
+
         :return:
         """
         asyncio.run(self.handle.gen_sample())

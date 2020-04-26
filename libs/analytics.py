@@ -51,6 +51,7 @@ class Analytics:
     def start(self, port: int = 2020):
         """
         Start web service
+
         :param port: integer of port to listen online
         :return:
         """
@@ -70,6 +71,7 @@ class Analytics:
     def stop(self):
         """
         Shutdown web service
+
         :return:
         """
         self.cron_job.stop()
@@ -78,6 +80,7 @@ class Analytics:
     async def server_response(self, message: str):
         """
         Check responses from web service
+
         :param message: string of JSON format
         :return: dict to response
         """
@@ -97,6 +100,7 @@ class Analytics:
     async def _server_response(self, data: dict):
         """
         Handle responses from web service
+
         :param data: dict from message decoded
         :return: dict to response
         """
@@ -115,6 +119,7 @@ class Analytics:
     async def analyze(self, data: dict):
         """
         Do analysis from URL sent by message with databases
+
         :param data: dict from message decoded
         :return: dict to response
         """
@@ -185,6 +190,7 @@ class Analytics:
     async def _deep_analyze(self, url: str):
         """
         Analyze URL with PageView
+
         :param url: URL that latest get via `requests`
         :return: float of the-trust-score between 0 to 1
         """
@@ -202,6 +208,7 @@ class Analytics:
     async def gen_sample(self):
         """
         Generate PageView samples with trustlist
+
         :return:
         """
         await self.view_survey.generate()
@@ -209,6 +216,7 @@ class Analytics:
     def update_blacklist_from_phishtank(self):
         """
         Update database for blacklist from PhishTank
+
         :return:
         """
         try:
@@ -223,6 +231,7 @@ class Analytics:
         def _upload(data):
             """
             Child function, to upload data to database
+
             :param data: dict
             :return:
             """

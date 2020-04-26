@@ -22,6 +22,7 @@ class View:
     async def analyze(self, target_url: str):
         """
         Analyze URL
+
         :param target_url: URL
         :return: URLs similar to in trustlist
         """
@@ -44,6 +45,7 @@ class View:
     async def generate(self):
         """
         Generate samples
+
         :return:
         """
         thread = None
@@ -52,6 +54,7 @@ class View:
         async def _upload(url: str):
             """
             Child function, to upload data to database
+
             :param url: URL
             :return:
             """

@@ -56,6 +56,7 @@ class Initialize:
     def __init__(self, pbp_handle):
         """
         Load configs and databases from config.ini
+
         :param pbp_handle: Analytics object
         """
         self.handle = pbp_handle
@@ -64,6 +65,7 @@ class Initialize:
     def __config_checker(self):
         """
         Check configs
+
         :return:
         """
         self.handle.cfg = self.default_configs
@@ -80,6 +82,7 @@ class Initialize:
     def __mysql_checker(self):
         """
         Check databases simply
+
         :return:
         """
         client = sql_client.connect(**self.handle.cfg["MySQL"])
@@ -87,6 +90,7 @@ class Initialize:
         def check_table_exists(table: str):
             """
             To check table whether exists in database
+
             :param table: name of table
             :return: bool
             """

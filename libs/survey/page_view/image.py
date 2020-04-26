@@ -33,6 +33,7 @@ class Image:
     async def capture(self, url: str):
         """
         Capture Web Page by URL
+
         :param url: URL to capture
         :return: string hashed and NumPy Array
         """
@@ -57,6 +58,7 @@ class Image:
     async def signature(self, hex_digest: str):
         """
         Match PageView signature from database
+
         :param hex_digest: string hashed
         :return: URL or NoneType
         """
@@ -65,6 +67,7 @@ class Image:
     async def rank(self, target_num_array: str):
         """
         To rank URL not registered if it same/similar to someone in trustlist.
+
         :param target_num_array: NumPy Array
         :return: URLs that similar to the target
         """
@@ -74,6 +77,7 @@ class Image:
         def _compare(sample: dict):
             """
             Child function, rank sample of URL with samples in trustlist
+
             :param sample: NumPy Array
             :return:
             """
@@ -120,6 +124,7 @@ class WebCapture:
     def __set_browser_simulation(type_id: str):
         """
         Set Browser Simulation by ID
+
         :param type_id: Type ID
         :return: class object
         """
@@ -130,7 +135,8 @@ class WebCapture:
 
     def get_page_image(self, target_url: str, output_image: str = 'out.png'):
         """
-        To get the image of the URL you provided.
+        To get the image of the URL you provided
+
         :param target_url: The target URL
         :param output_image: Output path (optional)
         :return: bool
@@ -145,7 +151,8 @@ class WebCapture:
 
     def delete_page_image(self, output_image: str = 'out.png'):
         """
-        To delete the image of the URL you provided.
+        To delete the image of the URL you provided
+
         :param output_image: Output path (optional)
         :return: bool
         """
@@ -157,6 +164,7 @@ class WebCapture:
     def image_object(path: str):
         """
         Create NumPy Array
+
         :param path: The Image Path
         :return: NumPy Array
         """
@@ -166,6 +174,7 @@ class WebCapture:
     def image_object_from_b64(b64_string: bytes):
         """
         Import NumPy Array by base64
+
         :param b64_string: base64 NumPy Array dumped
         :return: NumPy Array
         """
@@ -176,6 +185,7 @@ class WebCapture:
     def image_compare(img1: numpy.numarray, img2: numpy.numarray):
         """
         To compare image using structural similarity index
+
         :param img1: Image object
         :param img2: Image object
         :return: float of the similar lever

@@ -21,6 +21,7 @@ class PhishTank:
     def __init__(self, username: str, api_key: str):
         """
         Initialization
+
         :param username: PhishTank Username
         :param api_key: PhishTank API Key
         """
@@ -33,6 +34,7 @@ class PhishTank:
     def lookup(self, url: str):
         """
         To check URLs from PhishTank
+
         :param url: URL
         :return: dict
         """
@@ -49,6 +51,7 @@ class PhishTank:
     def get_database(self):
         """
         Get database from PhishTank
+
         :return: dict
         """
         data = requests.get(self.db_url)

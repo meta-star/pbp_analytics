@@ -10,6 +10,10 @@ import mysql.connector as sql_client
 
 
 def mysql_checker(function):
+    """
+    To wrap a function for preventing to disconnect from the database
+    """
+
     def wrapper(*args, **kwargs):
         try:
             result = function(*args, **kwargs)
@@ -35,6 +39,7 @@ class Data:
     def __init__(self, pbp_handle):
         """
         Configure and initialize database details
+
         :param pbp_handle: Analytics object
         """
         self.handle = pbp_handle
@@ -44,6 +49,7 @@ class Data:
     def check_trustlist(self, url: str):
         """
         To check URL whether exists in trustlist
+
         :param url: URL
         :return: string of UUID or NoneType
         """
@@ -62,6 +68,7 @@ class Data:
     def check_trust_domain(self, domain: str):
         """
         To check URL whether exists in trust_domain list
+
         :param domain: domain
         :return: string of UUID or NoneType
         """
@@ -80,6 +87,7 @@ class Data:
     def check_blacklist(self, url: str):
         """
         To check URL whether exists in blacklist
+
         :param url: URL
         :return: dict of URL and Mark-Date or NoneType
         """
@@ -98,6 +106,7 @@ class Data:
     def check_warnlist(self, url: str):
         """
         To check URL whether exists in warnlist
+
         :param url: URL
         :return: dict of URL, similar URL and Mark-Date or NoneType
         """
@@ -116,6 +125,7 @@ class Data:
     def get_urls_from_trustlist(self):
         """
         Fetch all URL in trustlist
+
         :return: list of URL
         """
         cursor = self.db_client.cursor()
@@ -133,6 +143,7 @@ class Data:
     def get_view_narray_from_trustlist(self):
         """
         Fetch all target_view_narray in trustlist
+
         :return: dict of URL and NumPy Array
         """
         cursor = self.db_client.cursor(dictionary=True)
@@ -148,6 +159,7 @@ class Data:
     def find_page_by_view_signature(self, signature: str):
         """
         Search URL by view_signature in trustlist
+
         :param signature: string hashed
         :return: URL or NoneType
         """
@@ -167,6 +179,7 @@ class Data:
     def find_result_cache_by_url_hash(self, url_hash: str):
         """
         Search cache by url_hash in result_cache
+
         :param url_hash: URL hashed
         :return: float of the-trust-score or NoneType
         """
@@ -186,6 +199,7 @@ class Data:
     def upload_result_cache(self, url_hash: str, score: float):
         """
         Upload the-trust-score to cache
+
         :param url_hash: URL hashed
         :param score: float of the-trust-score
         :return:
@@ -203,6 +217,7 @@ class Data:
     def clean_result_cache(self):
         """
         Clean result caches
+
         :return: True
         """
         cursor = self.db_client.cursor()
@@ -215,6 +230,7 @@ class Data:
     def upload_view_sample(self, url: str, view_signature: str, view_data: str):
         """
         Upload ViewSample for PageView
+
         :param url: URL of Sample
         :param view_signature: string hashed with view_data
         :param view_data: string of num array base64 encoded
@@ -241,6 +257,7 @@ class Data:
     def mark_as_blacklist(self, url: str):
         """
         Mark URL to blacklist by Database
+
         :param url: URL to mark
         :return: True
         """
@@ -257,6 +274,7 @@ class Data:
     def mark_as_warnlist(self, url: str, origin_url: str):
         """
         Mark URL to warnlist by PageView
+
         :param url: URL to mark
         :param origin_url: the URL similar to
         :return: True

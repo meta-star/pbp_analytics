@@ -1,4 +1,4 @@
-sphinx>=3.0.2 
+sphinx>=3.0.2
 numpy>=1.18.3
 selenium>=3.141.0
 url_normalize>=1.4.1

@@ -19,6 +19,7 @@ class Tools:
     def get_time(time_format: str = "%b %d %Y %H:%M:%S %Z"):
         """
         Get datetime with format
+
         :param time_format: string of format codes
         :return:
         """
@@ -29,6 +30,7 @@ class Tools:
     def error_report():
         """
         Report errors as message
+
         :return: string
         """
         occur_time = Tools.get_time()
@@ -43,6 +45,7 @@ class Tools:
     def logger(error_msg, silent: bool = True):
         """
         Journal or print error message
+
         :return:
         """
         if silent:
@@ -55,6 +58,7 @@ class Tools:
     def set_ready(status: bool):
         """
         Set status whether service is ready or not
+
         :param status: bool of status
         :return:
         """
@@ -68,6 +72,7 @@ class Tools:
     def check_ready():
         """
         Check status that service is ready or not
+
         :return: bool of status
         """
         return os.path.isfile(check_file)
@@ -76,6 +81,7 @@ class Tools:
     def lists_separate(lists: list, numbers: int):
         """
         Split lists to average
+
         :param lists: list you want to separate
         :param numbers: numbers in part you want
         :return:

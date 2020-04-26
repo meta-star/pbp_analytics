@@ -18,6 +18,7 @@ class GoogleSafeBrowsing:
     def __init__(self, google_api_key: str):
         """
         Initialization
+
         :param google_api_key: Google API Token
         """
         host = "safebrowsing.googleapis.com"
@@ -33,6 +34,7 @@ class GoogleSafeBrowsing:
     def lookup(self, urls: list):
         """
         To check URLs from Google SafeBrowsing
+
         :param urls: list of URLs
         :return: dict
         """
@@ -56,6 +58,7 @@ class GoogleSafeBrowsing:
     def get_database(self):
         """
         Get database from Google SafeBrowsing
+
         :return: dict
         """
 
