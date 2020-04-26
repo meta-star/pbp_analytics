@@ -1,5 +1,9 @@
-Phishing Blocker Project - Analytics API Reference
+API Reference
 ================================================================
+
+This is an auto-generate reference of Analytics.
+
+You can make sense of Analytics how to work through these documents.
 
 .. toctree::
    :maxdepth: 2

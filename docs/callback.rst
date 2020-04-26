@@ -1,4 +1,4 @@
-callback
+Callback
 =============================
 
 .. autoclass:: libs.callback.WebServer
