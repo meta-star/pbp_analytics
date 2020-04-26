@@ -1,5 +1,5 @@
 Tools
-=============================
+=====
 
 .. autoclass:: libs.Tools
    :members:

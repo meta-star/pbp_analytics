@@ -11,7 +11,7 @@ import requests
 
 class GoogleSafeBrowsing:
     """
-    Google SafeBrowsing Client
+    Google Safe Browsing Client
     https://safebrowsing.google.com/
     """
 
@@ -33,7 +33,7 @@ class GoogleSafeBrowsing:
 
     def lookup(self, urls: list):
         """
-        To check URLs from Google SafeBrowsing
+        To check URLs from Google Safe Browsing
 
         :param urls: list of URLs
         :return: dict
@@ -57,7 +57,7 @@ class GoogleSafeBrowsing:
 
     def get_database(self):
         """
-        Get database from Google SafeBrowsing
+        Get database from Google Safe Browsing
 
         :return: dict
         """

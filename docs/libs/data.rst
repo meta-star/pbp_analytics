@@ -1,5 +1,5 @@
 Data
-=============================
+====
 
 .. autoclass:: libs.Data
    :members:

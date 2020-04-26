@@ -1,5 +1,5 @@
 Initialize
-==============================
+==========
 
 .. autoclass:: libs.initialize.Initialize
    :members:
