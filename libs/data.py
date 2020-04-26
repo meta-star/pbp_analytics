@@ -1,3 +1,5 @@
+from functools import wraps
+
 import mysql.connector as sql_client
 
 """
@@ -14,6 +16,7 @@ def mysql_checker(function):
     To wrap a function for preventing to disconnect from the database
     """
 
+    @wraps(function)
     def wrapper(*args, **kwargs):
         try:
             result = function(*args, **kwargs)
