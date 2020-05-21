@@ -27,7 +27,6 @@ CREATE TABLE `result_cache` (
 
 CREATE TABLE `trustlist` (
   `uuid` varchar(36) NOT NULL,
-  `type` int(2) NOT NULL DEFAULT 0,
   `url` text NOT NULL,
   `target_view_narray` mediumblob DEFAULT NULL,
   `target_view_signature` text DEFAULT NULL
