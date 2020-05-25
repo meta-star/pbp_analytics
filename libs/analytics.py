@@ -147,7 +147,8 @@ class Analytics:
 
         url = response.url
 
-        host = urlparse(url).hostname if urlparse(url).hostname != "localhost" else "127.0.0.1"
+        host = urlparse(url).hostname if urlparse(
+            url).hostname != "localhost" else "127.0.0.1"
         if (validators.ipv4(host) or validators.ipv6(host)) and ipaddress.ip_address(host).is_private:
             return {
                 "status": 403,
@@ -225,30 +226,6 @@ class Analytics:
             print(Tools.get_time(), "[Notice] PhishTank forbidden temporary.")
             return
 
-        thread = None
-        lock = Lock()
-
-        def _upload(data):
-            """
-            Child function, to upload data to database
-
-            :param data: dict
-            :return:
-            """
-            for target in data:
-                lock.acquire()
-                if not self.data_control.check_blacklist(target.get("url")):
-                    self.data_control.mark_as_blacklist(target.get("url"))
-                lock.release()
-
-        for part in Tools.lists_separate(blacklist, 100):
-            thread = Thread(
-                target=_upload,
-                args=(
-                    part,
-                )
-            )
-            thread.start()
-
-        if thread:
-            thread.join()
+        self.data_control.mark_as_blacklist_mass(
+            [target.get("url") for target in blacklist]
+        )

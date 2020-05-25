@@ -1,4 +1,5 @@
 from functools import wraps
+from hashlib import sha256
 
 import mysql.connector as sql_client
 
@@ -266,8 +267,27 @@ class Data:
         """
         cursor = self.db_client.cursor()
         cursor.execute(
-            "INSERT INTO `blacklist`(`uuid`, `url`, `date`) VALUES (UUID(), %s, NOW())",
-            (url,)
+            "INSERT INTO `blacklist`(`uuid`, `url`, `date`, `url_hash`) VALUES (UUID(), %s, NOW(), %s)",
+            (url, sha256(url.encode("utf-8")).hexdigest(),)
+        )
+        self.db_client.commit()
+        cursor.close()
+        return True
+
+    @mysql_checker
+    def mark_as_blacklist_mass(self, urls: list):
+        """
+        Mark URLs to blacklist by Database
+
+        :param url: URLs to mark
+        :return: True
+        """
+        cursor = self.db_client.cursor()
+        datas = [(url, sha256(url.encode("utf-8")).hexdigest())
+                 for url in urls]
+        cursor.executemany(
+            "INSERT INTO `blacklist`(`uuid`, `url`, `date`, `url_hash`) VALUES (UUID(), %s, NOW(), %s)",
+            datas
         )
         self.db_client.commit()
         cursor.close()
