@@ -1,6 +1,5 @@
 import asyncio
 import base64
-from threading import Thread, Lock
 
 from .image import Image
 from ...tools import Tools
@@ -48,8 +47,7 @@ class View:
 
         :return:
         """
-        thread = None
-        lock = Lock()
+        events = []
 
         async def _upload(url: str):
             """
@@ -58,7 +56,6 @@ class View:
             :param url: URL
             :return:
             """
-            lock.acquire()
             try:
                 (view_signature, view_data) = await self.image_handle.capture(url)
                 b64_view_data = base64.b64encode(view_data.dumps())
@@ -70,19 +67,11 @@ class View:
             except:
                 error_report = Tools.error_report()
                 raise ViewException("generate._upload", url, error_report)
-            lock.release()
 
         for origin_url in self.data_control.get_urls_from_trustlist():
-            thread = Thread(
-                target=lambda url: asyncio.run(_upload(url)),
-                args=(
-                    origin_url,
-                )
-            )
-            thread.start()
+            events.append(_upload(origin_url))
 
-        if thread:
-            thread.join()
+        await asyncio.gather(*events)
 
 
 class ViewException(Exception):

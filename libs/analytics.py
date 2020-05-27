@@ -3,7 +3,6 @@ import json
 import sys
 from configparser import ConfigParser
 from hashlib import sha256
-from threading import Thread, Lock
 from urllib.parse import urlparse
 
 import requests
