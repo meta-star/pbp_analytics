@@ -11,7 +11,9 @@ Phishing Blocker Project - Analytics
 """
 
 from libs import Analytics
+import os
 
 if __name__ == "__main__":
-    handle = Analytics()
+    config_type = "ENV" if "PBP_CFG" in os.environ else "config.ini"
+    handle = Analytics(config_type)
     handle.start()
