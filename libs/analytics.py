@@ -28,13 +28,13 @@ from .tools import Tools
 class Analytics:
     # Loading Configs
     cfg = {}
-    config = ConfigParser()
 
     def __init__(self, config: str):
         # Read Config
         if config == "ENV":
-            self.config == config
+            self.config = config
         else:
+            self.config = ConfigParser()
             self.config.read(config)
         # Initialization
         Initialize(self)
