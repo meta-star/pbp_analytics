@@ -42,7 +42,7 @@ class Analytics:
         self.view_survey = View(self)
         self.cron_job = Cron(self)
         self.safe_browsing = GoogleSafeBrowsing(
-            self.cfg["Google Safe Browsing"]["google_api_key"]
+            self.cfg["SafeBrowsing"]["google_api_key"]
         )
         self.phishtank = PhishTank(
             self.cfg["PhishTank"]["username"],
