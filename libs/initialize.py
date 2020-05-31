@@ -1,4 +1,5 @@
 import mysql.connector as sql_client
+import os
 
 from .tools import Tools
 
@@ -60,28 +61,34 @@ class Initialize:
         :param pbp_handle: Analytics object
         """
         self.handle = pbp_handle
-        self.__config_checker()
+        self.__config_checker(
+            self.handle.config == "ENV"
+        )
 
-    def __config_checker(self):
+    def __config_checker(self, env: bool):
         """
-        Check configs
+        Load and check settings from shell environment or config file
 
         :return:
         """
         self.handle.cfg = self.default_configs
         for item in self.default_configs:
             for item_ in self.default_configs.get(item):
-                if item in self.handle.config and item_ in self.handle.config[item]:
+                if env and item in self.handle.config and "PBP_{}_{}".format(item, item_) in os.environ:
+                    self.handle.cfg[item][item_] = os.getenv(
+                        "PBP_{}_{}".format(item, item_))
+                elif item in self.handle.config and item_ in self.handle.config[item]:
                     self.handle.cfg[item][item_] = self.handle.config[item][item_]
                 else:
                     self.handle.cfg[item][item_] = self.default_configs[item][item_]
                 assert self.handle.cfg[item][item_] is not None, \
-                    "{}/{} is not found in config.ini".format(item, item_)
+                    "{}/{} is not found in {}".format(
+                        item, item_, ("config file", "shell environment")[env])
         return self.__mysql_checker()
 
     def __mysql_checker(self):
         """
-        Check databases simply
+        Check tables existed with the database
 
         :return:
         """

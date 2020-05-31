@@ -30,9 +30,12 @@ class Analytics:
     cfg = {}
     config = ConfigParser()
 
-    def __init__(self, config: str = "config.ini"):
+    def __init__(self, config: str):
         # Read Config
-        self.config.read(config)
+        if config == "ENV":
+            self.config == config
+        else:
+            self.config.read(config)
         # Initialization
         Initialize(self)
         self.data_control = Data(self)

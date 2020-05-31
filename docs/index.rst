@@ -1,7 +1,7 @@
 Library Reference
 =================
 
-This is an auto-generate reference of Analytics.
+This is an auto-generate reference of `Analytics <https://github.com/star-inc/pbp-analytics>`.
 
 You can make sense of Analytics how to work through these documents.
 

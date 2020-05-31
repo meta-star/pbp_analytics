@@ -9,7 +9,7 @@ FROM selenium/standalone-firefox:latest
 ###
 
 # PB Project Maintainer
-MAINTAINER Star Inc.<star_inc@aol.com>
+LABEL maintainer="SuperSonic<supersonic@livemail.tw>"
 
 # Set working directory
 WORKDIR /app
