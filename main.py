@@ -15,6 +15,6 @@ import os
 from libs import Analytics
 
 if __name__ == "__main__":
-    config_type = "ENV" if os.getenv("PBP_CFG") == 1 else "config.ini"
+    config_type = "ENV" if os.getenv("PBP_CFG") == "1" else "config.ini"
     handle = Analytics(config_type)
     handle.start()
