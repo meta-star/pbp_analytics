@@ -38,7 +38,7 @@ class Initialize:
             "passwd": None,
             "database": None
         },
-        "Google Safe Browsing": {
+        "SafeBrowsing": {
             "google_api_key": None
         },
         "PhishTank": {
