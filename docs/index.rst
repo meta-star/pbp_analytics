@@ -1,5 +1,5 @@
-Analytics Document
-==================
+Analytics Documents
+===================
 
 Welcome : )
 
@@ -45,11 +45,16 @@ You can make sense of Analytics how to work through these documents.
 
 Guide
 -----
+
+The manual will lead you to install Analytics,
+
+show how to connect Analytics ,and tell you the usage.
+
 .. toctree::
    :maxdepth: 2
    :caption: Basic
 
-   guide/installation.rst
+   guide/installation/index.rst
 
 Indices and tables
 ------------------
