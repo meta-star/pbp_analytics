@@ -17,7 +17,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `blacklist` (
   `uuid` varchar(36) NOT NULL,
   `url` text NOT NULL,
-  `date` datetime NOT NULL
+  `date` datetime NOT NULL,
+  `url_hash` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `result_cache` (
@@ -45,6 +46,10 @@ CREATE TABLE `warnlist` (
   `date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE `blacklist`
+  ADD PRIMARY KEY (`uuid`),
+  ADD UNIQUE KEY `url_hash` (`url_hash`);
+
 ALTER TABLE `result_cache`
   ADD PRIMARY KEY (`url_hash`);
 
@@ -52,8 +57,9 @@ ALTER TABLE `trustlist`
   ADD PRIMARY KEY (`uuid`);
 
 ALTER TABLE `trust_domain`
-  ADD PRIMARY KEY (`uuid`);
-COMMIT;
+  ADD PRIMARY KEY (`uuid`),
+  ADD KEY `foreign_key` (`foreign_key`),
+  ADD CONSTRAINT `trust_domain_ibfk_1` FOREIGN KEY (`foreign_key`) REFERENCES `trustlist` (`uuid`) ON DELETE CASCADE;
 
 ALTER TABLE `warnlist`
   ADD PRIMARY KEY (`uuid`);

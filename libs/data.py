@@ -286,7 +286,7 @@ class Data:
         datas = [(url, sha256(url.encode("utf-8")).hexdigest())
                  for url in urls]
         cursor.executemany(
-            "INSERT INTO `blacklist`(`uuid`, `url`, `date`, `url_hash`) VALUES (UUID(), %s, NOW(), %s)",
+            "INSERT IGNORE INTO `blacklist`(`uuid`, `url`, `date`, `url_hash`) VALUES (UUID(), %s, NOW(), %s)",
             datas
         )
         self.db_client.commit()
