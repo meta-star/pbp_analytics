@@ -19,7 +19,7 @@ This is an auto-generate reference of Analytics_.
 You can make sense of Analytics how to work through these documents.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Basic
 
    libs/analytics
@@ -29,14 +29,14 @@ You can make sense of Analytics how to work through these documents.
    libs/tools
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Survey Tools
 
    libs/survey/safebrowsing
    libs/survey/phishtank
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: PageView Technology
 
    libs/survey/page_view/index
@@ -51,10 +51,10 @@ The manual will lead you to install Analytics,
 show how to connect Analytics ,and tell you the usage.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Basic
+   :maxdepth: 3
+   :caption: Install Analytics
 
-   guide/installation/index.rst
+   guide/installation/index
 
 Indices and tables
 ------------------

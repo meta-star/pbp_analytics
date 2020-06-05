@@ -12,6 +12,6 @@ This OSS(Open Source Software) is licensed under [Mozilla Public License 2.0](ht
 
 ## Installation Tutorial and Documents
 
-Available on [ReadTheDocs](https://pbp-analytics.rtfd.io).
+Available on [Read the Docs](https://pbp-analytics.rtfd.io).
 
 > (c) 2020 Star Inc.
