@@ -31,7 +31,7 @@ class BrowserRender:
         (width, height) = size.split(",")
         self.driver.set_window_size(width, height)
         self.driver.set_wait(1)
-        self.driver.set_timeout(3)
+        self.driver.set_timeout(6)
         self.driver.save_screenshot(url, path)
 
     def close(self):
