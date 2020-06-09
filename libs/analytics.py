@@ -87,10 +87,9 @@ class Analytics:
         :return: dict to response
         """
         url = url_normalize(data.get("url"))
-        url_hash = sha256(url.encode("utf-8")).hexdigest()
 
-        result_from_db = await self.check_from_database(url, url_hash, urlparse(url).hostname)
-        if check_from_database is not result_from_db:
+        result_from_db = await self.check_from_database(url)
+        if result_from_db is not None:
             return {
                 "status": 200,
                 "url": url,
@@ -129,13 +128,21 @@ class Analytics:
                 "reason": "forbidden"
             }
 
+        result_from_db = await self.check_from_database(url, host)
+        if result_from_db is not None:
+            return {
+                "status": 200,
+                "url": url,
+                "trust_score": result_from_db
+            }
+
         return {
             "status": 200,
             "url": url,
             "trust_score": await self._deep_analyze(url)
         }
 
-    async def check_from_database(self, url: str, url_hash: str, host: str):
+    async def check_from_database(self, url: str, host: str = None):
         """
         Check URL whether existed in database
 
@@ -144,6 +151,9 @@ class Analytics:
         :param host: host from URL decoded
         :return: trust_score or NoneType
         """
+        if host is None:
+            host = urlparse(url).hostname
+        url_hash = sha256(url.encode("utf-8")).hexdigest()
         cache = self.data_control.find_result_cache_by_url_hash(url_hash)
 
         if cache is not None:
