@@ -10,7 +10,13 @@ The server side of PB Project analyzing URLs with `PageView Technology` which by
 
 This OSS(Open Source Software) is licensed under [Mozilla Public License 2.0](https://github.com/star-inc/pbp-analytics/blob/master/LICENSE.md).
 
-## Installation Tutorial and Documents
+## Easy Installation
+
+The Docker Image of Analytics is available on [Docker Hub](https://hub.docker.com/r/starinc/pbp-analytics) now.
+
+[Next](https://pbp-analytics.readthedocs.io/en/docker_docs/guide/installation/production.html#easy-install)
+
+## Full Installation Tutorial and Documents
 
 Available on [Read the Docs](https://pbp-analytics.rtfd.io).
 
