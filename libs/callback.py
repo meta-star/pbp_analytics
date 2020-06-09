@@ -83,7 +83,8 @@ class WebServer:
 
     def __init__(self, pbp_handle):
         global response_handle
-        response_handle = (pbp_handle.server_response,)
+        response_handle = (self.server_response,)
+        self.handle = pbp_handle
 
     async def server_response(self, message: str):
         """
@@ -118,7 +119,7 @@ class WebServer:
             }
 
         if "url" in data and validators.url(data["url"]):
-            return await self.analyze(data)
+            return await self.handle.analyze(data)
 
         return {
             "status": 401

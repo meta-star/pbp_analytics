@@ -89,6 +89,14 @@ class Analytics:
         url = url_normalize(data.get("url"))
         url_hash = sha256(url.encode("utf-8")).hexdigest()
 
+        result_from_db = await self.check_from_database(url, url_hash, urlparse(url).hostname)
+        if check_from_database is not result_from_db:
+            return {
+                "status": 200,
+                "url": url,
+                "trust_score": result_from_db
+            }
+
         try:
             response = requests.get(url)
         except requests.exceptions.ConnectionError as e:
@@ -119,14 +127,6 @@ class Analytics:
             return {
                 "status": 403,
                 "reason": "forbidden"
-            }
-
-        result_from_db = await self.check_from_database(url, url_hash, host)
-        if check_from_database is not result_from_db:
-            return {
-                "status": 200,
-                "url": url,
-                "trust_score": result_from_db
             }
 
         return {
