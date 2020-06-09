@@ -79,45 +79,6 @@ class Analytics:
         self.cron_job.stop()
         sys.exit(0)
 
-    async def server_response(self, message: str):
-        """
-        Check responses from web service
-
-        :param message: string of JSON format
-        :return: dict to response
-        """
-        try:
-            req_res = json.loads(message)
-        except json.decoder.JSONDecodeError:
-            return {"status": 401}
-        if req_res.get("version") is not None:
-            try:
-                return await self._server_response(req_res)
-            except:
-                error_report = Tools.error_report()
-                Tools.logger(error_report)
-                return {"status": 500}
-        return {"status": 400}
-
-    async def _server_response(self, data: dict):
-        """
-        Handle responses from web service
-
-        :param data: dict from message decoded
-        :return: dict to response
-        """
-        if data.get("version") < 1:
-            return {
-                "status": 505
-            }
-
-        if "url" in data and validators.url(data["url"]):
-            return await self.analyze(data)
-
-        return {
-            "status": 401
-        }
-
     async def analyze(self, data: dict):
         """
         Do analysis from URL sent by message with databases
@@ -126,7 +87,14 @@ class Analytics:
         :return: dict to response
         """
         url = url_normalize(data.get("url"))
-        url_hash = sha256(url.encode("utf-8")).hexdigest()
+
+        result_from_db = await self.check_from_database(url)
+        if result_from_db is not None:
+            return {
+                "status": 200,
+                "url": url,
+                "trust_score": result_from_db
+            }
 
         try:
             response = requests.get(url)
@@ -150,45 +118,68 @@ class Analytics:
         url = response.url
 
         host = urlparse(url).hostname if urlparse(
-            url).hostname != "localhost" else "127.0.0.1"
-        if (validators.ipv4(host) or validators.ipv6(host)) and ipaddress.ip_address(host).is_private:
+            url
+        ).hostname != "localhost" else "127.0.0.1"
+
+        if (validators.ipv4(host) or validators.ipv6(host)) and \
+                ipaddress.ip_address(host).is_private:
             return {
                 "status": 403,
                 "reason": "forbidden"
             }
 
+        result_from_db = await self.check_from_database(url, host)
+        if result_from_db is not None:
+            return {
+                "status": 200,
+                "url": url,
+                "trust_score": result_from_db
+            }
+
+        return {
+            "status": 200,
+            "url": url,
+            "trust_score": await self._deep_analyze(url)
+        }
+
+    async def check_from_database(self, url: str, host: str = None):
+        """
+        Check URL whether existed in database
+
+        :param url: URL from request
+        :param url_hash: URL hashed
+        :param host: host from URL decoded
+        :return: trust_score or NoneType
+        """
+        if host is None:
+            host = urlparse(url).hostname
+        url_hash = sha256(url.encode("utf-8")).hexdigest()
         cache = self.data_control.find_result_cache_by_url_hash(url_hash)
 
         if cache is not None:
             score = cache
 
-        elif self.data_control.check_trustlist(url):
+        elif self.data_control.check_trustlist(url) or \
+                self.data_control.check_trust_domain(host):
             score = 1
-
-        elif self.data_control.check_trust_domain(host):
-            score = 1
-
-        elif self.data_control.check_blacklist(url):
-            score = 0
 
         elif self.data_control.check_warnlist(url):
             score = 0.5
 
-        elif self.safe_browsing.lookup([url]):
+        elif self.data_control.check_blacklist(url):
             score = 0
+
+        elif self.safe_browsing.lookup([url]):
             self.data_control.mark_as_blacklist(url)
+            score = 0
 
         else:
-            score = await self._deep_analyze(url)
+            return None
 
         if cache is None:
             self.data_control.upload_result_cache(url_hash, score)
 
-        return {
-            "status": 200,
-            "url": url,
-            "trust_score": score
-        }
+        return score
 
     async def _deep_analyze(self, url: str):
         """

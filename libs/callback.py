@@ -1,10 +1,14 @@
 import json
+import validators
+
 from abc import ABC
 
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.web import Application, RequestHandler
 from tornado.websocket import WebSocketHandler
+
+from .tools import Tools
 
 """
     Copyright (c) 2020 Star Inc.(https://starinc.xyz)
@@ -79,7 +83,47 @@ class WebServer:
 
     def __init__(self, pbp_handle):
         global response_handle
-        response_handle = (pbp_handle.server_response,)
+        response_handle = (self.server_response,)
+        self.handle = pbp_handle
+
+    async def server_response(self, message: str):
+        """
+        Check responses from web service
+
+        :param message: string of JSON format
+        :return: dict to response
+        """
+        try:
+            req_res = json.loads(message)
+        except json.decoder.JSONDecodeError:
+            return {"status": 401}
+        if req_res.get("version") is not None:
+            try:
+                return await self._server_response(req_res)
+            except:
+                error_report = Tools.error_report()
+                Tools.logger(error_report)
+                return {"status": 500}
+        return {"status": 400}
+
+    async def _server_response(self, data: dict):
+        """
+        Handle responses from web service
+
+        :param data: dict from message decoded
+        :return: dict to response
+        """
+        if data.get("version") < 1:
+            return {
+                "status": 505
+            }
+
+        if "url" in data and validators.url(data["url"]):
+            return await self.handle.analyze(data)
+
+        return {
+            "status": 401
+        }
 
     @staticmethod
     def listen(port: int):
