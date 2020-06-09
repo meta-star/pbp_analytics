@@ -1,3 +1,6 @@
+Callback Status Code
+====================
+
 - `200` Success With `url` And `trust_score` Tag
 - `201` Success With `msg` Tag
 - `202` Success Without Any Response
@@ -11,6 +14,9 @@
 Correct Request:
 
     {
+
         "version":1,
+
         "url": "https://example.org/"
+
     }

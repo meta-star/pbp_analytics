@@ -55,6 +55,7 @@ show how to connect Analytics ,and tell you the usage.
    :caption: Install Analytics
 
    guide/installation/index
+   guide/callback_status_code.rst
 
 Indices and tables
 ------------------
