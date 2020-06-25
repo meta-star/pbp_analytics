@@ -4,54 +4,20 @@
 
 The server side of PB Project analyzing URLs with `PageView Technology` which by `structural similarity index`.
 
-![Logo](logo.svg)
+![Logo](https://raw.githubusercontent.com/star-inc/pbp-analytics/master/logo.svg)
 
 ## License
 
-This OSS(Open Source Software) is licensed under [Mozilla Public License 2.0](LICENSE.md).
+This OSS(Open Source Software) is licensed under [Mozilla Public License 2.0](https://github.com/star-inc/pbp-analytics/blob/master/LICENSE.md).
 
-## Database required
+## Easy Installation
 
-`Analytics` using [MySQL](https://www.mysql.com/) or [MariaDB](https://mariadb.org/) as its data driver.
+The Docker Image of Analytics is available on [Docker Hub](https://hub.docker.com/r/starinc/pbp-analytics) now.
 
-Install one of them, and create a database with any name you like, then import [initialize.sql](initialize.sql) to the database.
+[Next](https://pbp-analytics.readthedocs.io/en/docker_docs/guide/installation/production.html#easy-install)
 
-Filling the information for connect to the database into `config.ini` as [config.sample.ini](config.sample.ini) did.
+## Full Installation Tutorial and Documents
 
-## Development
-
-For improving and researching on the platform.
-
-### Requirement
-
-    Ubuntu >= 18.04
-    python == 3.7
-    pip >= 19.2
-
-### Installation
-
-- Configure `config.ini` at first.
-
-- Follow these commands:
-
-        python3.7 -m pip install requirements.txt
-        python3.7 main.py
-
-Enjoy for using and developing.
-
-## Production
-
-In order to security reason, ought not to using without [docker](https://docker.io) for decreasing danger on the host server.
-
-### Installation
-
-- Configure `config.ini` at first.
-
-- Follow these commands:
-
-        sudo docker build -t pbpa .
-        sudo docker run --network=host --detach pbpa
-  
-It should be work.
+Available on [Read the Docs](https://pbp-analytics.rtfd.io).
 
 > (c) 2020 Star Inc.
