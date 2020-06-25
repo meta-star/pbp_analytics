@@ -14,10 +14,10 @@ This OSS(Open Source Software) is licensed under [Mozilla Public License 2.0](ht
 
 The Docker Image of Analytics is available on [Docker Hub](https://hub.docker.com/r/starinc/pbp-analytics) now.
 
-[Next](https://pbp-analytics.readthedocs.io/en/docker_docs/guide/installation/production.html#easy-install)
+[Next](https://pbp-analytics.readthedocs.io/en/v1/guide/installation/production.html#easy-install)
 
 ## Full Installation Tutorial and Documents
 
-Available on [Read the Docs](https://pbp-analytics.rtfd.io).
+Available on [Read the Docs](https://pbp-analytics.rtfd.io/en/v1).
 
 > (c) 2020 Star Inc.
