@@ -8,7 +8,11 @@ In order to security reason, ought not to using without docker_ for decreasing d
 Build and Install with Docker
 -----------------------------
 
-- Configure `config.ini` at first.
+- Clone from `the source repository`_
+
+        git clone https://github.com/star-inc/pbp-analytics.git
+
+- Configure `config.ini`.
 
 - Follow these commands:
 
@@ -16,6 +20,8 @@ Build and Install with Docker
         
         sudo docker run --network=host --detach pbpa
   
+.. _the source repository: https://github.com/star-inc/pbp-analytics
+
 Easy Install
 ------------
 
