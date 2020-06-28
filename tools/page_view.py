@@ -23,7 +23,7 @@ async def main():
     if len(sys.argv) != 2:
         handle.stop()
         sys.exit()
-    async for x in handle.view_survey.analyze(0, sys.argv[1]):
+    async for x in handle.view_survey.analyze(sys.argv[1]):
         print(x)
 
 
