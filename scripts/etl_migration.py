@@ -8,7 +8,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import text
 from app.database import engine
 from app.models import TrustList
 from app.services.browser import browser_service
@@ -19,36 +18,15 @@ from app.config import settings
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ETL")
 
-async def ensure_schema(session: AsyncSession):
-    """
-    Ensure the schema is up to date (add new columns if missing).
-    """
-    try:
-        # Check if column exists
-        # This query is MySQL specific
-        result = await session.execute(text("SHOW COLUMNS FROM trustlist LIKE 'target_view_embedding'"))
-        if not result.scalar():
-            logger.info("Adding missing column 'target_view_embedding' to 'trustlist' table...")
-            await session.execute(text("ALTER TABLE trustlist ADD COLUMN target_view_embedding JSON DEFAULT NULL"))
-            await session.commit()
-            logger.info("Column added.")
-        else:
-            logger.info("Column 'target_view_embedding' already exists.")
-    except Exception as e:
-        logger.error(f"Error checking/updating schema: {e}")
-        # We might fail if table doesn't exist at all, but we assume it does for migration.
-
 async def migrate():
     logger.info("Starting ETL Migration...")
+    logger.info("Ensure you have run 'alembic upgrade head' before running this script.")
 
     # Ensure cache directory exists
     os.makedirs(settings.CACHE_PATH, exist_ok=True)
 
     async with AsyncSession(engine) as session:
-        # 1. Ensure Schema
-        await ensure_schema(session)
-
-        # 2. Fetch all TrustList entries
+        # Fetch all TrustList entries
         stmt = select(TrustList)
         result = await session.execute(stmt)
         entries = result.scalars().all()

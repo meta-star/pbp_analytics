@@ -5,15 +5,18 @@ from app.scheduler import start_scheduler, stop_scheduler
 from app.database import engine
 from app.models import SQLModel
 from app.config import settings
+import os
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
     start_scheduler()
 
-    # Create tables if they don't exist (Quick setup for dev/demo)
-    async with engine.begin() as conn:
-         await conn.run_sync(SQLModel.metadata.create_all)
+    # Auto-creation of tables is removed in favor of Alembic migrations.
+    # However, for local development convenience or if explicitly requested via env, we might keep it.
+    # For this submission, we strictly follow the migration path.
+    # async with engine.begin() as conn:
+    #      await conn.run_sync(SQLModel.metadata.create_all)
 
     yield
 
