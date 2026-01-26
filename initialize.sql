@@ -2,7 +2,7 @@
 --
 -- This OSS is licensed under the Mozilla Public License, v. 2.0.
 -- https://github.com/star-inc/pbp-analytics
--- Copyright (c) 2020 Star Inc.(https://starinc.xyz)
+-- Copyright (c) 2020-2026 Star Inc.(https://starinc.xyz)
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -30,7 +30,8 @@ CREATE TABLE `trustlist` (
   `uuid` varchar(36) NOT NULL,
   `url` text NOT NULL,
   `target_view_narray` mediumblob DEFAULT NULL,
-  `target_view_signature` text DEFAULT NULL
+  `target_view_signature` text DEFAULT NULL,
+  `target_view_embedding` JSON DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `trust_domain` (
